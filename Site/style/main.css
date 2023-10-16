@@ -16,6 +16,9 @@ body{
 
 .non{
     display: none;
+    pointer-events: none;
+    user-select: none;
+    z-index: -1;
 }
 
 .parent{
@@ -34,3 +37,17 @@ body{
 input{
     margin: 10px;
 }
+
+.source {
+    border: 1px solid #ccc;
+    position: absolute;
+    top: 200px;
+    left: 10px;
+  }
+  
+  .target {
+    background: #ccc;
+    position: absolute;
+    top: 20px;
+    right: 10px;
+  }
