@@ -16,10 +16,7 @@ namespace AriesCloud
             Application.SetCompatibleTextRenderingDefault(false);
 
             AuthorizationForm authorizationForm = new AuthorizationForm();
-            Application.Run(new RegistrationForm());
-
-
-
+            Application.Run(authorizationForm);
             Application.Run(new MainForm());
         }
     }

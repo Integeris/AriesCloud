@@ -2,7 +2,8 @@
 {
     public static class UserData
     {
-        public static string Login;
-        public static string Password;
+        public static string Email { get; set; }
+        public static string Login { get; set; }
+        public static string Password { get; set; }
     }
 }

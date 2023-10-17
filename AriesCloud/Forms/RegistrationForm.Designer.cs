@@ -82,6 +82,8 @@
             // 
             // emailTextBox
             // 
+            this.emailTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.emailTextBox.Location = new System.Drawing.Point(89, 12);
             this.emailTextBox.Name = "emailTextBox";
             this.emailTextBox.Size = new System.Drawing.Size(446, 26);
@@ -89,6 +91,8 @@
             // 
             // loginTextBox
             // 
+            this.loginTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.loginTextBox.Location = new System.Drawing.Point(89, 44);
             this.loginTextBox.Name = "loginTextBox";
             this.loginTextBox.Size = new System.Drawing.Size(446, 26);
@@ -96,6 +100,8 @@
             // 
             // passwordTextBox
             // 
+            this.passwordTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.passwordTextBox.Location = new System.Drawing.Point(89, 76);
             this.passwordTextBox.Name = "passwordTextBox";
             this.passwordTextBox.Size = new System.Drawing.Size(446, 26);
@@ -104,6 +110,8 @@
             // 
             // confirmTextBox
             // 
+            this.confirmTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.confirmTextBox.Location = new System.Drawing.Point(169, 108);
             this.confirmTextBox.Name = "confirmTextBox";
             this.confirmTextBox.Size = new System.Drawing.Size(366, 26);
@@ -112,12 +120,16 @@
             // 
             // registrationButton
             // 
+            this.registrationButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.registrationButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(177)))), ((int)(((byte)(196)))));
+            this.registrationButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.registrationButton.Location = new System.Drawing.Point(17, 140);
             this.registrationButton.Name = "registrationButton";
             this.registrationButton.Size = new System.Drawing.Size(518, 31);
             this.registrationButton.TabIndex = 10;
             this.registrationButton.Text = "Зарегестрироваться";
-            this.registrationButton.UseVisualStyleBackColor = true;
+            this.registrationButton.UseVisualStyleBackColor = false;
             this.registrationButton.Click += new System.EventHandler(this.RegistrationButtonOnClick);
             // 
             // RegistrationForm

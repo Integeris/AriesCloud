@@ -5,13 +5,24 @@ using System.Windows.Forms;
 
 namespace AriesCloud.Forms
 {
+    /// <summary>
+    /// Форма регистрации.
+    /// </summary>
     public partial class RegistrationForm : Form
     {
+        /// <summary>
+        /// Создание формы регистрации.
+        /// </summary>
         public RegistrationForm()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Обработчик кнопки "Регистрация".
+        /// </summary>
+        /// <param name="sender">Кнопка "Регистрация".</param>
+        /// <param name="e">Данные события.</param>
         private void RegistrationButtonOnClick(object sender, EventArgs e)
         {
             string loginPattern = @"^[A-Za-z][A-Za-z0-9]{7,49}$";
