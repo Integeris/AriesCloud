@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace AriesCloud.CLasses
+namespace AriesCloud.Classes
 {
     /// <summary>
     /// Менеджер сообщений.

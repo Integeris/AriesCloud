@@ -1,4 +1,4 @@
-﻿namespace AriesCloud.CLasses
+﻿namespace AriesCloud.Classes
 {
     public static class UserData
     {
