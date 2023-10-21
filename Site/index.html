@@ -3,7 +3,6 @@
     <head>
         <link type = "text/css" rel = "stylesheet" href = "./style/main.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-        
     </head>
     <body>
         <div id="target"></div>
@@ -13,7 +12,9 @@
                 <img src="" alt="">
             </div>
             <div style="display: flex; flex-direction: column;" id="authInput">
+                <div class="labelInput">Логин</div>
                 <input id="login" type="text">
+                <div class="labelInput">Пароль</div>
                 <input id="password" type="password" name="" id="">
             </div>
             <div id="buttonAuth">
@@ -21,7 +22,8 @@
                     Вход
                 </button>
             </div>
-            <div id="buttonCheckReg">
+
+            <div style="margin-top: 10px" id="buttonCheckReg">
                 <button>
                     Зарегестрироваться
                 </button>
@@ -32,9 +34,13 @@
                 <img src="" alt="">
             </div>
             <div id="regInput" style="display: flex; flex-direction: column;">
+                <div class="labelInput">Логин</div>
                 <input id="regLogin" type="text">
+                <div class="labelInput">Email</div>
                 <input id="regEmail" type="text">
+                <div class="labelInput">Пароль</div>
                 <input id="regPassword" type="password" name="" id="">
+                <div class="labelInput">Повторите пароль</div>
                 <input id="regPasswordRepiat" type="password" name="" id="">
             </div>
             <div id="buttonReg">
@@ -42,7 +48,7 @@
                     Регистрация
                 </button>
             </div>
-            <div id="buttonCheckAuth">
+            <div style="margin-top: 10px" id="buttonCheckAuth">
                 <button>
                     Войти
                 </button>

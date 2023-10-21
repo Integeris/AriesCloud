@@ -38,6 +38,10 @@ input{
     margin: 10px;
 }
 
+.labelInput{
+    margin: 10px;
+}
+
 .source {
     border: 1px solid #ccc;
     position: absolute;
