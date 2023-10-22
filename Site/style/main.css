@@ -1,27 +1,27 @@
-body{
+body {
     background-color: #f1eef1;
-    font-family: 'Trebuchet MS','Arial';
+    font-family: 'Trebuchet MS', 'Arial';
 }
 
-.container{
+.container {
     display: flex;
-	align-items: center;
-	justify-content: center;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
     background-color: #8ab1c4;
     padding: 10px;
     height: 600px;
-	width: 360px;
+    width: 360px;
 }
 
-.non{
+.non {
     display: none;
     pointer-events: none;
     user-select: none;
     z-index: -1;
 }
 
-.parent{
+.parent {
     width: 100%;
     height: 100%;
     position: fixed;
@@ -34,11 +34,11 @@ body{
     overflow: auto;
 }
 
-input{
+input {
     margin: 10px;
 }
 
-.labelInput{
+.labelInput {
     margin: 10px;
 }
 
@@ -47,11 +47,11 @@ input{
     position: absolute;
     top: 200px;
     left: 10px;
-  }
-  
-  .target {
+}
+
+.target {
     background: #ccc;
     position: absolute;
     top: 20px;
     right: 10px;
-  }
+}
