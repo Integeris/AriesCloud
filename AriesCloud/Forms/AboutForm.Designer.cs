@@ -51,7 +51,7 @@
             this.passwordTextBox.ReadOnly = true;
             this.passwordTextBox.Size = new System.Drawing.Size(426, 109);
             this.passwordTextBox.TabIndex = 12;
-            this.passwordTextBox.Text = "Программа предназначена для шифрации и хранения файлов на удалённом сервере.";
+            this.passwordTextBox.Text = "Программа предназначена для шифрования и хранения файлов на удалённом сервере.";
             this.passwordTextBox.UseSystemPasswordChar = true;
             // 
             // loginTextBox
