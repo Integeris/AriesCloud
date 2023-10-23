@@ -61,7 +61,7 @@ namespace AriesCloud.Forms
                 {
                     using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
                     {
-                        byte[] buffer = new byte[128];
+                        byte[] buffer = new byte[32];
                         Random random = new Random();
 
                         random.NextBytes(buffer);

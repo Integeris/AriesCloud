@@ -44,6 +44,11 @@ namespace AriesCloud.Forms
             }
         }
 
+        /// <summary>
+        /// Обработчик кнопки "Выход".
+        /// </summary>
+        /// <param name="sender">Кнопка "Выход".</param>
+        /// <param name="e">Данные события.</param>
         private void ExitToolStripMenuItemOnClick(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
