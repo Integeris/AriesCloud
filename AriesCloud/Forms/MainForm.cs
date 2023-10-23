@@ -19,6 +19,19 @@ namespace AriesCloud.Forms
         }
 
         /// <summary>
+        /// Обработчик кнопки "Настройки".
+        /// </summary>
+        /// <param name="sender">Кнопка "Настройки".</param>
+        /// <param name="e">Данные события.</param>
+        private void SettingsToolStripMenuItemOnClick(object sender, EventArgs e)
+        {
+            using (SettingsForm settingsForm = new SettingsForm())
+            {
+                settingsForm.ShowDialog();
+            }
+        }
+
+        /// <summary>
         /// Обработчик кнопки "О программе".
         /// </summary>
         /// <param name="sender">Кнопка "О программе".</param>
@@ -29,6 +42,12 @@ namespace AriesCloud.Forms
             {
                 aboutForm.ShowDialog();
             }
+        }
+
+        private void ExitToolStripMenuItemOnClick(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            Close();
         }
     }
 }

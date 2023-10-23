@@ -15,9 +15,28 @@ namespace AriesCloud
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            AuthorizationForm authorizationForm = new AuthorizationForm();
-            Application.Run(authorizationForm);
-            Application.Run(new MainForm());
+            while (true)
+            {
+                using (AuthorizationForm authorizationForm = new AuthorizationForm())
+                {
+                    Application.Run(authorizationForm);
+
+                    if (authorizationForm.DialogResult != DialogResult.OK)
+                    {
+                        return;
+                    }
+                }
+
+                using (MainForm mainForm = new MainForm())
+                {
+                    Application.Run(mainForm);
+
+                    if (mainForm.DialogResult != DialogResult.OK)
+                    {
+                        return;
+                    }
+                }
+            }
         }
     }
 }
