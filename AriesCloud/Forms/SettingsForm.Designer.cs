@@ -36,9 +36,10 @@
             this.keyPathTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.accountTabPage = new System.Windows.Forms.TabPage();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.changePasswordButton = new System.Windows.Forms.Button();
+            this.confirmTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.newPasswordTextBox = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.applyButton = new System.Windows.Forms.Button();
             this.mainTabControl.SuspendLayout();
@@ -113,9 +114,10 @@
             // 
             // accountTabPage
             // 
-            this.accountTabPage.Controls.Add(this.textBox2);
+            this.accountTabPage.Controls.Add(this.changePasswordButton);
+            this.accountTabPage.Controls.Add(this.confirmTextBox);
             this.accountTabPage.Controls.Add(this.label3);
-            this.accountTabPage.Controls.Add(this.textBox1);
+            this.accountTabPage.Controls.Add(this.newPasswordTextBox);
             this.accountTabPage.Controls.Add(this.label2);
             this.accountTabPage.Location = new System.Drawing.Point(4, 31);
             this.accountTabPage.Name = "accountTabPage";
@@ -125,15 +127,25 @@
             this.accountTabPage.Text = "Аккаунт";
             this.accountTabPage.UseVisualStyleBackColor = true;
             // 
-            // textBox2
+            // changePasswordButton
             // 
-            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.changePasswordButton.Location = new System.Drawing.Point(123, 75);
+            this.changePasswordButton.Name = "changePasswordButton";
+            this.changePasswordButton.Size = new System.Drawing.Size(185, 31);
+            this.changePasswordButton.TabIndex = 7;
+            this.changePasswordButton.Text = "Сменить";
+            this.changePasswordButton.UseVisualStyleBackColor = true;
+            this.changePasswordButton.Click += new System.EventHandler(this.ChangePasswordButtonOnClick);
+            // 
+            // confirmTextBox
+            // 
+            this.confirmTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.Location = new System.Drawing.Point(203, 38);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(295, 26);
-            this.textBox2.TabIndex = 5;
-            this.textBox2.UseSystemPasswordChar = true;
+            this.confirmTextBox.Location = new System.Drawing.Point(203, 38);
+            this.confirmTextBox.Name = "confirmTextBox";
+            this.confirmTextBox.Size = new System.Drawing.Size(295, 26);
+            this.confirmTextBox.TabIndex = 5;
+            this.confirmTextBox.UseSystemPasswordChar = true;
             // 
             // label3
             // 
@@ -144,15 +156,15 @@
             this.label3.TabIndex = 4;
             this.label3.Text = "Подтверждение пароля:";
             // 
-            // textBox1
+            // newPasswordTextBox
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.newPasswordTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Location = new System.Drawing.Point(203, 6);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(295, 26);
-            this.textBox1.TabIndex = 3;
-            this.textBox1.UseSystemPasswordChar = true;
+            this.newPasswordTextBox.Location = new System.Drawing.Point(203, 6);
+            this.newPasswordTextBox.Name = "newPasswordTextBox";
+            this.newPasswordTextBox.Size = new System.Drawing.Size(295, 26);
+            this.newPasswordTextBox.TabIndex = 3;
+            this.newPasswordTextBox.UseSystemPasswordChar = true;
             // 
             // label2
             // 
@@ -174,6 +186,7 @@
             this.applyButton.TabIndex = 9;
             this.applyButton.Text = "Применить";
             this.applyButton.UseVisualStyleBackColor = false;
+            this.applyButton.Click += new System.EventHandler(this.ApplyButtonOnClick);
             // 
             // SettingsForm
             // 
@@ -186,6 +199,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.MaximizeBox = false;
             this.Name = "SettingsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Настройки";
@@ -206,11 +220,12 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox keyPathTextBox;
         private System.Windows.Forms.Button changeKeyButton;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox confirmTextBox;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox newPasswordTextBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button generateKeyButton;
         private System.Windows.Forms.Button applyButton;
+        private System.Windows.Forms.Button changePasswordButton;
     }
 }

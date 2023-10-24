@@ -44,6 +44,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainContextMenuStrip.SuspendLayout();
             this.mainMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -106,6 +107,7 @@
             this.uploadToolStripMenuItem,
             this.downloadToolStripMenuItem,
             this.renameToolStripMenuItem,
+            this.updateToolStripMenuItem,
             this.removeToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -118,6 +120,7 @@
             this.uploadToolStripMenuItem.Name = "uploadToolStripMenuItem";
             this.uploadToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.uploadToolStripMenuItem.Text = "Загрузить";
+            this.uploadToolStripMenuItem.Click += new System.EventHandler(this.UploadToolStripMenuItemOnClick);
             // 
             // downloadToolStripMenuItem
             // 
@@ -126,6 +129,7 @@
             this.downloadToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F1;
             this.downloadToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.downloadToolStripMenuItem.Text = "Скачать";
+            this.downloadToolStripMenuItem.Click += new System.EventHandler(this.DownloadToolStripMenuItemOnClick);
             // 
             // renameToolStripMenuItem
             // 
@@ -134,6 +138,7 @@
             this.renameToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F2;
             this.renameToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.renameToolStripMenuItem.Text = "Переименовать";
+            this.renameToolStripMenuItem.Click += new System.EventHandler(this.RenameToolStripMenuItemOnClick);
             // 
             // removeToolStripMenuItem
             // 
@@ -142,6 +147,7 @@
             this.removeToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.Delete;
             this.removeToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.removeToolStripMenuItem.Text = "Удалить";
+            this.removeToolStripMenuItem.Click += new System.EventHandler(this.RemoveToolStripMenuItemOnClick);
             // 
             // exitToolStripMenuItem
             // 
@@ -166,6 +172,14 @@
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(99, 22);
             this.aboutToolStripMenuItem.Text = "О программе";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemOnClick);
+            // 
+            // updateToolStripMenuItem
+            // 
+            this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
+            this.updateToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
+            this.updateToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.updateToolStripMenuItem.Text = "Обновить";
+            this.updateToolStripMenuItem.Click += new System.EventHandler(this.UpdateToolStripMenuItemOnClick);
             // 
             // MainForm
             // 
@@ -207,5 +221,6 @@
         private System.Windows.Forms.ToolStripMenuItem renameContextToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeContextToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem updateToolStripMenuItem;
     }
 }

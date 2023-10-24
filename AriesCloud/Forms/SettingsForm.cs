@@ -102,5 +102,15 @@ namespace AriesCloud.Forms
                 }
             }
         }
+
+        /// <summary>
+        /// Обработчик кнопки "Сменить".
+        /// </summary>
+        /// <param name="sender">Кнопка "Сменить".</param>
+        /// <param name="e">Данные события.</param>
+        private void ChangePasswordButtonOnClick(object sender, EventArgs e)
+        {
+            // TODO: Написать запрос на смену пароля.
+        }
     }
 }
