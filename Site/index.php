@@ -22,7 +22,11 @@ if (!empty($segments[1])) {
     $actionName = $segments[1];
 }
 if ($segments[0] == null) {
-    $controllerName = "Main";
+    $url = ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+    $url = explode('?', $url);
+    $url = $url[0];
+    header('Location: '.$url.'main');
+    die();
 }
 
 $controllerFile = 'php/' . $controllerName . '.php';
