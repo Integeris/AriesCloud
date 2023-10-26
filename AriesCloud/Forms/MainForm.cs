@@ -16,6 +16,7 @@ namespace AriesCloud.Forms
             InitializeComponent();
 
             KeyPreview = true;
+            UpdateFiles();
         }
 
         /// <summary>
@@ -35,7 +36,7 @@ namespace AriesCloud.Forms
         /// <param name="e">Данные события.</param>
         private void DownloadToolStripMenuItemOnClick(object sender, EventArgs e)
         {
-
+            DownloadFiles();
         }
 
         /// <summary>
@@ -45,7 +46,7 @@ namespace AriesCloud.Forms
         /// <param name="e">Данные события.</param>
         private void RenameToolStripMenuItemOnClick(object sender, EventArgs e)
         {
-
+            RenameFile();
         }
 
         /// <summary>
@@ -55,7 +56,7 @@ namespace AriesCloud.Forms
         /// <param name="e">Данные события.</param>
         private void UpdateToolStripMenuItemOnClick(object sender, EventArgs e)
         {
-
+            UpdateFiles();
         }
 
         /// <summary>
@@ -65,7 +66,7 @@ namespace AriesCloud.Forms
         /// <param name="e">Данные события.</param>
         private void RemoveToolStripMenuItemOnClick(object sender, EventArgs e)
         {
-
+            DeleteFiles();
         }
 
         /// <summary>
@@ -103,6 +104,68 @@ namespace AriesCloud.Forms
             {
                 aboutForm.ShowDialog();
             }
+        }
+
+        /// <summary>
+        /// Обработчик кнопки "Скачать".
+        /// </summary>
+        /// <param name="sender">Кнопка "Скачать".</param>
+        /// <param name="e">Данные события.</param>
+        private void DownloadContextToolStripMenuItemOnClick(object sender, EventArgs e)
+        {
+            DownloadFiles();
+        }
+
+        /// <summary>
+        /// Обработчик кнопки "Переименовать".
+        /// </summary>
+        /// <param name="sender">Кнопка "Переименовать".</param>
+        /// <param name="e">Данные события.</param>
+        private void RenameContextToolStripMenuItemOnClick(object sender, EventArgs e)
+        {
+            RenameFile();
+        }
+
+        /// <summary>
+        /// Обработчик кнопки "Удалить".
+        /// </summary>
+        /// <param name="sender">Кнопка "Удалить".</param>
+        /// <param name="e">Данные события.</param>
+        private void RemoveContextToolStripMenuItemOnClick(object sender, EventArgs e)
+        {
+            DeleteFiles();
+        }
+
+        /// <summary>
+        /// Обновление списка файлов.
+        /// </summary>
+        private void UpdateFiles()
+        {
+            // TODO: Добавить обновление списка файлов.
+        }
+
+        /// <summary>
+        /// Скачивание файлов.
+        /// </summary>
+        private void DownloadFiles()
+        {
+            // TODO: Добавить логику скачивания файлов.ы
+        }
+
+        /// <summary>
+        /// Переименование файла.
+        /// </summary>
+        private void RenameFile()
+        {
+            // TODO: Добавить логику переименования файла.
+        }
+        
+        /// <summary>
+        /// Удаление файлов.
+        /// </summary>
+        private void DeleteFiles()
+        {
+            // TODO: Добавить логику удаления файлов.
         }
     }
 }

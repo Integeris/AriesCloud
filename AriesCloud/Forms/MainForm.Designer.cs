@@ -40,11 +40,11 @@
             this.uploadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainContextMenuStrip.SuspendLayout();
             this.mainMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -67,25 +67,28 @@
             this.renameContextToolStripMenuItem,
             this.removeContextToolStripMenuItem});
             this.mainContextMenuStrip.Name = "mainContextMenuStrip";
-            this.mainContextMenuStrip.Size = new System.Drawing.Size(162, 70);
+            this.mainContextMenuStrip.Size = new System.Drawing.Size(181, 92);
             // 
             // downloadContextToolStripMenuItem
             // 
             this.downloadContextToolStripMenuItem.Name = "downloadContextToolStripMenuItem";
-            this.downloadContextToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.downloadContextToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.downloadContextToolStripMenuItem.Text = "Загрузить";
+            this.downloadContextToolStripMenuItem.Click += new System.EventHandler(this.DownloadContextToolStripMenuItemOnClick);
             // 
             // renameContextToolStripMenuItem
             // 
             this.renameContextToolStripMenuItem.Name = "renameContextToolStripMenuItem";
-            this.renameContextToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.renameContextToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.renameContextToolStripMenuItem.Text = "Переименовать";
+            this.renameContextToolStripMenuItem.Click += new System.EventHandler(this.RenameContextToolStripMenuItemOnClick);
             // 
             // removeContextToolStripMenuItem
             // 
             this.removeContextToolStripMenuItem.Name = "removeContextToolStripMenuItem";
-            this.removeContextToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.removeContextToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.removeContextToolStripMenuItem.Text = "Удалить";
+            this.removeContextToolStripMenuItem.Click += new System.EventHandler(this.RemoveContextToolStripMenuItemOnClick);
             // 
             // mainMenuStrip
             // 
@@ -140,6 +143,14 @@
             this.renameToolStripMenuItem.Text = "Переименовать";
             this.renameToolStripMenuItem.Click += new System.EventHandler(this.RenameToolStripMenuItemOnClick);
             // 
+            // updateToolStripMenuItem
+            // 
+            this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
+            this.updateToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
+            this.updateToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.updateToolStripMenuItem.Text = "Обновить";
+            this.updateToolStripMenuItem.Click += new System.EventHandler(this.UpdateToolStripMenuItemOnClick);
+            // 
             // removeToolStripMenuItem
             // 
             this.removeToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -172,14 +183,6 @@
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(99, 22);
             this.aboutToolStripMenuItem.Text = "О программе";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemOnClick);
-            // 
-            // updateToolStripMenuItem
-            // 
-            this.updateToolStripMenuItem.Name = "updateToolStripMenuItem";
-            this.updateToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
-            this.updateToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.updateToolStripMenuItem.Text = "Обновить";
-            this.updateToolStripMenuItem.Click += new System.EventHandler(this.UpdateToolStripMenuItemOnClick);
             // 
             // MainForm
             // 
