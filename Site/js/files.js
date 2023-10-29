@@ -33,7 +33,13 @@ function fileGeneration(files) {
     label.className = "labelFile";
     label.innerText = value;
     var str = "../source/";
-    switch (value.split(".")[value.split(".").length - 1]) {
+    var s
+    if(value.split(".").length>1){
+      s=value.split(".")[value.split(".").length - 1]
+    }else{
+      s=""
+    }
+    switch (s) {
       case "xlsx":
         str += "xlsx.png";
         break;
@@ -57,6 +63,9 @@ function fileGeneration(files) {
         break;
       case "cmd":
         str += "cmd.png";
+        break;
+      case "":
+        str +="folder.png"
         break;
       default:
         str += "default.png";
