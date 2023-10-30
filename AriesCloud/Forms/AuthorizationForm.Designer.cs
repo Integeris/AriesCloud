@@ -40,7 +40,7 @@
             // 
             // registrationButton
             // 
-            this.registrationButton.Location = new System.Drawing.Point(17, 94);
+            this.registrationButton.Location = new System.Drawing.Point(17, 124);
             this.registrationButton.Name = "registrationButton";
             this.registrationButton.Size = new System.Drawing.Size(185, 31);
             this.registrationButton.TabIndex = 4;
@@ -52,9 +52,9 @@
             // 
             this.passwordTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.passwordTextBox.Location = new System.Drawing.Point(89, 44);
+            this.passwordTextBox.Location = new System.Drawing.Point(12, 74);
             this.passwordTextBox.Name = "passwordTextBox";
-            this.passwordTextBox.Size = new System.Drawing.Size(333, 26);
+            this.passwordTextBox.Size = new System.Drawing.Size(410, 26);
             this.passwordTextBox.TabIndex = 2;
             this.passwordTextBox.UseSystemPasswordChar = true;
             // 
@@ -62,36 +62,38 @@
             // 
             this.loginTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.loginTextBox.Location = new System.Drawing.Point(89, 12);
+            this.loginTextBox.Location = new System.Drawing.Point(12, 27);
             this.loginTextBox.Name = "loginTextBox";
-            this.loginTextBox.Size = new System.Drawing.Size(333, 26);
+            this.loginTextBox.Size = new System.Drawing.Size(410, 26);
             this.loginTextBox.TabIndex = 1;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(13, 46);
+            this.label3.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.Location = new System.Drawing.Point(13, 56);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(69, 22);
+            this.label3.Size = new System.Drawing.Size(53, 18);
             this.label3.TabIndex = 13;
             this.label3.Text = "Пароль:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 15);
+            this.label2.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.Location = new System.Drawing.Point(13, 9);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 22);
+            this.label2.Size = new System.Drawing.Size(106, 18);
             this.label2.TabIndex = 12;
-            this.label2.Text = "Логин:";
+            this.label2.Text = "Логин или почта:";
             // 
             // entryButton
             // 
             this.entryButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(177)))), ((int)(((byte)(196)))));
             this.entryButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.entryButton.Location = new System.Drawing.Point(208, 94);
+            this.entryButton.Location = new System.Drawing.Point(208, 124);
             this.entryButton.Name = "entryButton";
             this.entryButton.Size = new System.Drawing.Size(214, 31);
             this.entryButton.TabIndex = 3;
@@ -103,7 +105,7 @@
             // 
             this.forgotPasswordLinkLabel.AutoSize = true;
             this.forgotPasswordLinkLabel.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.forgotPasswordLinkLabel.Location = new System.Drawing.Point(325, 73);
+            this.forgotPasswordLinkLabel.Location = new System.Drawing.Point(325, 103);
             this.forgotPasswordLinkLabel.Name = "forgotPasswordLinkLabel";
             this.forgotPasswordLinkLabel.Size = new System.Drawing.Size(97, 18);
             this.forgotPasswordLinkLabel.TabIndex = 14;
@@ -117,7 +119,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(241)))), ((int)(((byte)(238)))), ((int)(((byte)(241)))));
-            this.ClientSize = new System.Drawing.Size(434, 137);
+            this.ClientSize = new System.Drawing.Size(434, 168);
             this.Controls.Add(this.forgotPasswordLinkLabel);
             this.Controls.Add(this.entryButton);
             this.Controls.Add(this.passwordTextBox);

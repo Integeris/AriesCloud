@@ -341,10 +341,15 @@ namespace AriesCloud.Classes
         /// <summary>
         /// Создание Шифратора.
         /// </summary>
-        /// <param name="firstKey">Первая часть ключа.</param>
-        /// <param name="secondKey">Вторая часть ключа.</param>
-        public Scrambler(byte[] firstKey, byte[] secondKey)
+        /// <param name="key">Ключ.</param>
+        public Scrambler(byte[] key)
         {
+            // 32 - полная длинна ключа.
+            if (key.Length != 32)
+            {
+                throw new ArgumentOutOfRangeException(nameof(key), "Длинна ключа должна быть 32 байта.");
+            }
+
             blockSize = 16;
             linearTransformation = new byte[]
             {
@@ -358,8 +363,8 @@ namespace AriesCloud.Classes
                 keys[i] = new byte[16];
             }
 
-            Array.Copy(firstKey, keys[0], firstKey.Length);
-            Array.Copy(secondKey, keys[1], secondKey.Length);
+            Array.Copy(key, keys[0], blockSize);
+            Array.Copy(key, blockSize, keys[1], 0, blockSize);
 
             GenerationRoundKeys();
         }
