@@ -3,10 +3,10 @@
 namespace Site;
 
 require './php/DB.php';
-require './php/getFiles.php';
+require './php/webFiles.php';
 
 use Service\DB;
-use Service\getFiles;
+use Service\webFiles;
 
 $db = new DB();
 $db->conn();
@@ -19,16 +19,25 @@ $actionName = '';
 if (!empty($segments[0])) {
     $controllerName = ucfirst($segments[0]);
 }
-if ($segments[1]=="getFiles") {
-    $get=new getFiles();
+
+
+if ($segments[1] == "getFiles") {
+    $get = new webFiles();
     $get->getFiles();
     return;
 }
+
+if ($segments[1] == "delFiles") {
+    $get = new webFiles();
+    $get->delFiles();
+    return;
+}
+
 if ($segments[0] == null) {
     $url = ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     $url = explode('?', $url);
     $url = $url[0];
-    header('Location: '.$url.'main');
+    header('Location: ' . $url . 'main');
     die();
 }
 $controllerFile = 'php/' . $controllerName . '.php';
