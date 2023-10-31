@@ -16,7 +16,20 @@ namespace AriesCloud.Forms
             InitializeComponent();
 
             KeyPreview = true;
+
+            // TODO: Считать настройки из файла конфигурации.
+
             UpdateFiles();
+        }
+
+        /// <summary>
+        /// Обработчик кнопки "Создать папку".
+        /// </summary>
+        /// <param name="sender">Кнопка "Создать папку".</param>
+        /// <param name="e">Данные события.</param>
+        private void CreateDirectoryToolStripMenuItemOnClick(object sender, EventArgs e)
+        {
+            CreateDirectory();
         }
 
         /// <summary>
@@ -107,6 +120,16 @@ namespace AriesCloud.Forms
         }
 
         /// <summary>
+        /// Обработчик кнопки "Создать папку".
+        /// </summary>
+        /// <param name="sender">Кнопка "Создать папку".</param>
+        /// <param name="e">Данные события.</param>
+        private void CreateDirectoryContextToolStripMenuItemOnClick(object sender, EventArgs e)
+        {
+            CreateDirectory();
+        }
+
+        /// <summary>
         /// Обработчик кнопки "Скачать".
         /// </summary>
         /// <param name="sender">Кнопка "Скачать".</param>
@@ -134,6 +157,11 @@ namespace AriesCloud.Forms
         private void RemoveContextToolStripMenuItemOnClick(object sender, EventArgs e)
         {
             DeleteFiles();
+        }
+
+        private void CreateDirectory()
+        {
+            // TODO: Добавить логику добавления папки.
         }
 
         /// <summary>

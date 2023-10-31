@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Configurator.cs" />
     <Compile Include="Classes\InfoViewer.cs" />
     <Compile Include="Classes\Scrambler.cs" />
     <Compile Include="Classes\UserData.cs" />
