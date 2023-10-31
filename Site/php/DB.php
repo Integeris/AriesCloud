@@ -33,4 +33,20 @@ class DB
             }
         }
     }
+
+    public function auth($hash)
+    {
+
+        $pdo = $this->conn();
+
+        $state = $pdo->prepare("SELECT * FROM users WHERE hash = :hash");
+        $state->execute(['hash' => $hash]);
+        $result = $state->fetch();
+
+        if ($result) {
+            return True;
+        } else {
+            return False;
+        }
+    }
 }

@@ -53,3 +53,16 @@ $('#buttonCheckAuth').click(function () {
     opacity: 0
   })
 })
+
+
+function auth(){
+  $.ajax({
+    url: window.location.href + "/autorization",
+    method: "post",
+    dataType: "html",
+    data: {login:document.getElementById("login").value , password:document.getElementById("password").value},
+    success: function (data) {
+      console.log(data)
+    },
+  });
+}

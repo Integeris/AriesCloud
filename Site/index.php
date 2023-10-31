@@ -4,9 +4,11 @@ namespace Site;
 
 require './php/DB.php';
 require './php/webFiles.php';
+require './php/authentication.php';
 
 use Service\DB;
 use Service\webFiles;
+use Service\authentication;
 
 $db = new DB();
 $db->conn();
@@ -31,6 +33,20 @@ if ($segments[1] == "delFiles") {
     $get = new webFiles();
     $get->delFiles();
     return;
+}
+
+if ($segments[1] == "autorization") {
+    $get = new authentication();
+    $get->auth($_POST["login"], $_POST['password']);
+    return;
+}
+
+if ($segments[1] == "autorizationHash") {
+    $get = new DB();
+    if ($get->auth($_POST["hash"]))
+        return True;
+    else
+        return False;
 }
 
 if ($segments[0] == null) {
