@@ -80,6 +80,7 @@ function fileGeneration(files) {
 }
 
 function getFiles() {
+  startLoader()
   $.ajax({
     url: window.location.href + "/getFiles",
     method: "post",
@@ -87,12 +88,12 @@ function getFiles() {
     data: {},
     success: function (data) {
       fileGeneration(JSON.parse(data));
+      stopLoader()
     },
   });
 }
 
 function delFile() {
-  console.log(elem);
   var data = [];
   data.push(elem.children[1].innerText);
   $.ajax({
@@ -102,6 +103,17 @@ function delFile() {
     data: { dataFiles: data },
     success: function (data) {
       getFiles()
+    },
+  });
+}
+
+function exit(){
+  $.ajax({
+    url: window.location.href + "/exit",
+    method: "post",
+    dataType: "html",
+    data: { },
+    success: function (data) {
     },
   });
 }

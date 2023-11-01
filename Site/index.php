@@ -25,7 +25,7 @@ if (!empty($segments[0])) {
 
 if ($segments[1] == "getFiles") {
     $get = new webFiles();
-    $get->getFiles();
+        $get->getFiles();
     return;
 }
 
@@ -35,9 +35,17 @@ if ($segments[1] == "delFiles") {
     return;
 }
 
+if ($segments[1] == "exit") {
+    $get = new authentication();
+    $get->exit();
+    return;
+}
+
+
 if ($segments[1] == "autorization") {
     $get = new authentication();
     $get->auth($_POST["login"], $_POST['password']);
+
     return;
 }
 

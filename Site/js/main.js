@@ -62,7 +62,9 @@ function auth(){
     dataType: "html",
     data: {login:document.getElementById("login").value , password:document.getElementById("password").value},
     success: function (data) {
-      console.log(data)
+      if(data=="Good"){
+        window.location.href=window.location.href.substring(0, window.location.href.lastIndexOf("main"))+"files"
+      }
     },
   });
 }

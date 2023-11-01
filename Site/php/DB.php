@@ -49,4 +49,12 @@ class DB
             return False;
         }
     }
+
+    public function reg($login,$password,$email){
+
+    }
+
+    public function checCode(){
+
+    }
 }
