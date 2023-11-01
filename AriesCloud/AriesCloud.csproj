@@ -55,7 +55,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Configurator.cs" />
+    <Compile Include="Classes\Directory.cs" />
+    <Compile Include="Classes\DirectoryItem.cs" />
+    <Compile Include="Classes\File.cs" />
+    <Compile Include="Classes\FileManager.cs" />
     <Compile Include="Classes\InfoViewer.cs" />
+    <Compile Include="Classes\PathManager.cs" />
     <Compile Include="Classes\Scrambler.cs" />
     <Compile Include="Classes\UserData.cs" />
     <Compile Include="Forms\AboutForm.cs">
