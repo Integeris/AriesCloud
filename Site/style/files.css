@@ -79,21 +79,23 @@ a {
 
 .files {
     display: flex;
-    align-items: flex-start;
     flex-wrap: wrap;
-    padding-left: 15px;
-    padding-top: 10px;
+    padding: 10px;
+    justify-content: center;
 }
 
 .file {
-    width: 50pt;
     display: flex;
-    flex-direction: column;
-    padding-right: 20px;
+    flex-direction: row;
+    padding: 7px;
+    border: black solid;
+    border-radius: 20px;
+    flex-basis: 40%;
+    margin: 5px;
 }
 
 .file img {
-
+    width: 50pt;
 }
 
 .file label {
@@ -102,15 +104,23 @@ a {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    width: 60px;
+    width: 200px;
 }
 
-.pages{
+.pages {
     padding-top: 20px;
     display: flex;
     justify-content: center;
 }
 
-.pages a{
+.pages a {
     padding-left: 10px;
+}
+
+.way{
+    background-color: #ac7447;
+    color: #f1eef1;
+    display: flex;
+    justify-content: center;
+    padding: 5px;
 }

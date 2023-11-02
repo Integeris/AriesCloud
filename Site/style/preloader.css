@@ -6,7 +6,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: radial-gradient(circle farthest-corner at center, #3C4B57 0%, #1C262B 100%);
+    background-image: radial-gradient(circle farthest-corner at center, #007aa2 0%, #f1eef1 100%);
 }
 
 .loader {

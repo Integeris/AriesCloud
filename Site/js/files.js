@@ -33,6 +33,7 @@ function fileGeneration(files) {
     img.className = "imgFile";
     label.className = "labelFile";
     label.innerText = value;
+    label.title=value;
     var str = "../source/";
     var s;
     if (value.split(".").length > 1) {
