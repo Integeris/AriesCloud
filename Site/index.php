@@ -12,7 +12,7 @@ use Service\authentication;
 
 $db = new DB();
 $db->conn();
-$route = $_POST['route'];
+$route = $_GET['route'];
 $segments = explode('/', $route);
 $controllerName = '';
 $actionName = '';
