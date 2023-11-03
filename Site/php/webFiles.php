@@ -4,16 +4,16 @@ namespace Service;
 
 class webFiles
 {
-    public function getFiles()
+    public function getFiles($uid)
     {
-        $files = scandir("./fileUsers");
+        $files = scandir("./fileUsers/$uid");
         $files = array_diff($files, array('.', '..'));
         echo json_encode($files);
     }
 
-    public function delFiles()
+    public function delFiles($uid)
     {
-        $dir = "./fileUsers/";
+        $dir = "./fileUsers/$uid/";
         $data = $_POST['dataFiles'];
         foreach ($data as $val) {
             if (is_dir($dir . $val)) {
@@ -36,4 +36,6 @@ class webFiles
         }
         rmdir($dir);
     }
+
+    
 }
