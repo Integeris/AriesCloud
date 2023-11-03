@@ -86,7 +86,7 @@ function getFiles() {
   startLoader();
   $.ajax({
     url: window.location.href + "/getFiles",
-    method: "post",
+    method: "get",
     dataType: "html",
     data: {},
     success: function (data) {
@@ -101,7 +101,7 @@ function delFile() {
   data.push(elem.children[1].innerText);
   $.ajax({
     url: window.location.href + "/delFiles",
-    method: "post",
+    method: "get",
     dataType: "html",
     data: { dataFiles: data },
     success: function (data) {
@@ -113,7 +113,7 @@ function delFile() {
 function exit() {
   $.ajax({
     url: window.location.href + "/exit",
-    method: "post",
+    method: "get",
     dataType: "html",
     data: {},
     success: function (data) {},

@@ -16,6 +16,7 @@ $route = $_GET['route'];
 $segments = explode('/', $route);
 $controllerName = '';
 $actionName = '';
+
 if (!empty($segments[0])) {
     $controllerName = ucfirst($segments[0]);
 }
@@ -40,13 +41,13 @@ if ($segments[1] == "exit") {
 
 if ($segments[1] == "autorization") {
     $get = new authentication();
-    $get->auth($_POST["login"], $_POST['password']);
+    $get->auth($_GET["login"], $_GET['password']);
     return;
 }
 
 if ($segments[1] == "autorizationHash") {
     $get = new DB();
-    if ($get->auth($_POST["hash"])) {
+    if ($get->auth($_GET["hash"])) {
         echo "True";
         return;
     } else {

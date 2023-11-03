@@ -58,7 +58,7 @@ $('#buttonCheckAuth').click(function () {
 function auth(){
   $.ajax({
     url: window.location.href + "/autorization",
-    method: "post",
+    method: "get",
     dataType: "html",
     data: {login:document.getElementById("login").value , password:document.getElementById("password").value},
     success: function (data) {
