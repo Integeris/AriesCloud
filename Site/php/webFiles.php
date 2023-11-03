@@ -37,5 +37,4 @@ class webFiles
         rmdir($dir);
     }
 
-    
 }

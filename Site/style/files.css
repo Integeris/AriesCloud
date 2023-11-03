@@ -116,7 +116,7 @@ a {
     padding-left: 10px;
 }
 
-.way{
+.way {
     background-color: #ac7447;
     color: #f1eef1;
     display: flex;
@@ -124,9 +124,10 @@ a {
     padding: 5px;
 }
 
-.selected{
+.selected {
     background-color: #007aa2;
 }
-.selected label{
+
+.selected label {
     background-color: #007aa2;
 }

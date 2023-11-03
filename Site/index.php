@@ -20,7 +20,6 @@ if (!empty($segments[0])) {
     $controllerName = ucfirst($segments[0]);
 }
 
-
 if ($segments[1] == "getFiles") {
     $get = new webFiles();
     $get->getFiles("a001f87a8a7f6c2f009d7e2f8d3c588b");
@@ -39,11 +38,9 @@ if ($segments[1] == "exit") {
     return;
 }
 
-
 if ($segments[1] == "autorization") {
     $get = new authentication();
     $get->auth($_POST["login"], $_POST['password']);
-
     return;
 }
 

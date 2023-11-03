@@ -122,7 +122,6 @@ function exit() {
 
 getFiles();
 
-
-function dublClick(btn){
-  console.log("db")
+function dublClick(btn) {
+  console.log("db");
 }
