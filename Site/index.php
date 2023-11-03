@@ -25,7 +25,7 @@ if (!empty($segments[0])) {
 
 if ($segments[1] == "getFiles") {
     $get = new webFiles();
-        $get->getFiles();
+    $get->getFiles();
     return;
 }
 
@@ -51,10 +51,13 @@ if ($segments[1] == "autorization") {
 
 if ($segments[1] == "autorizationHash") {
     $get = new DB();
-    if ($get->auth($_POST["hash"]))
-        return True;
-    else
-        return False;
+    if ($get->auth($_POST["hash"])) {
+        echo True;
+        return;
+    } else {
+        echo False;
+        return;
+    }
 }
 
 if ($segments[0] == null) {

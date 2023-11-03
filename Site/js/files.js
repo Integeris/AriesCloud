@@ -30,10 +30,12 @@ function fileGeneration(files) {
     var img = document.createElement("img");
     var label = document.createElement("label");
     child.className = "file";
+    //child.setAttribute("dblclick", "dublClick(this)");
+    //child.setAttribute("onclick","preventDefaultClick(event)")
     img.className = "imgFile";
     label.className = "labelFile";
     label.innerText = value;
-    label.title=value;
+    label.title = value;
     var str = "../source/";
     var s;
     if (value.split(".").length > 1) {
@@ -81,7 +83,7 @@ function fileGeneration(files) {
 }
 
 function getFiles() {
-  startLoader()
+  startLoader();
   $.ajax({
     url: window.location.href + "/getFiles",
     method: "post",
@@ -89,7 +91,7 @@ function getFiles() {
     data: {},
     success: function (data) {
       fileGeneration(JSON.parse(data));
-      stopLoader()
+      stopLoader();
     },
   });
 }
@@ -103,20 +105,24 @@ function delFile() {
     dataType: "html",
     data: { dataFiles: data },
     success: function (data) {
-      getFiles()
+      getFiles();
     },
   });
 }
 
-function exit(){
+function exit() {
   $.ajax({
     url: window.location.href + "/exit",
     method: "post",
     dataType: "html",
-    data: { },
-    success: function (data) {
-    },
+    data: {},
+    success: function (data) {},
   });
 }
 
-getFiles()
+getFiles();
+
+
+function dublClick(btn){
+  console.log("db")
+}

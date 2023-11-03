@@ -42,7 +42,6 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 5%;
 }
 
 .left {
@@ -123,4 +122,11 @@ a {
     display: flex;
     justify-content: center;
     padding: 5px;
+}
+
+.selected{
+    background-color: #007aa2;
+}
+.selected label{
+    background-color: #007aa2;
 }
