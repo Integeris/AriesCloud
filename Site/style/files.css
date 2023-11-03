@@ -97,6 +97,10 @@ a {
     width: 50pt;
 }
 
+.file img .size:hover{
+    width: 600pt;
+}
+
 .file label {
     background: #f1eef1;
     padding: 10px;

@@ -12,7 +12,7 @@ use Service\authentication;
 
 $db = new DB();
 $db->conn();
-$route = $_GET['route'];
+$route = $_POST['route'];
 $segments = explode('/', $route);
 $controllerName = '';
 $actionName = '';
@@ -41,13 +41,13 @@ if ($segments[1] == "exit") {
 
 if ($segments[1] == "autorization") {
     $get = new authentication();
-    $get->auth($_GET["login"], $_GET['password']);
+    $get->auth($_POST["login"], $_POST['password']);
     return;
 }
 
 if ($segments[1] == "autorizationHash") {
     $get = new DB();
-    if ($get->auth($_GET["hash"])) {
+    if ($get->auth($_POST["hash"])) {
         echo "True";
         return;
     } else {

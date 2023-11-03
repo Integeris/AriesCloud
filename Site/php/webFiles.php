@@ -14,7 +14,7 @@ class webFiles
     public function delFiles($uid)
     {
         $dir = "./fileUsers/$uid/";
-        $data = $_GET['dataFiles'];
+        $data = $_POST['dataFiles'];
         foreach ($data as $val) {
             if (is_dir($dir . $val)) {
                 $this->deleteDirectory($dir . $val);
