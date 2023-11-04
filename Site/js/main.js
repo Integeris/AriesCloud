@@ -68,3 +68,15 @@ function auth(){
     },
   });
 }
+
+function sendMail(){
+  $.ajax({
+    url: window.location.href + "/sendMail",
+    method: "post",
+    dataType: "html",
+    data: {email:document.getElementById("regEmail").value},
+    success: function (data) {
+      console.log(data);
+    },
+  });
+}

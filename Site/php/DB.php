@@ -50,11 +50,38 @@ class DB
         }
     }
 
-    public function reg($login,$password,$email){
-
+    public function reg($login, $password, $email)
+    {
     }
 
-    public function checCode(){
+    public function regCode($code, $email)
+    {
+        $conn = $this->conn();
 
+        $state = $conn->prepare("SELECT * FROM code WHERE email = :email");
+        $state->execute(['email' => $email]);
+        if ($state->rowCount() > 0) {
+            $deleteQuery = "DELETE FROM code WHERE email = :email";
+            $deleteValues = [
+                'email' => $email
+            ];
+
+            $deleteStmt = $conn->prepare($deleteQuery);
+            $deleteStmt->execute($deleteValues);
+        }
+
+        $query = "INSERT INTO code (email, cod, status) VALUES (:email, :cod, :status)";
+        $values = [
+            'email' => $email,
+            'cod' => $code,
+            'status' => 'non'
+        ];
+        $stmt = $conn->prepare($query);
+        $stmt->execute($values);
+        $conn = null;
+    }
+
+    public function checCode()
+    {
     }
 }

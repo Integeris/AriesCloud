@@ -39,6 +39,12 @@ if ($segments[1] == "exit") {
     return;
 }
 
+if ($segments[1] == "sendMail") {
+    $get = new authentication();
+    $get->sendMail($_POST["email"]);
+    return;
+}
+
 if ($segments[1] == "autorization") {
     $get = new authentication();
     $get->auth($_POST["login"], $_POST['password']);

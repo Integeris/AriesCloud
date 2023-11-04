@@ -1,52 +1,62 @@
-
 <html>
-  <head>
-    <link type="text/css" rel="stylesheet" href="./style/main.css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-  </head>
-  <body>
-    <div id="target"></div>
-    <div class="parent">
-      <div class="container" id="containerAuth">
-        <div id="imageAuth">
-          <img src="" alt="" />
-        </div>
-        <div style="display: flex; flex-direction: column" id="authInput">
-          <div class="labelInput">Логин</div>
-          <input id="login" type="text" />
-          <div class="labelInput">Пароль</div>
-          <input id="password" type="password" name="" id="" />
-        </div>
-        <div id="buttonAuth">
-          <button onclick="auth()">Вход</button>
-        </div>
-        <div style="margin-top: 10px" id="buttonCheckReg">
-          <button>Зарегестрироваться</button>
-        </div>
+
+<head>
+  <link type="text/css" rel="stylesheet" href="./style/main.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+</head>
+
+<body>
+  <div id="target"></div>
+  <div class="parent">
+    <div class="container" id="containerAuth">
+      <div id="imageAuth">
+        <img src="" alt="" />
       </div>
-      <br />
-      <div class="container non" id="containerReg">
-        <div id="imageReg">
-          <img src="" alt="" />
-        </div>
-        <div id="regInput" style="display: flex; flex-direction: column">
-          <div class="labelInput">Логин</div>
-          <input id="regLogin" type="text" />
-          <div class="labelInput">Email</div>
-          <input id="regEmail" type="text" />
-          <div class="labelInput">Пароль</div>
-          <input id="regPassword" type="password" name="" id="" />
-          <div class="labelInput">Повторите пароль</div>
-          <input id="regPasswordRepiat" type="password" name="" id="" />
-        </div>
-        <div id="buttonReg">
-          <button>Регистрация</button>
-        </div>
-        <div style="margin-top: 10px" id="buttonCheckAuth">
-          <button>Войти</button>
-        </div>
+      <div style="display: flex; flex-direction: column" id="authInput">
+        <div class="labelInput">Логин</div>
+        <input id="login" type="text" />
+        <div class="labelInput">Пароль</div>
+        <input id="password" type="password" name="" id="" />
+      </div>
+      <div id="buttonAuth">
+        <button onclick="auth()">Вход</button>
+      </div>
+      <div style="margin-top: 10px" id="buttonCheckReg">
+        <button>Зарегестрироваться</button>
       </div>
     </div>
-    <script src="./js/main.js"></script>
-  </body>
+    <br />
+    <div class="container non" id="containerReg">
+      <div id="imageReg">
+        <img src="" alt="" />
+      </div>
+      <div id="regInput" style="display: flex; flex-direction: column">
+        <div class="labelInput">Логин</div>
+        <input id="regLogin" type="text" />
+        <div class="labelInput">Email</div>
+        <input id="regEmail" type="text" />
+        <div id="buttonCode" style="display: flex; flex-direction: column">
+          <button onclick="sendMail()">Отправить код</button>
+        </div>
+        <div class="labelInput">Код подтверждения</div>
+        <input id="regCode" type="text" />
+        <div id="buttonCheck" style="display: flex; flex-direction: column">
+          <button>Подтвердить код</button>
+        </div>
+        <div class="labelInput">Пароль</div>
+        <input id="regPassword" type="password" name="" id="" />
+        <div class="labelInput">Повторите пароль</div>
+        <input id="regPasswordRepiat" type="password" name="" id="" />
+      </div>
+      <div id="buttonReg">
+        <button>Регистрация</button>
+      </div>
+      <div style="margin-top: 10px" id="buttonCheckAuth">
+        <button>Войти</button>
+      </div>
+    </div>
+  </div>
+  <script src="./js/main.js"></script>
+</body>
+
 </html>
