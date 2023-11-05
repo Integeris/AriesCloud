@@ -93,7 +93,7 @@ class DB
             $sql = "UPDATE code SET status = :newStatus WHERE email = :email";
             $stmt = $pdo->prepare($sql);
             $stmt->execute(['email' => $email, 'newStatus' => "yes"]);
-            echo "Good";
+            echo "True";
             return True;
         } else {
             return False;
