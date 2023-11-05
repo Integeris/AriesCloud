@@ -81,7 +81,22 @@ class DB
         $conn = null;
     }
 
-    public function checCode()
+    public function checkCode($email, $code)
     {
+        $pdo = $this->conn();
+
+        $state = $pdo->prepare("SELECT * FROM code WHERE email = :email AND cod=:cod");
+        $state->execute(['email' => $email, 'cod' => $code]);
+        $result = $state->fetch();
+
+        if ($result) {
+            $sql = "UPDATE code SET status = :newStatus WHERE email = :email";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(['email' => $email, 'newStatus' => "yes"]);
+            echo "Good";
+            return True;
+        } else {
+            return False;
+        }
     }
 }

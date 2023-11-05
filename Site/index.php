@@ -45,6 +45,12 @@ if ($segments[1] == "sendMail") {
     return;
 }
 
+if ($segments[1] == "checkCode") {
+    $get = new DB();
+    $get->checkCode($_POST["email"],$_POST["code"]);
+    return;
+}
+
 if ($segments[1] == "autorization") {
     $get = new authentication();
     $get->auth($_POST["login"], $_POST['password']);

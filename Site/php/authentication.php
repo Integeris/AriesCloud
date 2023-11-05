@@ -65,4 +65,7 @@ class authentication
             echo "Письмо не отправлено. Ошибка: " . $result;
         }
     }
+
+    
+
 }

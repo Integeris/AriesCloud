@@ -80,3 +80,15 @@ function sendMail(){
     },
   });
 }
+
+function checkCode(){
+  $.ajax({
+    url: window.location.href + "/checkCode",
+    method: "post",
+    dataType: "html",
+    data: {email:document.getElementById("regEmail").value,code:document.getElementById("regCode").value},
+    success: function (data) {
+      console.log(data);
+    },
+  });
+}
