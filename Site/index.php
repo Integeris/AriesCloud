@@ -17,13 +17,14 @@ $segments = explode('/', $route);
 $controllerName = '';
 $actionName = '';
 
+
 if (!empty($segments[0])) {
     $controllerName = ucfirst($segments[0]);
 }
 
 if ($segments[1] == "getFiles") {
     $get = new webFiles();
-    $get->getFiles("a001f87a8a7f6c2f009d7e2f8d3c588b");
+    $get->getFiles("4917b218a0c0ae2d48755a6a4accb711");
     return;
 }
 
@@ -36,18 +37,6 @@ if ($segments[1] == "delFiles") {
 if ($segments[1] == "exit") {
     $get = new authentication();
     $get->exit();
-    return;
-}
-
-if ($segments[1] == "sendMail") {
-    $get = new authentication();
-    $get->sendMail($_POST["email"]);
-    return;
-}
-
-if ($segments[1] == "checkCode") {
-    $get = new DB();
-    $get->checkCode($_POST["email"],$_POST["code"]);
     return;
 }
 
@@ -68,6 +57,12 @@ if ($segments[1] == "autorizationHash") {
     }
 }
 
+if ($segments[1] == "registration") {
+    $get = new authentication();
+    $get->reg($_POST["login"], $_POST['password'],$_POST['email']);
+    return;
+}
+
 if ($segments[0] == null) {
     $url = ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     $url = explode('?', $url);
@@ -75,6 +70,22 @@ if ($segments[0] == null) {
     header('Location: ' . $url . 'main');
     die();
 }
+
+if ($segments[0] == "checkCode") {
+    $urlWithData = $_SERVER['REQUEST_URI'];
+    $parsedUrl = parse_url($urlWithData);
+    parse_str($parsedUrl['query'], $query);
+    $code = $query['code'];
+    $email = $query['email'];
+    $get = new DB();
+    if($get->checkCode($email,$code)){
+        echo "Код успешно прошёл проверку";
+    }else{
+        echo "Проверка кода провалена";
+    }
+    return;
+}
+
 $controllerFile = 'php/' . $controllerName . '.php';
 if (file_exists($controllerFile)) {
     require_once $controllerFile;

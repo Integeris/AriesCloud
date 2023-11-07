@@ -1,92 +1,92 @@
-$('#buttonCheckReg').click(function () {
-
-  var clone = $('#containerAuth')
+$("#buttonCheckReg").click(function () {
+  var clone = $("#containerAuth");
   clone.css({
-    top: $('#containerAuth').offset().top,
-    left: $('#containerAuth').offset().left,
-    position: 'absolute'
-  })
+    top: $("#containerAuth").offset().top,
+    left: $("#containerAuth").offset().left,
+    position: "absolute",
+  });
 
-  clone.animate({
-      top: $('#target').offset().top,
-      left: $('#target').offset().left,
-      opacity: 0
+  clone.animate(
+    {
+      top: $("#target").offset().top,
+      left: $("#target").offset().left,
+      opacity: 0,
     },
 
     function () {
       document.getElementById("containerAuth").classList.add("non");
-    })
+    }
+  );
 
   document.getElementById("containerReg").classList.remove("non");
-  document.getElementById("containerReg").style.cssText=""
+  document.getElementById("containerReg").style.cssText = "";
   clone.animate({
-    top: $('#containerReg').offset().top,
-    left: $('#containerReg').offset().left,
-    opacity: 0
-  })
-})
+    top: $("#containerReg").offset().top,
+    left: $("#containerReg").offset().left,
+    opacity: 0,
+  });
+});
 
-$('#buttonCheckAuth').click(function () {
-
-  var clone = $('#containerReg')
+$("#buttonCheckAuth").click(function () {
+  var clone = $("#containerReg");
   clone.css({
-    top: $('#containerReg').offset().top,
-    left: $('#containerReg').offset().left,
-    position: 'absolute'
-  })
+    top: $("#containerReg").offset().top,
+    left: $("#containerReg").offset().left,
+    position: "absolute",
+  });
 
-  clone.animate({
-      top: $('#target').offset().top,
-      left: $('#target').offset().left,
-      opacity: 0
+  clone.animate(
+    {
+      top: $("#target").offset().top,
+      left: $("#target").offset().left,
+      opacity: 0,
     },
 
     function () {
       document.getElementById("containerReg").classList.add("non");
-    })
+    }
+  );
 
   document.getElementById("containerAuth").classList.remove("non");
-  document.getElementById("containerAuth").style.cssText=""
+  document.getElementById("containerAuth").style.cssText = "";
   clone.animate({
-    top: $('#containerAuth').offset().top,
-    left: $('#containerAuth').offset().left,
-    opacity: 0
-  })
-})
+    top: $("#containerAuth").offset().top,
+    left: $("#containerAuth").offset().left,
+    opacity: 0,
+  });
+});
 
-
-function auth(){
+function auth() {
   $.ajax({
     url: window.location.href + "/autorization",
     method: "post",
     dataType: "html",
-    data: {login:document.getElementById("login").value , password:document.getElementById("password").value},
+    data: {
+      login: document.getElementById("login").value,
+      password: document.getElementById("password").value,
+    },
     success: function (data) {
-      if(data=="Good"){
-        window.location.href=window.location.href.substring(0, window.location.href.lastIndexOf("main"))+"files"
+      if (data == "Good") {
+        window.location.href =
+          window.location.href.substring(
+            0,
+            window.location.href.lastIndexOf("main")
+          ) + "files";
       }
     },
   });
 }
 
-function sendMail(){
+function reg() {
   $.ajax({
-    url: window.location.href + "/sendMail",
+    url: window.location.href + "/registration",
     method: "post",
     dataType: "html",
-    data: {email:document.getElementById("regEmail").value},
-    success: function (data) {
-      console.log(data);
+    data: {
+      email: document.getElementById("regEmail").value,
+      password: document.getElementById("regPassword").value,
+      login: document.getElementById("regLogin").value,
     },
-  });
-}
-
-function checkCode(){
-  $.ajax({
-    url: window.location.href + "/checkCode",
-    method: "post",
-    dataType: "html",
-    data: {email:document.getElementById("regEmail").value,code:document.getElementById("regCode").value},
     success: function (data) {
       console.log(data);
     },

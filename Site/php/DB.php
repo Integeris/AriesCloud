@@ -50,50 +50,105 @@ class DB
         }
     }
 
-    public function reg($login, $password, $email)
+    public function checkCode($email, $code)
     {
+
+
+        $pdo = $this->conn();
+
+        $state = $pdo->prepare("SELECT * FROM code WHERE email = :email AND cod=:cod");
+        $state->execute(['email' => $email, 'cod' => $code]);
+        $result = $state->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            $login = $result["login"];
+            $password = $result["password"];
+            $email = $result["email"];
+            $hash = md5($login . ".*." . $password);
+            mkdir("./fileUsers/$hash");
+
+            $query = "INSERT INTO users (email, password, login,hash) VALUES (:email, :password, :login,:hash)";
+            $values = [
+                'email' => $email,
+                'login' => $login,
+                'password' => $password,
+                'hash' => $hash
+            ];
+            $stmt = $pdo->prepare($query);
+            $stmt->execute($values);
+
+            $deleteQuery = "DELETE FROM code WHERE email = :email";
+            $deleteValues = [
+                'email' => $email
+            ];
+            $deleteStmt = $pdo->prepare($deleteQuery);
+            $deleteStmt->execute($deleteValues);
+            if ($stmt->rowCount() > 0) {
+                return True;
+            } else {
+                return False;
+            }
+        } else {
+            return False;
+        }
     }
 
-    public function regCode($code, $email)
+    public function checkDB($nameDB, $name, $what)
     {
-        $conn = $this->conn();
+        $pdo = $this->conn();
 
-        $state = $conn->prepare("SELECT * FROM code WHERE email = :email");
+        $state = $pdo->prepare("SELECT * FROM $nameDB WHERE $name = :$name");
+        $state->execute(["$name" => $what]);
+        $result = $state->fetch();
+
+        if ($result) {
+            return False;
+        } else {
+            return True;
+        }
+    }
+
+    public function updateCode($email, $code)
+    {
+        $pdo = $this->conn();
+
+        $state = $pdo->prepare("SELECT * FROM code WHERE email = :email");
+        $state->execute(["email" => $email]);
+        $result = $state->fetch();
+
+        if ($result) {
+            $sql = "UPDATE code SET cod = :cod WHERE email = :email";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute(['email' => $email, 'cod' => $code]);
+            return True;
+        } else {
+            return False;
+        }
+    }
+
+    public function reg($login, $password, $email)
+    {
+        $pdo = $this->conn();
+        $state = $pdo->prepare("SELECT * FROM code WHERE email = :email");
         $state->execute(['email' => $email]);
         if ($state->rowCount() > 0) {
             $deleteQuery = "DELETE FROM code WHERE email = :email";
             $deleteValues = [
                 'email' => $email
             ];
-
-            $deleteStmt = $conn->prepare($deleteQuery);
+            $deleteStmt = $pdo->prepare($deleteQuery);
             $deleteStmt->execute($deleteValues);
         }
 
-        $query = "INSERT INTO code (email, cod, status) VALUES (:email, :cod, :status)";
+        $query = "INSERT INTO code (email, password, login) VALUES (:email, :password, :login)";
         $values = [
             'email' => $email,
-            'cod' => $code,
-            'status' => 'non'
+            'login' => $login,
+            'password' => $password
         ];
-        $stmt = $conn->prepare($query);
+        $stmt = $pdo->prepare($query);
         $stmt->execute($values);
-        $conn = null;
-    }
-
-    public function checkCode($email, $code)
-    {
-        $pdo = $this->conn();
-
-        $state = $pdo->prepare("SELECT * FROM code WHERE email = :email AND cod=:cod");
-        $state->execute(['email' => $email, 'cod' => $code]);
-        $result = $state->fetch();
-
-        if ($result) {
-            $sql = "UPDATE code SET status = :newStatus WHERE email = :email";
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute(['email' => $email, 'newStatus' => "yes"]);
-            echo "True";
+        if ($stmt->rowCount() > 0) {
             return True;
         } else {
             return False;

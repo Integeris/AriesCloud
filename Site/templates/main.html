@@ -35,21 +35,13 @@
         <input id="regLogin" type="text" />
         <div class="labelInput">Email</div>
         <input id="regEmail" type="text" />
-        <div id="buttonCode" style="display: flex; flex-direction: column">
-          <button onclick="sendMail()">Отправить код</button>
-        </div>
-        <div class="labelInput">Код подтверждения</div>
-        <input id="regCode" type="text" />
-        <div id="buttonCheck" style="display: flex; flex-direction: column">
-          <button onclick="checkCode()">Подтвердить код</button>
-        </div>
         <div class="labelInput">Пароль</div>
         <input id="regPassword" type="password" name="" id="" />
         <div class="labelInput">Повторите пароль</div>
         <input id="regPasswordRepiat" type="password" name="" id="" />
       </div>
       <div id="buttonReg">
-        <button>Регистрация</button>
+        <button onclick="reg()">Регистрация</button>
       </div>
       <div style="margin-top: 10px" id="buttonCheckAuth">
         <button>Войти</button>
