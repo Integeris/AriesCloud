@@ -67,10 +67,10 @@ class authentication
                 $db->updateCode($email,$randomCode);
                 return "True";
             } else {
-                echo "Письмо не отправлено. Ошибка: " . $result;
+                return "Письмо не отправлено. Ошибка: " . $result;
             }
         } else {
-            echo "False";
+            return "False";
         }
     }
 
@@ -80,10 +80,10 @@ class authentication
         if ($db->checkDB('users', 'email', $email)) {
             if ($db->checkDB('users', 'login', $login)) {
                 if ($db->reg($login, $password, $email)) {
-                    if ($this->sendMail($email)==True)
+                    if ($this->sendMail($email)=="True")
                         echo "Регистрация прошла успешно, проверьте почту";
                     else
-                        echo "Проверку почты не удалось осуществить";
+                        echo "Отправить письмо не удалось";
                 } else {
                     echo "Регистрация закончилась ошибкой";
                 }
