@@ -50,6 +50,8 @@
             this.pathTextBox = new System.Windows.Forms.TextBox();
             this.upButton = new System.Windows.Forms.Button();
             this.mainListView = new System.Windows.Forms.ListView();
+            this.columnName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.mainImageList = new System.Windows.Forms.ImageList(this.components);
             this.mainContextMenuStrip.SuspendLayout();
             this.mainMenuStrip.SuspendLayout();
             this.controlPanel.SuspendLayout();
@@ -227,15 +229,31 @@
             // 
             // mainListView
             // 
+            this.mainListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnName});
             this.mainListView.ContextMenuStrip = this.mainContextMenuStrip;
             this.mainListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainListView.HideSelection = false;
+            this.mainListView.LargeImageList = this.mainImageList;
             this.mainListView.Location = new System.Drawing.Point(0, 60);
             this.mainListView.Name = "mainListView";
             this.mainListView.Size = new System.Drawing.Size(542, 214);
+            this.mainListView.SmallImageList = this.mainImageList;
             this.mainListView.TabIndex = 7;
             this.mainListView.UseCompatibleStateImageBehavior = false;
             this.mainListView.View = System.Windows.Forms.View.Details;
+            // 
+            // columnName
+            // 
+            this.columnName.Text = "Название";
+            this.columnName.Width = 92;
+            // 
+            // mainImageList
+            // 
+            this.mainImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("mainImageList.ImageStream")));
+            this.mainImageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.mainImageList.Images.SetKeyName(0, "File.png");
+            this.mainImageList.Images.SetKeyName(1, "Folder.png");
             // 
             // MainForm
             // 
@@ -285,5 +303,7 @@
         private System.Windows.Forms.ListView mainListView;
         private System.Windows.Forms.ToolStripMenuItem createDirectoryContextToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createDirectoryToolStripMenuItem;
+        private System.Windows.Forms.ColumnHeader columnName;
+        private System.Windows.Forms.ImageList mainImageList;
     }
 }

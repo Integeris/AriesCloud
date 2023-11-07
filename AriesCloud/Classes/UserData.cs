@@ -6,19 +6,9 @@
     public static class UserData
     {
         /// <summary>
-        /// Электронная почта.
+        /// Хеш.
         /// </summary>
-        public static string Email { get; set; }
-
-        /// <summary>
-        /// Логин.
-        /// </summary>
-        public static string Login { get; set; }
-
-        /// <summary>
-        /// Пароль.
-        /// </summary>
-        public static string Password { get; set; }
+        public static string Hash { get; set; }
 
         /// <summary>
         /// Путь к ключу.

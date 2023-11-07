@@ -77,7 +77,7 @@
             this.generateKeyButton.Location = new System.Drawing.Point(314, 38);
             this.generateKeyButton.Name = "generateKeyButton";
             this.generateKeyButton.Size = new System.Drawing.Size(185, 31);
-            this.generateKeyButton.TabIndex = 6;
+            this.generateKeyButton.TabIndex = 3;
             this.generateKeyButton.Text = "Сгенерировать новый";
             this.generateKeyButton.UseVisualStyleBackColor = true;
             this.generateKeyButton.Click += new System.EventHandler(this.GenerateKeyButtonOnClick);
@@ -89,7 +89,7 @@
             this.changeKeyButton.Location = new System.Drawing.Point(470, 6);
             this.changeKeyButton.Name = "changeKeyButton";
             this.changeKeyButton.Size = new System.Drawing.Size(29, 26);
-            this.changeKeyButton.TabIndex = 5;
+            this.changeKeyButton.TabIndex = 2;
             this.changeKeyButton.Text = "...";
             this.changeKeyButton.UseVisualStyleBackColor = true;
             this.changeKeyButton.Click += new System.EventHandler(this.ChangeKeyButtonOnClick);
@@ -183,7 +183,7 @@
             this.applyButton.Location = new System.Drawing.Point(318, 106);
             this.applyButton.Name = "applyButton";
             this.applyButton.Size = new System.Drawing.Size(184, 31);
-            this.applyButton.TabIndex = 9;
+            this.applyButton.TabIndex = 4;
             this.applyButton.Text = "Применить";
             this.applyButton.UseVisualStyleBackColor = false;
             this.applyButton.Click += new System.EventHandler(this.ApplyButtonOnClick);

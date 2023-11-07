@@ -53,7 +53,15 @@ namespace AriesCloud.Forms
                 return;
             }
 
-            // TODO: Отправка запроса на регистрацию. Обработка плохих ответов.
+            try
+            {
+                Core.Registration(emailTextBox.Text, loginTextBox.Text, passwordTextBox.Text);
+            }
+            catch (Exception ex)
+            {
+                InfoViewer.ShowError(ex);
+                return;
+            }
 
             InfoViewer.ShowInformation("Сообщение подтверждения регистрации отправлено на электронную почту.");
             Close();

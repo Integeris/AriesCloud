@@ -30,6 +30,7 @@ namespace AriesCloud.Forms
             // TODO: Сделать провеку всех полей.
 
             UserData.KeyPath = keyPathTextBox.Text;
+            Configurator.Save();
 
             // TODO: Сохранить текущие настройки.
 

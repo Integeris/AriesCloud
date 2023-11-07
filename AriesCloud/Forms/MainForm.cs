@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AriesCloud.Classes;
+using System;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace AriesCloud.Forms
@@ -9,15 +11,23 @@ namespace AriesCloud.Forms
     public partial class MainForm : Form
     {
         /// <summary>
+        /// Файловый менеджер.
+        /// </summary>
+        private readonly FileManager fileManager;
+
+        /// <summary>
         /// Создание главной формы.
         /// </summary>
         public MainForm()
         {
             InitializeComponent();
 
-            KeyPreview = true;
+            typeof(ListView)
+                .GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic)
+                .SetValue(mainListView, true);
 
-            // TODO: Считать настройки из файла конфигурации.
+            KeyPreview = true;
+            fileManager = new FileManager();
 
             UpdateFiles();
         }
@@ -169,7 +179,37 @@ namespace AriesCloud.Forms
         /// </summary>
         private void UpdateFiles()
         {
-            // TODO: Добавить обновление списка файлов.
+            fileManager.GetDirectoryItems();
+            mainListView.BeginUpdate();
+
+            try
+            {
+                mainListView.Items.Clear();
+
+                foreach (Directory directory in fileManager.Directories)
+                {
+                    ListViewItem listViewItem = new ListViewItem(directory.Name, 1)
+                    {
+                        Tag = directory
+                    };
+
+                    mainListView.Items.Add(listViewItem);
+                }
+
+                foreach (File file in fileManager.Files)
+                {
+                    ListViewItem listViewItem = new ListViewItem(file.Name, 0)
+                    {
+                        Tag = file
+                    };
+
+                    mainListView.Items.Add(listViewItem);
+                }
+            }
+            finally
+            {
+                mainListView.EndUpdate();
+            }
         }
 
         /// <summary>
