@@ -24,7 +24,7 @@ if (!empty($segments[0])) {
 
 if ($segments[1] == "getFiles") {
     $get = new webFiles();
-    $get->getFiles("4917b218a0c0ae2d48755a6a4accb711");
+    $get->getFiles("a001f87a8a7f6c2f009d7e2f8d3c588b");
     return;
 }
 

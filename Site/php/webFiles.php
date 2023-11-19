@@ -37,4 +37,19 @@ class webFiles
         rmdir($dir);
     }
 
+    public function uploadSite()
+    {
+    }
+
+    public function downloadSite()
+    {
+    }
+
+    public function uploadAPI()
+    {
+    }
+
+    public function downloadAPI()
+    {
+    }
 }

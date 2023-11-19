@@ -125,3 +125,29 @@ getFiles();
 function dublClick(btn) {
   console.log("db");
 }
+
+function openUpload(name){
+  var popupWindow = document.getElementById('popup'+name);
+    var popupClose = document.getElementById('close'+name);
+
+    showPopup(popupWindow);
+
+    popupClose.onclick = function () {
+        hidePopup(popupWindow);
+    }
+
+    window.onclick = function (event) {
+        if (event.target == popupWindow) {
+            hidePopup(popupWindow);
+        }
+    }
+}
+
+function showPopup(e) {
+  e.style.display = 'block';
+}
+
+
+function hidePopup(e) {
+  e.style.display = 'none';
+}
