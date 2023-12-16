@@ -328,6 +328,7 @@ class Scrambler
     public function decriptBlock($block)
     {
         if (count($block) != $this->blockSize) {
+            var_dump($block);
             throw new \OutOfRangeException("Длина массива должна быть 16 байт.");
         }
 

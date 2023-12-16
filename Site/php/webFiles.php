@@ -62,14 +62,16 @@ class webFiles
 
             $block = fread($file, 16);
             $parse = [];
-            for ($i = 0; $i < strlen($block); $i++) {
+            $block=unpack('C*', $block);
+            $block=array_values($block);
+            /* for ($i = 0; $i < strlen($block); $i++) {
                 array_push($parse, ord($block[$i]));
             }
-            $block = $parse;
+            $block = $parse; */
             $encryptedFileContent[] = $block;
         }
-
         $lastArray = end($encryptedFileContent);
+        var_dump($lastArray);
         if (count($lastArray) == 16) {
             $arr = [];
             for ($i = 0; $i < 15; $i++) {
@@ -87,14 +89,15 @@ class webFiles
             }
             $lastArray[] = $k;
         }
+        var_dump($lastArray);
         array_push($encryptedFileContent, $lastArray);
-        var_dump($encryptedFileContent);
         $criptMass = [];
         $scram = new Scrambler($key);
         foreach ($encryptedFileContent as $value) {
             $processedBlock = $scram->encriptBlock($value);
             $criptMass[] = $processedBlock;
         }
+
         // Шифрование файла
         $endArr = [];
         foreach ($criptMass as $str) {
@@ -102,13 +105,13 @@ class webFiles
                 $endArr[] = $val;
             }
         }
-        $parse = [];
+        /* $parse = [];
         for ($i = 0; $i < count($endArr); $i++) {
-            array_push($parse, chr($key[$i] + 65));
-        }
-        $encryptedFileContent = $parse;
-        $encryptedFileContent = implode('', $encryptedFileContent);
-        echo $encryptedFileContent;
+            array_push($parse, chr($key[$i]));
+        }*/
+        $encryptedFileContent = $endArr;
+        $encryptedFileContent=implode(array_map('chr', $encryptedFileContent));
+        //$encryptedFileContent = implode('', $encryptedFileContent);
         // Сохранение файла в определенной директории
         $encryptedFilePath = "./fileUsers/a001f87a8a7f6c2f009d7e2f8d3c588b/" . $fileToEncrypt['name'];
         file_put_contents($encryptedFilePath, $encryptedFileContent);
@@ -143,24 +146,24 @@ class webFiles
                 while (!feof($fileContents)) {
 
                     $block = fread($fileContents, 16);
-                    var_dump($block);
-                    if (strlen($block) == 0) {
+                    $block=unpack('C*', $block);
+                    $block=array_values($block);
+                    if(count($block)!=16){
                         break;
                     }
-                    $parse = [];
+                    /* $parse = [];
                     for ($i = 0; $i < strlen($block); $i++) {
                         array_push($parse, ord($block[$i]));
                     }
-                    $block = $parse;
-
+                    $block = $parse; */
                     $processedBlock = $scram->decriptBlock($block);
                     $encryptedFileContent[] = $processedBlock;
                 }
                 $lastArray = end($encryptedFileContent);
+                
                 array_pop($encryptedFileContent);
 
 
-                die;
 
                 $rev = array_reverse($lastArray);
                 $k = 0;
@@ -176,9 +179,10 @@ class webFiles
                     array_pop($lastArray);
                 } else if ($k == end($lastArray) && $k == 16) {
                     $lastArray == "fall";
-                } else if ($k == end($lastArray)) {
+                } else if ($k >= end($lastArray)) {
+                    $j=end($lastArray);
                     $i = 0;
-                    while ($k + 1 != $i) {
+                    while ($j + 1 != $i) {
                         array_pop($lastArray);
                         $i++;
                     }
@@ -195,12 +199,13 @@ class webFiles
                         $endArr[] = $val;
                     }
                 }
-                $parse = [];
+                /* $parse = [];
                 for ($i = 0; $i < count($endArr); $i++) {
-                    array_push($parse, chr($key[$i] + 65));
-                }
-                $encryptedFileContent = $parse;
-                $encryptedFileContent = implode('', $encryptedFileContent);
+                    array_push($parse, chr($key[$i]));
+                }*/
+                $encryptedFileContent = $endArr; 
+                $encryptedFileContent=implode(array_map('chr', $encryptedFileContent));
+                //$encryptedFileContent = implode('', $encryptedFileContent);
                 // Отправляем файл пользователю для скачивания
                 header('Content-Type: application/octet-stream');
                 header('Content-Disposition: attachment; filename="' . basename($file) . '"');

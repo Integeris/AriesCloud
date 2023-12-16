@@ -14,7 +14,7 @@ use Service\authentication;
 if (isset($_GET['socket'])) {
     $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
     $serverIp = 'site.test'; // Можно указать как url так и ip
-    $port = 1234;
+    $port = 80;
     socket_connect($socket, $serverIp, $port);
 
     $hash = socket_read($socket, 1024, PHP_NORMAL_READ);
