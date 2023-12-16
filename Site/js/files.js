@@ -122,32 +122,97 @@ function exit() {
 
 getFiles();
 
-function dublClick(btn) {
-  console.log("db");
-}
+function openWindows(name) {
+  var popupWindow = document.getElementById("popup" + name);
+  var popupClose = document.getElementById("close" + name);
 
-function openUpload(name){
-  var popupWindow = document.getElementById('popup'+name);
-    var popupClose = document.getElementById('close'+name);
+  showPopup(popupWindow);
 
-    showPopup(popupWindow);
+  popupClose.onclick = function () {
+    hidePopup(popupWindow);
+  };
 
-    popupClose.onclick = function () {
-        hidePopup(popupWindow);
+  window.onclick = function (event) {
+    if (event.target == popupWindow) {
+      hidePopup(popupWindow);
     }
-
-    window.onclick = function (event) {
-        if (event.target == popupWindow) {
-            hidePopup(popupWindow);
-        }
-    }
+  };
 }
 
 function showPopup(e) {
-  e.style.display = 'block';
+  e.style.display = "block";
 }
-
 
 function hidePopup(e) {
-  e.style.display = 'none';
+  e.style.display = "none";
 }
+
+var files = [];
+
+function downloadFiles(mode) {
+  if ((mode = "right")) {
+    files.push(elem);
+  }
+  nameFiles = [];
+  files.forEach((element) => {
+    nameFiles.push(element.children[1].innerText);
+  });
+  var key = $("#key")[0].files[0];
+  var way = $("#way")[0].innerText;
+  var formData = new FormData();
+  formData.append("keyFile", key);
+  formData.append("nameFiles", JSON.stringify(nameFiles));
+  formData.append("dir", way);
+  $.ajax({
+    url: window.location.href + "/downloadSiteFiles",
+    type: "POST",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (response) {
+      //console.log(response);
+      var link = document.createElement("a");
+        link.href = "data:application/octet-stream," + encodeURIComponent(response);
+        link.download = nameFiles[0];
+        link.click();
+        files = [];
+        nameFiles = [];
+    },
+  });
+}
+
+function uploadFiles(mode) {
+  var key = $("#key")[0].files[0];
+  var file = $("#file")[0].files[0];
+  var way = $("#way")[0].innerText;
+  var formData = new FormData();
+  formData.append("keyFile", key);
+  formData.append("file", file);
+  formData.append("dir", way);
+  $.ajax({
+    url: window.location.href + "/uploadSiteFiles",
+    type: "POST",
+    data: formData,
+    processData: false,
+    contentType: false,
+    success: function (data) {
+      getFiles();
+    },
+  });
+}
+
+function selectedMod() {}
+
+function selected(e) {}
+
+function back() {}
+
+function openFolder() {}
+
+function createFolder() {}
+
+function move() {}
+
+function rename() {}
+
+function unselected() {}

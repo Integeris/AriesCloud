@@ -300,9 +300,9 @@ class Scrambler
         for ($i = 0; $i < 10; $i++) {
             $this->keys[$i] = array_fill(0, 16, 0);
         }
-
-        array_splice($this->keys[0], 0, 16, array_slice($key, 0, 16));
-        array_splice($this->keys[1], 0, 16, array_slice($key, 16, 16));
+        $keyArray = $key;
+        array_splice($this->keys[0], 0, 16, array_slice($keyArray, 0, 16));
+        array_splice($this->keys[1], 0, 16, array_slice($keyArray, 16, 16));
 
         $this->generationRoundKeys();
     }
@@ -314,7 +314,6 @@ class Scrambler
         }
 
         $result = $block;
-
         for ($i = 0; $i < 9; $i++) {
             $this->exclusiveOR($result, $this->keys[$i]);
             $this->replaceBytes($result, $this->replaceBytes);
@@ -348,7 +347,7 @@ class Scrambler
     private function exclusiveOR(&$source, $key)
     {
         for ($i = 0; $i < $this->blockSize; $i++) {
-            $source[$i] ^= $key[$i];
+            $source[$i] = $source[$i] ^ $key[$i];
         }
     }
 
@@ -361,24 +360,27 @@ class Scrambler
 
     private function gaussiaMultiplication($origin, $key)
     {
+        $origin = $origin % 256;
+        $key = $key % 256;
         $result = 0;
-
+        
+        // цикл для каждого бита (В байте 8 битов)
         for ($i = 0; $i < 8; $i++) {
+            // Если младший бит ключа равен 1.
             if (($key & 0b01) == 1) {
                 $result ^= $origin;
             }
-
             $key >>= 1;
 
-            $higherBit = $origin & 0b10000000;
+            // Вычисляем старший бит исходного байта.
+            $higherBit = ($origin & 0b10000000);
             $origin <<= 1;
-
             if ($higherBit != 0) {
-                $origin ^= 195; // x^8 + x^7 + x^6 + x + 1
+                $origin ^= 195; // x^8 + x^7 + x^6 + x + 1.
             }
         }
-
-        return $result;
+        
+        return $result % 256;
     }
 
     private function transformBlock(&$block)
@@ -386,12 +388,15 @@ class Scrambler
         $sum = $this->gaussiaMultiplication($block[0], $this->linearTransformation[0]);
 
         for ($i = 1; $i < $this->blockSize; $i++) {
+
             $block[$i - 1] = $block[$i];
+
             $sum ^= $this->gaussiaMultiplication($block[$i], $this->linearTransformation[$i]);
         }
 
         $block[15] = $sum;
     }
+
     private function reversTransformBlock(&$block)
     {
         $sum = $block[15];

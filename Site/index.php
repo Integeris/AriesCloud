@@ -5,13 +5,35 @@ namespace Site;
 require './php/DB.php';
 require './php/webFiles.php';
 require './php/authentication.php';
+require './php/scrambler.php';
 
 use Service\DB;
 use Service\webFiles;
 use Service\authentication;
 
-$db = new DB();
-$db->conn();
+if (isset($_GET['socket'])) {
+    $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+    $serverIp = 'site.test'; // Можно указать как url так и ip
+    $port = 1234;
+    socket_connect($socket, $serverIp, $port);
+
+    $hash = socket_read($socket, 1024, PHP_NORMAL_READ);
+
+    $get = new DB();
+    if ($get->auth($hash)) {
+        $mode = socket_read($socket, 1024, PHP_NORMAL_READ);
+        if ($mode == "write") {
+            webFiles::uploadAPI($socket, $hash);
+        } else if ($mode == "read") {
+            webFiles::downloadAPI($socket, $hash);
+        }
+    } else {
+        echo "DONT HASH";
+    }
+    return;
+}
+
+
 $route = $_GET['route'];
 $segments = explode('/', $route);
 $controllerName = '';
@@ -31,6 +53,18 @@ if ($segments[1] == "getFiles") {
 if ($segments[1] == "delFiles") {
     $get = new webFiles();
     $get->delFiles("a001f87a8a7f6c2f009d7e2f8d3c588b");
+    return;
+}
+
+if ($segments[1] == "downloadSiteFiles") {
+    $get = new webFiles();
+    $get->downloadSite();
+    return;
+}
+
+if ($segments[1] == "uploadSiteFiles") {
+    $get = new webFiles();
+    $get->uploadSite();
     return;
 }
 
@@ -59,7 +93,7 @@ if ($segments[1] == "autorizationHash") {
 
 if ($segments[1] == "registration") {
     $get = new authentication();
-    $get->reg($_POST["login"], $_POST['password'],$_POST['email']);
+    $get->reg($_POST["login"], $_POST['password'], $_POST['email']);
     return;
 }
 
@@ -78,9 +112,9 @@ if ($segments[0] == "checkCode") {
     $code = $query['code'];
     $email = $query['email'];
     $get = new DB();
-    if($get->checkCode($email,$code)){
+    if ($get->checkCode($email, $code)) {
         echo "Код успешно прошёл проверку";
-    }else{
+    } else {
         echo "Проверка кода провалена";
     }
     return;
