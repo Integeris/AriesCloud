@@ -11,6 +11,8 @@ use Service\DB;
 use Service\webFiles;
 use Service\authentication;
 
+
+
 if (isset($_GET['socket'])) {
     $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
     $serverIp = 'site.test'; // Можно указать как url так и ip
@@ -21,6 +23,7 @@ if (isset($_GET['socket'])) {
 
     $get = new DB();
     if ($get->auth($hash)) {
+        socket_write($socket, "ОК");
         $mode = socket_read($socket, 1024, PHP_NORMAL_READ);
         if ($mode == "write") {
             webFiles::uploadAPI($socket, $hash);
@@ -53,6 +56,12 @@ if ($segments[1] == "getFiles") {
 if ($segments[1] == "delFiles") {
     $get = new webFiles();
     $get->delFiles("a001f87a8a7f6c2f009d7e2f8d3c588b");
+    return;
+}
+
+if ($segments[1] == "createFolder") {
+    $get = new webFiles();
+    $get->createFolder("a001f87a8a7f6c2f009d7e2f8d3c588b");
     return;
 }
 

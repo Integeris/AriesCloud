@@ -22,6 +22,8 @@ function rightClick(e) {
   }
 }
 
+var dir="/"
+
 function fileGeneration(files) {
   var parent = document.getElementById("files");
   parent.innerHTML = "";
@@ -88,8 +90,9 @@ function getFiles() {
     url: window.location.href + "/getFiles",
     method: "post",
     dataType: "html",
-    data: {},
+    data: {dir: dir},
     success: function (data) {
+      $("#way")[0].innerText=dir;
       fileGeneration(JSON.parse(data));
       stopLoader();
     },
@@ -158,7 +161,7 @@ function downloadFiles(mode) {
     nameFiles.push(element.children[1].innerText);
   });
   var key = $("#key")[0].files[0];
-  var way = $("#way")[0].innerText;
+  var way = dir;
   var formData = new FormData();
   formData.append("keyFile", key);
   formData.append("nameFiles", JSON.stringify(nameFiles));
@@ -184,7 +187,7 @@ function downloadFiles(mode) {
 function uploadFiles(mode) {
   var key = $("#key")[0].files[0];
   var file = $("#file")[0].files[0];
-  var way = $("#way")[0].innerText;
+  var way = dir;
   var formData = new FormData();
   formData.append("keyFile", key);
   formData.append("file", file);
@@ -207,9 +210,21 @@ function selected(e) {}
 
 function back() {}
 
-function openFolder() {}
+function openFolder() {
+  
+}
 
-function createFolder() {}
+function createFolder() {
+  $.ajax({
+    url: window.location.href + "/createFolder",
+    method: "post",
+    dataType: "html",
+    data: { dir: dir, nameFolder: $("#inputFolder")[0].value},
+    success: function (data) {
+      getFiles();
+    },
+  });
+}
 
 function move() {}
 
