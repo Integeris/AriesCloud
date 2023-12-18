@@ -22,7 +22,7 @@ function rightClick(e) {
   }
 }
 
-var dir="/"
+var dir = "/";
 
 function fileGeneration(files) {
   var parent = document.getElementById("files");
@@ -45,6 +45,7 @@ function fileGeneration(files) {
     } else {
       s = "";
     }
+    mode = "";
     switch (s) {
       case "xlsx":
         str += "xlsx.png";
@@ -71,6 +72,7 @@ function fileGeneration(files) {
         str += "cmd.png";
         break;
       case "":
+        mode = "f";
         str += "folder.png";
         break;
       default:
@@ -80,6 +82,8 @@ function fileGeneration(files) {
     img.src = str;
     child.appendChild(img);
     child.appendChild(label);
+    if ((mode = "f")) child.setAttribute("onclick", "openFolder(this)");
+    mode = "";
     parent.appendChild(child);
   });
 }
@@ -90,9 +94,9 @@ function getFiles() {
     url: window.location.href + "/getFiles",
     method: "post",
     dataType: "html",
-    data: {dir: dir},
+    data: { dir: dir },
     success: function (data) {
-      $("#way")[0].innerText=dir;
+      $("#way")[0].innerText = dir;
       fileGeneration(JSON.parse(data));
       stopLoader();
     },
@@ -175,11 +179,12 @@ function downloadFiles(mode) {
     success: function (response) {
       //console.log(response);
       var link = document.createElement("a");
-        link.href = "data:application/octet-stream," + encodeURIComponent(response);
-        link.download = nameFiles[0];
-        link.click();
-        files = [];
-        nameFiles = [];
+      link.href =
+        "data:application/octet-stream," + encodeURIComponent(response);
+      link.download = nameFiles[0];
+      link.click();
+      files = [];
+      nameFiles = [];
     },
   });
 }
@@ -208,10 +213,15 @@ function selectedMod() {}
 
 function selected(e) {}
 
-function back() {}
+function back() {
+    dir = dir.replace(/\/[^/]+\/$/, "/");
+    getFiles();
+}
 
-function openFolder() {
-  
+function openFolder(e) {
+  dir += e.children[1].innerText + "/";
+  console.log(dir);
+  getFiles();
 }
 
 function createFolder() {
@@ -219,7 +229,7 @@ function createFolder() {
     url: window.location.href + "/createFolder",
     method: "post",
     dataType: "html",
-    data: { dir: dir, nameFolder: $("#inputFolder")[0].value},
+    data: { dir: dir, nameFolder: $("#inputFolder")[0].value },
     success: function (data) {
       getFiles();
     },

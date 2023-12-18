@@ -31,7 +31,7 @@ if (isset($_GET['socket'])) {
             webFiles::downloadAPI($socket, $hash);
         }
     } else {
-        echo "DONT HASH";
+        socket_write($socket, "DONT HASH");
     }
     return;
 }
