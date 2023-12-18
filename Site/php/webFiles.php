@@ -291,7 +291,7 @@ class webFiles
         $filePath = socket_read($socket, 1024);
         $path = "./fileUsers/$hash/$filePath";
         socket_write($socket, "READY");
-        $file = fopen($path, "wr");
+        $file = fopen($path, "w");
         while ($data = socket_read($socket, 1024)) {
             fwrite($file, $data, strlen($data));
         }
