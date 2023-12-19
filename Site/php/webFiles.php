@@ -208,8 +208,12 @@ class webFiles
                 $encryptedFileContent = implode(array_map('chr', $encryptedFileContent));
                 //$encryptedFileContent = implode('', $encryptedFileContent);
                 // Отправляем файл пользователю для скачивания
-                header('Content-Type: application/octet-stream; charset=utf-8');
+                header('Content-Description: File Transfer');
+                header('Content-Type: application/octet-stream');
                 header('Content-Disposition: attachment; filename="' . basename($file) . '"');
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate');
+                header('Pragma: public');
                 echo $encryptedFileContent;
                 exit;
             } else {
@@ -272,6 +276,7 @@ class webFiles
                     $zip->close();
 
                     // Отправляем архив пользователю для скачивания
+                    
                     header('Content-Type: application/octet-stream');
                     header('Content-Disposition: attachment; filename="' . $zipName . '"');
                     readfile($zipName);
@@ -299,11 +304,11 @@ class webFiles
 
     public static function downloadAPI($hash)
     {
-        $dir = "./fileUsers/$hash/" . $_POST["dir"] . "/".$_POST["fileName"];
+        $dir = "./fileUsers/$hash/" . $_POST["dir"] . "/" . $_POST["fileName"];
         if (file_exists($dir)) {
             header('Content-Description: File Transfer');
             header('Content-Type: application/octet-stream');
-            header('Content-Disposition: attachment; filename="'.basename($dir).'"');
+            header('Content-Disposition: attachment; filename="' . basename($dir) . '"');
             header('Expires: 0');
             header('Cache-Control: must-revalidate');
             header('Pragma: public');
