@@ -11,7 +11,7 @@ class webFiles
 {
     public function getFiles($uid)
     {
-        $files = scandir("./fileUsers/$uid/".$_POST["dir"]);
+        $files = scandir("./fileUsers/$uid/" . $_POST["dir"]);
         $files = array_diff($files, array('.', '..'));
         echo json_encode($files);
     }
@@ -62,8 +62,8 @@ class webFiles
 
             $block = fread($file, 16);
             $parse = [];
-            $block=unpack('C*', $block);
-            $block=array_values($block);
+            $block = unpack('C*', $block);
+            $block = array_values($block);
             /* for ($i = 0; $i < strlen($block); $i++) {
                 array_push($parse, ord($block[$i]));
             }
@@ -95,7 +95,7 @@ class webFiles
         $criptMass = [];
         $scram = new Scrambler($key);
         foreach ($encryptedFileContent as $value) {
-            $processedBlock =$value;// $scram->encriptBlock($value);
+            $processedBlock = $value; // $scram->encriptBlock($value);
             $criptMass[] = $processedBlock;
         }
 
@@ -111,10 +111,10 @@ class webFiles
             array_push($parse, chr($key[$i]));
         }*/
         $encryptedFileContent = $endArr;
-        $encryptedFileContent=implode(array_map('chr', $encryptedFileContent));
+        $encryptedFileContent = implode(array_map('chr', $encryptedFileContent));
         //$encryptedFileContent = implode('', $encryptedFileContent);
         // Сохранение файла в определенной директории
-        $encryptedFilePath = "./fileUsers/a001f87a8a7f6c2f009d7e2f8d3c588b/".$_POST["dir"]."/" . $fileToEncrypt['name'];
+        $encryptedFilePath = "./fileUsers/a001f87a8a7f6c2f009d7e2f8d3c588b/" . $_POST["dir"] . "/" . $fileToEncrypt['name'];
         file_put_contents($encryptedFilePath, $encryptedFileContent);
 
         echo 'Файл успешно загружен и зашифрован.';
@@ -141,15 +141,15 @@ class webFiles
             // Если список содержит только один файл, скачиваем его
             if ($count === 1) {
                 $file = $files[0];
-                $fileContents = fopen("./fileUsers/a001f87a8a7f6c2f009d7e2f8d3c588b/" .$_POST["dir"]."/". $file, 'rb');
+                $fileContents = fopen("./fileUsers/a001f87a8a7f6c2f009d7e2f8d3c588b/" . $_POST["dir"] . "/" . $file, 'rb');
                 $encryptedFileContent = [];
                 $scram = new Scrambler($key);
                 while (!feof($fileContents)) {
 
                     $block = fread($fileContents, 16);
-                    $block=unpack('C*', $block);
-                    $block=array_values($block);
-                    if(count($block)!=16){
+                    $block = unpack('C*', $block);
+                    $block = array_values($block);
+                    if (count($block) != 16) {
                         break;
                     }
                     /* $parse = [];
@@ -157,11 +157,11 @@ class webFiles
                         array_push($parse, ord($block[$i]));
                     }
                     $block = $parse; */
-                    $processedBlock =$block;// $scram->decriptBlock($block);
+                    $processedBlock = $block; // $scram->decriptBlock($block);
                     $encryptedFileContent[] = $processedBlock;
                 }
                 $lastArray = end($encryptedFileContent);
-                
+
                 array_pop($encryptedFileContent);
 
 
@@ -181,7 +181,7 @@ class webFiles
                 } else if ($k == end($lastArray) && $k == 16) {
                     $lastArray == "fall";
                 } else if ($k >= end($lastArray)) {
-                    $j=end($lastArray);
+                    $j = end($lastArray);
                     $i = 0;
                     while ($j + 1 != $i) {
                         array_pop($lastArray);
@@ -204,8 +204,8 @@ class webFiles
                 for ($i = 0; $i < count($endArr); $i++) {
                     array_push($parse, chr($key[$i]));
                 }*/
-                $encryptedFileContent = $endArr; 
-                $encryptedFileContent=implode(array_map('chr', $encryptedFileContent));
+                $encryptedFileContent = $endArr;
+                $encryptedFileContent = implode(array_map('chr', $encryptedFileContent));
                 //$encryptedFileContent = implode('', $encryptedFileContent);
                 // Отправляем файл пользователю для скачивания
                 header('Content-Type: application/octet-stream; charset=utf-8');
@@ -219,7 +219,7 @@ class webFiles
 
                 if ($zip->open($zipName, ZipArchive::CREATE) === true) {
                     foreach ($files as $file) {
-                        $fileContents = fopen("./fileUsers/a001f87a8a7f6c2f009d7e2f8d3c588b/" .$_POST["dir"]."/". $file, 'rb');
+                        $fileContents = fopen("./fileUsers/a001f87a8a7f6c2f009d7e2f8d3c588b/" . $_POST["dir"] . "/" . $file, 'rb');
                         $encryptedFileContent = [];
                         $scram = new Scrambler($key);
                         while (!feof($fileContents)) {
@@ -285,44 +285,40 @@ class webFiles
         }
     }
 
-    public static function uploadAPI($socket, $hash)
+    public static function uploadAPI($hash)
     {
-        socket_write($socket, "PATH");
-        $filePath = socket_read($socket, 1024);
-        $path = "./fileUsers/$hash/$filePath";
-        socket_write($socket, "READY");
-        $file = fopen($path, "w");
-        while ($data = socket_read($socket, 1024)) {
-            fwrite($file, $data, strlen($data));
-        }
+        $dir = "./fileUsers/$hash/" . $_POST["dir"] . "/";
+        $file = $dir . basename($_FILES["file"]["name"]);
 
-        fclose($file);
-        socket_write($socket, "GOOD");
-        socket_close($socket);
+        if (move_uploaded_file($_FILES["file"]["tmp_name"], $file)) {
+            echo "True";
+        } else {
+            echo "False";
+        }
     }
 
-    public static function downloadAPI($socket, $hash)
+    public static function downloadAPI($hash)
     {
-        socket_write($socket, "PATH");
-        $filePath = socket_read($socket, 1024);
-        $path = "./fileUsers/$hash/$filePath";
-        socket_write($socket, "READY");
-        $file = fopen($path, 'rb');
-        while (!feof($file)) {
-            $buffer = fread($file, 1024);
-            socket_write($socket, $buffer, strlen($buffer));
+        $dir = "./fileUsers/$hash/" . $_POST["dir"] . "/".$_POST["fileName"];
+        if (file_exists($dir)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="'.basename($dir).'"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($dir));
+            readfile($dir);
         }
-        fclose($file);
-        socket_write($socket, "GOOD");
-        socket_close($socket);
     }
 
-    public function createFolder($hash){
-        $dir = "./fileUsers/$hash/".$_POST['dir']."/".$_POST['nameFolder'];
+    public function createFolder($hash)
+    {
+        $dir = "./fileUsers/$hash/" . $_POST['dir'] . "/" . $_POST['nameFolder'];
         if (!file_exists($dir)) {
             mkdir($dir, 0777, true);
             echo "True";
-        }else{
+        } else {
             echo "False";
         }
     }

@@ -13,30 +13,6 @@ use Service\authentication;
 
 
 
-if (isset($_GET['socket'])) {
-    $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-    $serverIp = 'site.test'; // Можно указать как url так и ip
-    $port = 80;
-    socket_connect($socket, $serverIp, $port);
-
-    $hash = socket_read($socket, 1024, PHP_NORMAL_READ);
-
-    $get = new DB();
-    if ($get->auth($hash)) {
-        socket_write($socket, "ОК");
-        $mode = socket_read($socket, 1024, PHP_NORMAL_READ);
-        if ($mode == "write") {
-            webFiles::uploadAPI($socket, $hash);
-        } else if ($mode == "read") {
-            webFiles::downloadAPI($socket, $hash);
-        }
-    } else {
-        socket_write($socket, "DONT HASH");
-    }
-    return;
-}
-
-
 $route = $_GET['route'];
 $segments = explode('/', $route);
 $controllerName = '';
@@ -74,6 +50,18 @@ if ($segments[1] == "downloadSiteFiles") {
 if ($segments[1] == "uploadSiteFiles") {
     $get = new webFiles();
     $get->uploadSite();
+    return;
+}
+
+if ($segments[1] == "downloadAPI") {
+    $get = new webFiles();
+    $get->downloadAPI($_POST["hash"]);
+    return;
+}
+
+if ($segments[1] == "uploadAPI") {
+    $get = new webFiles();
+    $get->uploadAPI($_POST["hash"]);
     return;
 }
 
