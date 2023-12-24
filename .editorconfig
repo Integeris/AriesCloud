@@ -146,3 +146,6 @@ dotnet_style_namespace_match_folder = true:suggestion
 dotnet_code_quality_unused_parameters = all:suggestion
 dotnet_style_predefined_type_for_locals_parameters_members = true:silent
 dotnet_style_predefined_type_for_member_access = true:silent
+
+# IDE0300: Упростите инициализацию коллекции
+dotnet_style_prefer_collection_expression = false

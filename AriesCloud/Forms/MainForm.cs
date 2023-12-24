@@ -28,6 +28,7 @@ namespace AriesCloud.Forms
 
             KeyPreview = true;
             fileManager = new FileManager();
+            fileManager.ChangeDirectory += FileManagerOnChangeDirectory;
 
             UpdateFiles();
         }
@@ -49,7 +50,12 @@ namespace AriesCloud.Forms
         /// <param name="e">Данные события.</param>
         private void UploadToolStripMenuItemOnClick(object sender, EventArgs e)
         {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
 
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                fileManager.UploadFile(openFileDialog.FileName);
+            }
         }
 
         /// <summary>
@@ -169,6 +175,9 @@ namespace AriesCloud.Forms
             DeleteFiles();
         }
 
+        /// <summary>
+        /// Создать папку.
+        /// </summary>
         private void CreateDirectory()
         {
             // TODO: Добавить логику добавления папки.
@@ -217,7 +226,7 @@ namespace AriesCloud.Forms
         /// </summary>
         private void DownloadFiles()
         {
-            // TODO: Добавить логику скачивания файлов.ы
+            // TODO: Добавить логику скачивания файлов.
         }
 
         /// <summary>
@@ -234,6 +243,17 @@ namespace AriesCloud.Forms
         private void DeleteFiles()
         {
             // TODO: Добавить логику удаления файлов.
+        }
+
+        /// <summary>
+        /// Изменение открытой папки.
+        /// </summary>
+        /// <param name="sender">Файловый менеджер вызвавший событие.</param>
+        /// <param name="directoryPath">Путь к папке.</param>
+        private void FileManagerOnChangeDirectory(FileManager sender, string directoryPath)
+        {
+            pathTextBox.Text = directoryPath;
+            UpdateFiles();
         }
     }
 }

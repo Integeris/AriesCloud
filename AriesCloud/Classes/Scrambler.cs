@@ -372,55 +372,43 @@ namespace AriesCloud.Classes
         /// <summary>
         /// Шифрование блока.
         /// </summary>
-        /// <param name="block">Блока.</param>
-        /// <returns>Зашифрованный блок.</returns>
-        public byte[] EncriptBlock(byte[] block)
+        /// <param name="block">Блок.</param>
+        public void EncriptBlock(byte[] block)
         {
             if (block.Length != blockSize)
             {
                 throw new ArgumentOutOfRangeException(nameof(block), "Длина массива должна быть 16 байт.");
             }
 
-            byte[] result = new byte[blockSize];
-            Array.Copy(block, result, block.Length);
-
             for (int i = 0; i < 9; i++)
             {
-                ExclusiveOR(result, keys[i]);
-                ReplaceBytes(result, replaceBytes);
-                MultiTransform(result, TransformBlock);
+                ExclusiveOR(block, keys[i]);
+                ReplaceBytes(block, replaceBytes);
+                MultiTransform(block, TransformBlock);
             }
 
-            ExclusiveOR(result, keys[9]);
-
-            return result;
+            ExclusiveOR(block, keys[9]);
         }
 
         /// <summary>
         /// Расшифровка блока.
         /// </summary>
         /// <param name="block">Блок.</param>
-        /// <returns>Расшифрованный блок.</returns>
-        public byte[] DecriptBlock(byte[] block)
+        public void DecriptBlock(byte[] block)
         {
             if (block.Length != blockSize)
             {
                 throw new ArgumentOutOfRangeException(nameof(block), "Длина массива должна быть 16 байт.");
             }
 
-            byte[] result = new byte[blockSize];
-
-            Array.Copy(block, result, block.Length);
-            ExclusiveOR(result, keys[9]);
+            ExclusiveOR(block, keys[9]);
 
             for (int i = 8; i >= 0; i--)
             {
-                MultiTransform(result, ReversTransformBlock);
-                ReplaceBytes(result, reversReplaceBytes);
-                ExclusiveOR(result, keys[i]);
+                MultiTransform(block, ReversTransformBlock);
+                ReplaceBytes(block, reversReplaceBytes);
+                ExclusiveOR(block, keys[i]);
             }
-
-            return result;
         }
 
         /// <summary>
