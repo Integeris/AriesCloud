@@ -155,6 +155,24 @@ function hidePopup(e) {
 }
 
 var files = [];
+var test = "";
+
+function compareStrings(str1, str2) {
+  let byteDiff = -1;
+  let diffChars = "";
+
+  for (let i = 0; i < str1.length; i++) {
+    if (str1.charCodeAt(i) !== str2.charCodeAt(i)) {
+      byteDiff = i;
+      diffChars += `${str1[i]}${str2[i]}`;
+    }
+  }
+
+  return {
+    byteDiff,
+    diffChars,
+  };
+}
 
 function downloadFiles(mode) {
   if ((mode = "right")) {
@@ -176,13 +194,34 @@ function downloadFiles(mode) {
     data: formData,
     processData: false,
     contentType: false,
+    xhrFields: {
+      responseType: 'blob' // Указываем, что ожидаем получить blob-объект
+    },
     success: function (response) {
-      //console.log(response);
-      var link = document.createElement("a");
+
+      console.log(response);
+     /*  console.log(
+        test == response,
+        test,
+        response,
+        test.length,
+        response.length
+      ); */
+      var blob = new Blob([response]);
+      var link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = nameFiles[0];
+    link.click();
+    // document.body.removeChild(link);
+      /* var link = document.createElement("a");
       link.href =
         "data:application/octet-stream," + encodeURIComponent(response);
       link.download = nameFiles[0];
-      link.click();
+      link.click(); */
+
+      /* const result = compareStrings(test, response);
+      console.log(`Различающийся байт: ${result.byteDiff}`);
+      console.log(`Различающиеся символы: ${result.diffChars}`); */
       files = [];
       nameFiles = [];
     },
@@ -204,6 +243,7 @@ function uploadFiles(mode) {
     processData: false,
     contentType: false,
     success: function (data) {
+      test = data;
       getFiles();
     },
   });
@@ -214,8 +254,8 @@ function selectedMod() {}
 function selected(e) {}
 
 function back() {
-    dir = dir.replace(/\/[^/]+\/$/, "/");
-    getFiles();
+  dir = dir.replace(/\/[^/]+\/$/, "/");
+  getFiles();
 }
 
 function openFolder(e) {
