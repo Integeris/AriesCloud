@@ -32,8 +32,6 @@ function fileGeneration(files) {
     var img = document.createElement("img");
     var label = document.createElement("label");
     child.className = "file";
-    //child.setAttribute("dblclick", "dublClick(this)");
-    //child.setAttribute("onclick","preventDefaultClick(event)")
     img.className = "imgFile";
     label.className = "labelFile";
     label.innerText = value;
@@ -195,33 +193,16 @@ function downloadFiles(mode) {
     processData: false,
     contentType: false,
     xhrFields: {
-      responseType: 'blob' // Указываем, что ожидаем получить blob-объект
+      responseType: 'blob'
     },
     success: function (response) {
 
       console.log(response);
-     /*  console.log(
-        test == response,
-        test,
-        response,
-        test.length,
-        response.length
-      ); */
       var blob = new Blob([response]);
       var link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
     link.download = nameFiles[0];
     link.click();
-    // document.body.removeChild(link);
-      /* var link = document.createElement("a");
-      link.href =
-        "data:application/octet-stream," + encodeURIComponent(response);
-      link.download = nameFiles[0];
-      link.click(); */
-
-      /* const result = compareStrings(test, response);
-      console.log(`Различающийся байт: ${result.byteDiff}`);
-      console.log(`Различающиеся символы: ${result.diffChars}`); */
       files = [];
       nameFiles = [];
     },
