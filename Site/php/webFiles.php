@@ -391,13 +391,13 @@ class webFiles
                 $extension = pathinfo($oldName, PATHINFO_EXTENSION);
                 $newName = $newName . '.' . $extension;
                 rename($dir . '/' . $oldName, $dir . '/' . $newName);
-                echo 'Файл успешно переименован.';
+                echo 1;
             } elseif (is_dir($dir . '/' . $oldName)) {
                 rename($dir . '/' . $oldName, $dir . '/' . $newName);
-                echo 'Папка успешно переименована.';
+                echo 2;
             }
         } else {
-            echo 'Файл или папка с указанным именем не существует.';
+            echo 0;
         }
     }
 }
