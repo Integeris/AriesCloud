@@ -264,7 +264,7 @@ class webFiles
                 echo 1;
             } elseif (is_dir($dir . '/' . $oldName)) {
                 rename($dir . '/' . $oldName, $dir . '/' . $newName);
-                echo 2;
+                echo 1;
             }
         } else {
             echo 0;
