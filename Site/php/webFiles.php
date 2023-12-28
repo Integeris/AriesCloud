@@ -261,13 +261,13 @@ class webFiles
                 $extension = pathinfo($oldName, PATHINFO_EXTENSION);
                 $newName = $newName . '.' . $extension;
                 rename($dir . '/' . $oldName, $dir . '/' . $newName);
-                echo 1;
+                echo "True";
             } elseif (is_dir($dir . '/' . $oldName)) {
                 rename($dir . '/' . $oldName, $dir . '/' . $newName);
-                echo 1;
+                echo "True";
             }
         } else {
-            echo 0;
+            echo "False";
         }
     }
 }
