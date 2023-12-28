@@ -17,13 +17,17 @@ class webFiles
 
     public function delFiles($uid)
     {
-        $dir = "./fileUsers/$uid/" . $_POST["dir"]."/";
+        $dir = "./fileUsers/$uid/" . $_POST["dir"] . "/";
         $data = $_POST['dataFiles'];
-
-        if (is_dir($dir . $data)) {
-            $this->deleteDirectory($dir . $data);
+        if (file_exists($dir . '/' . $data)) {
+            if (is_dir($dir . $data)) {
+                $this->deleteDirectory($dir . $data);
+            } else {
+                unlink($dir . $data);
+            }
+            echo "True";
         } else {
-            unlink($dir . $data);
+            echo "False";
         }
     }
 
