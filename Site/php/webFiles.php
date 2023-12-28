@@ -223,6 +223,8 @@ class webFiles
             header('Pragma: public');
             header('Content-Length: ' . filesize($dir));
             readfile($dir);
+        }else{
+            http_response_code(404);
         }
     }
 
