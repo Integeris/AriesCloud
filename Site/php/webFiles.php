@@ -17,14 +17,13 @@ class webFiles
 
     public function delFiles($uid)
     {
-        $dir = "./fileUsers/$uid/";
+        $dir = "./fileUsers/$uid/" . $_POST["dir"];
         $data = $_POST['dataFiles'];
-        foreach ($data as $val) {
-            if (is_dir($dir . $val)) {
-                $this->deleteDirectory($dir . $val);
-            } else {
-                unlink($dir . $val);
-            }
+
+        if (is_dir($dir . $data)) {
+            $this->deleteDirectory($dir . $data);
+        } else {
+            unlink($dir . $data);
         }
     }
 
@@ -124,7 +123,7 @@ class webFiles
                     array_pop($encryptedFileContent);
                     array_push($encryptedFileContent, $lastArray);
                 }
-                
+
                 $endArr = [];
                 foreach ($encryptedFileContent as $str) {
                     foreach ($str as $val) {

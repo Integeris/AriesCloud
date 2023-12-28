@@ -102,13 +102,12 @@ function getFiles() {
 }
 
 function delFile() {
-  var data = [];
-  data.push(elem.children[1].innerText);
+
   $.ajax({
     url: window.location.href + "/delFiles",
     method: "post",
     dataType: "html",
-    data: { dataFiles: data },
+    data: { dataFiles: elem.children[1].innerText ,dir:dir},
     success: function (data) {
       getFiles();
     },
