@@ -17,7 +17,7 @@ class webFiles
 
     public function delFiles($uid)
     {
-        $dir = "./fileUsers/$uid/" . $_POST["dir"];
+        $dir = "./fileUsers/$uid/" . $_POST["dir"]."/";
         $data = $_POST['dataFiles'];
 
         if (is_dir($dir . $data)) {
