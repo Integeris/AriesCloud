@@ -149,52 +149,37 @@ class webFiles
 
                 if ($zip->open($zipName, ZipArchive::CREATE) === true) {
                     foreach ($files as $file) {
-                        $fileContents = fopen("./fileUsers/a001f87a8a7f6c2f009d7e2f8d3c588b/" . $_POST["dir"] . "/" . $file, 'rb');
-                        $encryptedFileContent = [];
+                        $fileName = $file;
+                        $file = file_get_contents("./fileUsers/a001f87a8a7f6c2f009d7e2f8d3c588b/" . $_POST["dir"] . "/" . $file);
+                        $fileTest = $file;
+                        $file = unpack('C*', $file);
+                        $encryptedFileContent = array_chunk($file, 16);
+
                         $scram = new Scrambler($key);
-                        while (!feof($fileContents)) {
-
-                            $block = fread($fileContents, 16);
-                            if (strlen($block) == 0) {
-                                break;
-                            }
-                            $parse = [];
-                            for ($i = 0; $i < strlen($block); $i++) {
-                                array_push($parse, ord($block[$i]));
-                            }
-                            $block = $parse;
-
-                            $processedBlock = $scram->decriptBlock($block);
-                            $encryptedFileContent[] = $processedBlock;
+                        for ($i = 0; $i < count($encryptedFileContent); $i++) {
+                            $encryptedFileContent[$i] = $scram->decriptBlock($encryptedFileContent[$i]);
                         }
+
+
                         $lastArray = end($encryptedFileContent);
-                        array_pop($encryptedFileContent);
-
-                        if ($lastArray[count($lastArray) - 1] == 15 && count(array_filter($lastArray, function ($value) {
-                            return $value == 0;
-                        })) == 15) {
-                            $lastArray = "fall";
-                        } elseif ($lastArray[count($lastArray) - 1] == count(array_filter($lastArray, function ($value) {
-                            return $value == 0;
-                        }))) {
-                            array_splice($lastArray, 0, count(array_filter($lastArray, function ($value) {
-                                return $value == 0;
-                            })));
-                            array_pop($lastArray);
+                        if (end($lastArray) == 16) {
+                            array_pop($encryptedFileContent);
+                        } else if (end($lastArray) < 16) {
+                            for ($i = end($lastArray); $i > 0; $i--) {
+                                array_pop($lastArray);
+                            }
+                            array_pop($encryptedFileContent);
+                            array_push($encryptedFileContent, $lastArray);
                         }
+
                         $endArr = [];
                         foreach ($encryptedFileContent as $str) {
                             foreach ($str as $val) {
                                 $endArr[] = $val;
                             }
                         }
-                        if ($lastArray != "fall") {
-                            foreach ($lastArray as $val) {
-                                $endArr[] = $val;
-                            }
-                        }
-
-                        $encryptedFileContent = implode(array_map("chr", $endArr));
+                        $encryptedFileContent = $endArr;
+                        $encryptedFileContent = pack('C*', ...$encryptedFileContent);
 
                         $zip->addFromString(basename($file), $encryptedFileContent);
                     }
