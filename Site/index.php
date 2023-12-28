@@ -41,6 +41,12 @@ if ($segments[1] == "createFolder") {
     return;
 }
 
+if ($segments[1] == "rename") {
+    $get = new webFiles();
+    $get->rename("a001f87a8a7f6c2f009d7e2f8d3c588b");
+    return;
+}
+
 if ($segments[1] == "downloadSiteFiles") {
     $get = new webFiles();
     $get->downloadSite();
@@ -49,7 +55,7 @@ if ($segments[1] == "downloadSiteFiles") {
 
 if ($segments[1] == "uploadSiteFiles") {
     $get = new webFiles();
-    $get->uploadSite();
+    $get->uploadSite(); 
     return;
 }
 

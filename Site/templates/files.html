@@ -41,8 +41,8 @@
             <li onclick="downloadFiles('right')"><a>Скачать</a></li>
             <li onclick="delFile()"><a>Удалить</a></li>
             <li><a>Переместить</a></li>
-            <li><a onclick="openWindows('NewFolder')">Создать папку</a></li>
-            <li><a>Переименовать</a></li>
+            <li onclick="openWindows('NewFolder')"><a>Создать папку</a></li>
+            <li onclick="openRename(); openWindows('Rename')"><a>Переименовать</a></li>
         </ul>
     </div>
     <div class="loaderBody" id="loader">
@@ -89,6 +89,23 @@
             </form>
         </div>
         <button id="closeNewFolder" class="popup-close">×</button>
+    </div>
+    <div id="popupRename" class="popup-window">
+        <div class="popup-content">
+            <form id="form" class="form">
+                <div class="omrs-input-group">
+                    <label class="omrs-input-underlined">
+                        <input id="newName">
+                        <span class="omrs-input-label">Новое имя папки</span>
+                        
+                    </label>
+                </div>
+                <div class="container">
+                    <a class="buttonArrow button" id="submit" onclick="rename()">Создать папку</a>
+                </div>
+            </form>
+        </div>
+        <button id="closeRename" class="popup-close">×</button>
     </div>
     <script type="text/javascript">
         document.oncontextmenu = rightClick;

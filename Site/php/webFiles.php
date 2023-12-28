@@ -64,6 +64,27 @@ class webFiles
 
         $file = unpack('C*', $file);
         $encryptedFileContent = array_chunk($file, 16);
+
+        $lastArray = end($encryptedFileContent);
+        if (count($lastArray) == 16) {
+            $arr = [];
+            for ($i = 0; $i < 15; $i++)
+                $arr[] = 0;
+            $arr[] = 16;
+            $encryptedFileContent[] = $arr;
+        } else if (count($lastArray) < 16) {
+            $k = 16 - count($lastArray);
+            for ($i = 0; $i < $k - 1; $i++)
+                $lastArray[] = 0;
+            $lastArray[] = $k;
+            array_pop($encryptedFileContent);
+            array_push($encryptedFileContent, $lastArray);
+        }
+
+        $scram = new Scrambler($key);
+        for ($i = 0; $i < count($encryptedFileContent); $i++) {
+            $encryptedFileContent[$i] = $scram->encriptBlock($encryptedFileContent[$i]);
+        }
         /* $file = fopen($fileToEncrypt['tmp_name'], 'rb');
         $encryptedFileContent = [];
         while (!feof($file)) {
@@ -115,16 +136,16 @@ class webFiles
             }
         }
         $encryptedFileContent = $endArr;
-   
+
         $encryptedFileContent = pack('C*', ...$encryptedFileContent);
         // $encryptedFileContent = implode(array_map('chr', $encryptedFileContent));
-     
+
         //$encryptedFileContent = implode('', $encryptedFileContent);
         // Сохранение файла в определенной директории
         $encryptedFilePath = "./fileUsers/a001f87a8a7f6c2f009d7e2f8d3c588b/" . $_POST["dir"] . "/" . $fileToEncrypt['name'];
         file_put_contents($encryptedFilePath, $encryptedFileContent);
         // var_dump(,$encryptedFileContent,$fileTest==$encryptedFileContent);
-        echo $encryptedFileContent; //'Файл успешно загружен и зашифрован.';
+        //echo $encryptedFileContent; //'Файл успешно загружен и зашифрован.';
         /* } else {
             echo 'Произошла ошибка при загрузке файла.';
         } */
@@ -134,14 +155,9 @@ class webFiles
     {
         $keyFilePath = $_FILES['keyFile'];
         $files = json_decode($_POST['nameFiles']);
-        $directory = $_POST['dir'];
-        $key = fopen($keyFilePath['tmp_name'], 'rb');
-        $key = fread($key, 32);
-        $parse = [];
-        for ($i = 0; $i < strlen($key); $i++) {
-            array_push($parse, ord($key[$i]));
-        }
-        $key = $parse;
+        $key = file_get_contents($keyFilePath['tmp_name']);
+        $key = unpack('C*', $key);
+
         if (isset($_POST['nameFiles'])) {
             ini_set('max_execution_time', 0);
             $count = count($files);
@@ -149,11 +165,28 @@ class webFiles
             if ($count === 1) {
                 $file = $files[0];
                 // $fileContents = fopen("./fileUsers/a001f87a8a7f6c2f009d7e2f8d3c588b/" . $_POST["dir"] . "/" . $file, 'rb');
-                $fileName=$file;
+                $fileName = $file;
                 $file = file_get_contents("./fileUsers/a001f87a8a7f6c2f009d7e2f8d3c588b/" . $_POST["dir"] . "/" . $file);
-                $fileTest=$file;
+                $fileTest = $file;
                 $file = unpack('C*', $file);
                 $encryptedFileContent = array_chunk($file, 16);
+
+                $scram = new Scrambler($key);
+                for ($i = 0; $i < count($encryptedFileContent); $i++) {
+                    $encryptedFileContent[$i] = $scram->decriptBlock($encryptedFileContent[$i]);
+                }
+
+
+                $lastArray = end($encryptedFileContent);
+                if (end($lastArray) == 16) {
+                    array_pop($encryptedFileContent);
+                } else if (end($lastArray) < 16) {
+                    for ($i = end($lastArray); $i > 0; $i--) {
+                        array_pop($lastArray);
+                    }
+                    array_pop($encryptedFileContent);
+                    array_push($encryptedFileContent, $lastArray);
+                }
                 /* $encryptedFileContent = [];
                 $scram = new Scrambler($key);
                 while (!feof($fileContents)) {
@@ -343,6 +376,28 @@ class webFiles
             echo "True";
         } else {
             echo "False";
+        }
+    }
+
+    public function rename($hash)
+    {
+
+        $dir = "./fileUsers/$hash/" . $_POST['dir'] . "/";
+        $oldName = $_POST['oldName'];
+        $newName = $_POST['newName'];
+
+        if (file_exists($dir . '/' . $oldName)) {
+            if (is_file($dir . '/' . $oldName)) {
+                $extension = pathinfo($oldName, PATHINFO_EXTENSION);
+                $newName = $newName . '.' . $extension;
+                rename($dir . '/' . $oldName, $dir . '/' . $newName);
+                echo 'Файл успешно переименован.';
+            } elseif (is_dir($dir . '/' . $oldName)) {
+                rename($dir . '/' . $oldName, $dir . '/' . $newName);
+                echo 'Папка успешно переименована.';
+            }
+        } else {
+            echo 'Файл или папка с указанным именем не существует.';
         }
     }
 }

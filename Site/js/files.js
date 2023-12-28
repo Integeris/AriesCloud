@@ -278,6 +278,20 @@ function createFolder() {
 
 function move() {}
 
-function rename() {}
+function openRename(){
+  $("#newName")[0].value=elem.children[1].innerText
+}
+
+function rename() {
+  $.ajax({
+    url: window.location.href + "/rename",
+    method: "post",
+    dataType: "html",
+    data: { dir: dir, oldName: elem.children[1].innerText, newName:$("#newName")[0].value},
+    success: function (data) {
+      getFiles();
+    },
+  });
+}
 
 function unselected() {}
