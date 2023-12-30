@@ -102,12 +102,11 @@ function getFiles() {
 }
 
 function delFile() {
-
   $.ajax({
     url: window.location.href + "/delFiles",
     method: "post",
     dataType: "html",
-    data: { dataFiles: elem.children[1].innerText ,dir:dir},
+    data: { dataFiles: elem.children[1].innerText, dir: dir },
     success: function (data) {
       getFiles();
     },
@@ -192,16 +191,15 @@ function downloadFiles(mode) {
     processData: false,
     contentType: false,
     xhrFields: {
-      responseType: 'blob'
+      responseType: "blob",
     },
     success: function (response) {
-
       console.log(response);
       var blob = new Blob([response]);
-      var link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = nameFiles[0];
-    link.click();
+      var link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = nameFiles[0];
+      link.click();
       files = [];
       nameFiles = [];
     },
@@ -256,10 +254,39 @@ function createFolder() {
   });
 }
 
-function move() {}
+function getDir() {
+  $.ajax({
+    url: window.location.href + "/getDir",
+    method: "post",
+    dataType: "html",
+    data: { dir: dir, excludeDir: elem.children[1].innerText },
+    success: function (data) {
+      $("#selectMove")[0].innerHTML = "";
+      JSON.parse(data).forEach((element) => {
+        $("#selectMove")[0].innerHTML += "<option> " + element + " </option>";
+      });
+    },
+  });
+}
 
-function openRename(){
-  $("#newName")[0].value=elem.children[1].innerText
+function move() {
+  $.ajax({
+    url: window.location.href + "/move",
+    method: "post",
+    dataType: "html",
+    data: {
+      dir: dir,
+      oldPath: dir + "/" + elem.children[1].innerText,
+      newPath: $("#selectMove")[0].value + "/" + elem.children[1].innerText,
+    },
+    success: function (data) {
+      getFiles();
+    },
+  });
+}
+
+function openRename() {
+  $("#newName")[0].value = elem.children[1].innerText;
 }
 
 function rename() {
@@ -267,7 +294,11 @@ function rename() {
     url: window.location.href + "/rename",
     method: "post",
     dataType: "html",
-    data: { dir: dir, oldName: elem.children[1].innerText, newName:$("#newName")[0].value},
+    data: {
+      dir: dir,
+      oldName: elem.children[1].innerText,
+      newName: $("#newName")[0].value,
+    },
     success: function (data) {
       getFiles();
     },

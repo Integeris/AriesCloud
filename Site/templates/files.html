@@ -40,7 +40,7 @@
         <ul>
             <li onclick="downloadFiles('right')"><a>Скачать</a></li>
             <li onclick="delFile()"><a>Удалить</a></li>
-            <li><a>Переместить</a></li>
+            <li onclick="getDir(); openWindows('Move')"><a>Переместить</a></li>
             <li onclick="openWindows('NewFolder')"><a>Создать папку</a></li>
             <li onclick="openRename(); openWindows('Rename')"><a>Переименовать</a></li>
         </ul>
@@ -80,7 +80,7 @@
                     <label class="omrs-input-underlined">
                         <input id="inputFolder">
                         <span class="omrs-input-label">Имя новой папки</span>
-                        
+
                     </label>
                 </div>
                 <div class="container">
@@ -97,7 +97,7 @@
                     <label class="omrs-input-underlined">
                         <input id="newName">
                         <span class="omrs-input-label">Новое имя папки</span>
-                        
+
                     </label>
                 </div>
                 <div class="container">
@@ -106,6 +106,24 @@
             </form>
         </div>
         <button id="closeRename" class="popup-close">×</button>
+    </div>
+    <div id="popupMove" class="popup-window">
+        <div class="popup-content">
+            <form id="form" class="form">
+                <div class="omrs-input-group">
+                    <div class="selectdiv">
+                        <label>
+                            <select id="selectMove">
+                            </select>
+                        </label>
+                      </div>
+                </div>
+                <div class="container">
+                    <a class="buttonArrow button" id="submit" onclick="move()">Переместить</a>
+                </div>
+            </form>
+        </div>
+        <button id="closeMove" class="popup-close">×</button>
     </div>
     <script type="text/javascript">
         document.oncontextmenu = rightClick;

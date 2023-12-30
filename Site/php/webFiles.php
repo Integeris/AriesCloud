@@ -4,6 +4,8 @@ namespace Service;
 
 use Service\Scrambler;
 use ZipArchive;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 
 class webFiles
@@ -223,7 +225,7 @@ class webFiles
             header('Pragma: public');
             header('Content-Length: ' . filesize($dir));
             readfile($dir);
-        }else{
+        } else {
             http_response_code(404);
         }
     }
@@ -256,6 +258,50 @@ class webFiles
                 rename($dir . '/' . $oldName, $dir . '/' . $newName);
                 echo "True";
             }
+        } else {
+            echo "False";
+        }
+    }
+
+    public function getDir($hash)
+    {
+        $startDir = "./fileUsers/$hash/";
+        $excludeDir = $startDir . $_POST["dir"] . "/" . $_POST["excludeDir"];
+        $directories = [];
+        $directories[]="/";
+        $startDir = preg_replace('/\s+/', '/', $startDir);
+        $excludeDir = preg_replace('/\/{2,}/', '/', $excludeDir);
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($startDir, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::SELF_FIRST,
+            RecursiveIteratorIterator::CATCH_GET_CHILD
+        );
+
+
+        foreach ($iterator as $path => $dir) {
+            $path = preg_replace('/\s+/', '/', $path);
+            $path = str_replace("\\", "/", $path);
+
+            if ($dir->isDir() && $dir->getFilename() !== $excludeDir) {
+                if (strpos($path, $excludeDir) === false) {
+                    $path = str_replace($startDir, "", $path);
+                    $path = "/" . $path;
+                    $directories[] = $path;
+                }
+            }
+        }
+        echo (json_encode($directories));
+    }
+
+    public function move($hash)
+    {
+        $dir = "./fileUsers/$hash/";
+        $oldPath = $dir.$_POST["oldPath"];
+        $newPath = $dir.$_POST["newPath"];
+
+        if (file_exists($oldPath)) {
+            rename($oldPath, $newPath);
+            echo "True";
         } else {
             echo "False";
         }

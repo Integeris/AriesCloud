@@ -47,6 +47,18 @@ if ($segments[1] == "rename") {
     return;
 }
 
+if ($segments[1] == "getDir") {
+    $get = new webFiles();
+    $get->getDir("a001f87a8a7f6c2f009d7e2f8d3c588b");
+    return;
+}
+
+if ($segments[1] == "move") {
+    $get = new webFiles();
+    $get->move("a001f87a8a7f6c2f009d7e2f8d3c588b");
+    return;
+}
+
 if ($segments[1] == "downloadSiteFiles") {
     $get = new webFiles();
     $get->downloadSite();
