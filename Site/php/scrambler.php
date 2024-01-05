@@ -289,7 +289,6 @@ class Scrambler
         if (count($key) != 32) {
             throw new \OutOfRangeException("Длинна ключа должна быть 32 байта.");
         }
-
         $this->blockSize = 16;
         $this->linearTransformation = [
             1, 148, 32, 133, 16, 194, 192, 1, 251, 1, 192, 194, 16, 133, 32, 148
@@ -301,6 +300,7 @@ class Scrambler
             $this->keys[$i] = array_fill(0, 16, 0);
         }
         $keyArray = $key;
+
         array_splice($this->keys[0], 0, 16, array_slice($keyArray, 0, 16));
         array_splice($this->keys[1], 0, 16, array_slice($keyArray, 16, 16));
 
@@ -312,7 +312,6 @@ class Scrambler
         if (count($block) != $this->blockSize) {
             throw new \OutOfRangeException("Длина массива должна быть 16 байт.");
         }
-
         $result = $block;
         for ($i = 0; $i < 9; $i++) {
             $this->exclusiveOR($result, $this->keys[$i]);
@@ -333,7 +332,6 @@ class Scrambler
         }
 
         $result = $block;
-
         $this->exclusiveOR($result, $this->keys[9]);
 
         for ($i = 8; $i >= 0; $i--) {
@@ -345,14 +343,14 @@ class Scrambler
         return $result;
     }
 
-    private function exclusiveOR(&$source, $key)
+    private function exclusiveOR(&$source, &$key)
     {
         for ($i = 0; $i < $this->blockSize; $i++) {
             $source[$i] = $source[$i] ^ $key[$i];
         }
     }
 
-    private function replaceBytes(&$block, $replaceBytes)
+    private function replaceBytes(&$block, &$replaceBytes)
     {
         for ($i = 0; $i < $this->blockSize; $i++) {
             $block[$i] = $replaceBytes[$block[$i]];
@@ -361,27 +359,28 @@ class Scrambler
 
     private function gaussiaMultiplication($origin, $key)
     {
-        $origin = $origin % 256;
-        $key = $key % 256;
         $result = 0;
-        
+
         // цикл для каждого бита (В байте 8 битов)
         for ($i = 0; $i < 8; $i++) {
-            // Если младший бит ключа равен 1.
+            // Если млодший бит ключа равен 1.
             if (($key & 0b01) == 1) {
                 $result ^= $origin;
             }
+
             $key >>= 1;
 
-            // Вычисляем старший бит исходного байта.
-            $higherBit = ($origin & 0b10000000);
+            // Вычисляем тарший бит исходного байта.
+            $higherBit = $origin & 0b10000000;
             $origin <<= 1;
+            $origin &= 255;
+
             if ($higherBit != 0) {
-                $origin ^= 195; // x^8 + x^7 + x^6 + x + 1.
+                $origin ^= 195; // x^8 + x^7 + x^6 + x + 1
             }
         }
-        
-        return $result % 256;
+
+        return $result;
     }
 
     private function transformBlock(&$block)
@@ -417,15 +416,15 @@ class Scrambler
         }
     }
 
-    private function feistelCell(&$firstKeys, $secondKey, $constants)
+    private function feistelCell(&$firstKeys, &$secondKey, &$constants)
     {
         $tmpKey = $firstKeys;
 
         $this->exclusiveOR($tmpKey, $constants);
+
         $this->replaceBytes($tmpKey, $this->replaceBytes);
         $this->multiTransform($tmpKey, [$this, 'transformBlock']);
         $this->exclusiveOR($tmpKey, $secondKey);
-
         $secondKey = $firstKeys;
         $firstKeys = $tmpKey;
     }
@@ -438,7 +437,6 @@ class Scrambler
 
             $this->keys[$firstPart] = $this->keys[$firstPart - 2];
             $this->keys[$secondPart] = $this->keys[$secondPart - 2];
-
             for ($j = 0; $j < 8; $j++) {
                 $this->feistelCell($this->keys[$firstPart], $this->keys[$secondPart], $this->constants[$j + 8 * $i]);
             }

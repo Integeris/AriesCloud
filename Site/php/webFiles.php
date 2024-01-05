@@ -123,8 +123,8 @@ class webFiles
                     $encryptedFileContent[$i] = $scram->decriptBlock($encryptedFileContent[$i]);
                 }
 
-
                 $lastArray = end($encryptedFileContent);
+                
                 if (end($lastArray) == 16) {
                     array_pop($encryptedFileContent);
                 } else if (end($lastArray) < 16) {
