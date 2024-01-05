@@ -50,6 +50,16 @@ class DB
         }
     }
 
+    public function getName($hash){
+        $pdo = $this->conn();
+
+        $state = $pdo->prepare("SELECT * FROM users WHERE hash = :hash");
+        $state->execute(['hash' => $hash]);
+        $result = $state->fetch();
+
+        return $result["login"];
+    }
+
     public function checkCode($email, $code)
     {
 
