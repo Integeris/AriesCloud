@@ -27,13 +27,7 @@ class authentication
 
     public function exit()
     {
-        session_unset();
-        session_destroy();
-        $url = ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-        $url = explode('?', $url);
-        $url = $url[0];
-        header('Location: ' . $url . 'main');
-        die();
+        setcookie('uid', "", time() + 3600,'/');
     }
 
     public function sendMail($email)

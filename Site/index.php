@@ -65,49 +65,49 @@ if ($segments[0] == "files" && $acces != "NO") {
 
     if ($segments[1] == "getFiles") {
         $get = new webFiles();
-        $get->getFiles("a001f87a8a7f6c2f009d7e2f8d3c588b");
+        $get->getFiles($acces);
         return;
     }
 
     if ($segments[1] == "delFiles") {
         $get = new webFiles();
-        $get->delFiles("a001f87a8a7f6c2f009d7e2f8d3c588b");
+        $get->delFiles($acces);
         return;
     }
 
     if ($segments[1] == "createFolder") {
         $get = new webFiles();
-        $get->createFolder("a001f87a8a7f6c2f009d7e2f8d3c588b");
+        $get->createFolder($acces);
         return;
     }
 
     if ($segments[1] == "rename") {
         $get = new webFiles();
-        $get->rename("a001f87a8a7f6c2f009d7e2f8d3c588b");
+        $get->rename($acces);
         return;
     }
 
     if ($segments[1] == "getDir") {
         $get = new webFiles();
-        $get->getDir("a001f87a8a7f6c2f009d7e2f8d3c588b");
+        $get->getDir($acces);
         return;
     }
 
     if ($segments[1] == "move") {
         $get = new webFiles();
-        $get->move("a001f87a8a7f6c2f009d7e2f8d3c588b");
+        $get->move($acces);
         return;
     }
 
     if ($segments[1] == "downloadSiteFiles") {
         $get = new webFiles();
-        $get->downloadSite();
+        $get->downloadSite($acces);
         return;
     }
 
     if ($segments[1] == "uploadSiteFiles") {
         $get = new webFiles();
-        $get->uploadSite();
+        $get->uploadSite($acces);
         return;
     }
 

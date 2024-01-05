@@ -51,7 +51,7 @@ class webFiles
         rmdir($dir);
     }
 
-    public function uploadSite()
+    public function uploadSite($hash)
     {
         $keyFile = $_FILES['keyFile'];
         $fileToEncrypt = $_FILES['file'];
@@ -95,11 +95,11 @@ class webFiles
 
         $encryptedFileContent = pack('C*', ...$encryptedFileContent);
 
-        $encryptedFilePath = "./fileUsers/a001f87a8a7f6c2f009d7e2f8d3c588b/" . $_POST["dir"] . "/" . $fileToEncrypt['name'];
+        $encryptedFilePath = "./fileUsers/$hash/" . $_POST["dir"] . "/" . $fileToEncrypt['name'];
         file_put_contents($encryptedFilePath, $encryptedFileContent);
     }
 
-    public function downloadSite()
+    public function downloadSite($hash)
     {
         $keyFilePath = $_FILES['keyFile'];
         $files = json_decode($_POST['nameFiles']);
@@ -113,7 +113,7 @@ class webFiles
             if ($count === 1) {
                 $file = $files[0];
                 $fileName = $file;
-                $file = file_get_contents("./fileUsers/a001f87a8a7f6c2f009d7e2f8d3c588b/" . $_POST["dir"] . "/" . $file);
+                $file = file_get_contents("./fileUsers/$hash/" . $_POST["dir"] . "/" . $file);
                 $fileTest = $file;
                 $file = unpack('C*', $file);
                 $encryptedFileContent = array_chunk($file, 16);

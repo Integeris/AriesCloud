@@ -119,7 +119,13 @@ function exit() {
     method: "post",
     dataType: "html",
     data: {},
-    success: function (data) {},
+    success: function (data) {
+      window.location.href =
+          window.location.href.substring(
+            0,
+            window.location.href.lastIndexOf("files")
+          ) + "main";
+    },
   });
 }
 
