@@ -18,11 +18,7 @@ class authentication
         $hash = md5($login . ".*." . $password);
         $db = new DB();
         if ($db->auth($hash)) {
-            $time = 2 * 60 * 60;
-            ini_set('session.gc_maxlifetime', $time);
-            ini_set('session.cookie_lifetime', $time);
-            session_start();
-            $_SESSION["hash"] = $hash;
+            setcookie('uid', $hash, time() + 3600,'/');
             echo "Good";
         } else {
             echo "Who are U?";
