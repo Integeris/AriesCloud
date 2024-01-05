@@ -10,16 +10,21 @@ use RecursiveIteratorIterator;
 
 class webFiles
 {
-    public function getFiles($uid)
+    public function getFiles($hash)
     {
-        $files = scandir("./fileUsers/$uid/" . $_POST["dir"]);
+        $files = scandir("./fileUsers/$hash/" . $_POST["dir"]);
         $files = array_diff($files, array('.', '..'));
-        echo json_encode($files);
+        $ret=[];
+        foreach($files as $val){
+            $type= is_dir("./fileUsers/$hash/" . $_POST["dir"]."/$val")? 'p' : 'f';
+            $ret[]=["name"=>$val,"type"=>$type];
+        }
+        echo json_encode($ret);
     }
 
-    public function delFiles($uid)
+    public function delFiles($hash)
     {
-        $dir = "./fileUsers/$uid/" . $_POST["dir"] . "/";
+        $dir = "./fileUsers/$hash/" . $_POST["dir"] . "/";
         $data = $_POST['dataFiles'];
         if (file_exists($dir . '/' . $data)) {
             if (is_dir($dir . $data)) {

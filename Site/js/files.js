@@ -34,53 +34,53 @@ function fileGeneration(files) {
     child.className = "file";
     img.className = "imgFile";
     label.className = "labelFile";
-    label.innerText = value;
-    label.title = value;
+    label.innerText = value.name;
+    label.title = value.name;
     var str = "../source/";
-    var s;
-    if (value.split(".").length > 1) {
-      s = value.split(".")[value.split(".").length - 1];
+    if (value.type == "f") {
+      var s;
+      if (value.name.split(".").length > 1) {
+        s = value.name.split(".")[value.name.split(".").length - 1];
+      } else {
+        s = "";
+      }
+      mode = "";
+      switch (s) {
+        case "xlsx":
+          str += "xlsx.png";
+          break;
+        case "doc":
+          str += "doc.png";
+          break;
+        case "docx":
+          str += "docx.png";
+          break;
+        case "exe":
+          str += "exe.png";
+          break;
+        case "pdf":
+          str += "pdf.png";
+          break;
+        case "txt":
+          str += "text_document.png";
+          break;
+        case "ods":
+          str += "ods.png";
+          break;
+        case "cmd":
+          str += "cmd.png";
+          break;
+        default:
+          str += "default.png";
+          break;
+      }
     } else {
-      s = "";
-    }
-    mode = "";
-    switch (s) {
-      case "xlsx":
-        str += "xlsx.png";
-        break;
-      case "doc":
-        str += "doc.png";
-        break;
-      case "docx":
-        str += "docx.png";
-        break;
-      case "exe":
-        str += "exe.png";
-        break;
-      case "pdf":
-        str += "pdf.png";
-        break;
-      case "txt":
-        str += "text_document.png";
-        break;
-      case "ods":
-        str += "ods.png";
-        break;
-      case "cmd":
-        str += "cmd.png";
-        break;
-      case "":
-        mode = "f";
-        str += "folder.png";
-        break;
-      default:
-        str += "default.png";
-        break;
+      str += "folder.png";
+      child.setAttribute("onclick", "openFolder(this)");
     }
     img.src = str;
     child.appendChild(img);
     child.appendChild(label);
-    if ((mode = "f")) child.setAttribute("onclick", "openFolder(this)");
     mode = "";
     parent.appendChild(child);
   });
@@ -238,7 +238,6 @@ function back() {
 
 function openFolder(e) {
   dir += e.children[1].innerText + "/";
-  console.log(dir);
   getFiles();
 }
 
