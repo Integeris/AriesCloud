@@ -51,6 +51,7 @@
             this.passwordTextBox.ReadOnly = true;
             this.passwordTextBox.Size = new System.Drawing.Size(426, 109);
             this.passwordTextBox.TabIndex = 12;
+            this.passwordTextBox.TabStop = false;
             this.passwordTextBox.Text = "Программа предназначена для шифрования и хранения файлов на удалённом сервере.";
             this.passwordTextBox.UseSystemPasswordChar = true;
             // 
@@ -64,6 +65,7 @@
             this.loginTextBox.ReadOnly = true;
             this.loginTextBox.Size = new System.Drawing.Size(224, 26);
             this.loginTextBox.TabIndex = 11;
+            this.loginTextBox.TabStop = false;
             this.loginTextBox.Text = "Черняков Антон";
             // 
             // emailTextBox
@@ -76,6 +78,7 @@
             this.emailTextBox.ReadOnly = true;
             this.emailTextBox.Size = new System.Drawing.Size(224, 26);
             this.emailTextBox.TabIndex = 10;
+            this.emailTextBox.TabStop = false;
             this.emailTextBox.Text = "Aries Cloud";
             // 
             // label3

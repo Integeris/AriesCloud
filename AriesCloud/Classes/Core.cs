@@ -79,7 +79,7 @@ namespace AriesCloud.Classes
         /// <returns>Результат операции.</returns>
         public static bool UploadFile(FileInfo file, string directory, byte[] key)
         {
-            HttpWebRequest httpWebRequest = HttpWebRequest.CreateHttp($"{server}/file/uploadAPI");
+            HttpWebRequest httpWebRequest = HttpWebRequest.CreateHttp($"{server}/files/uploadAPI");
             httpWebRequest.Method = "Post";
             string boundary = $"_Upload_{Guid.NewGuid()}";
             httpWebRequest.ContentType = $"multipart/form-data; boundary=\"{boundary}\"";
@@ -107,9 +107,9 @@ namespace AriesCloud.Classes
                     WriteStringBuffer(requestStream, stringBuilder.ToString());
 
                     Scrambler scrambler = new Scrambler(key);
-                    byte[] buffer = new byte[scrambler.BlockSize];
+                    byte[] buffer = new byte[Scrambler.BlockSize];
 
-                    long blockCount = fileStream.Length / scrambler.BlockSize;
+                    long blockCount = fileStream.Length / Scrambler.BlockSize;
 
                     for (int i = 0; i < blockCount; i++)
                     {
@@ -121,7 +121,7 @@ namespace AriesCloud.Classes
                     // Последний блок должен содержать количество нулей + 1 в конце.
                     Array.Clear(buffer, 0, buffer.Length);
                     fileStream.Read(buffer, 0, buffer.Length);
-                    buffer[buffer.Length - 1] = (byte)(scrambler.BlockSize - fileStream.Length % scrambler.BlockSize);
+                    buffer[buffer.Length - 1] = (byte)(Scrambler.BlockSize - fileStream.Length % Scrambler.BlockSize);
                     scrambler.EncriptBlock(buffer);
                     requestStream.Write(buffer, 0, buffer.Length);
 
@@ -149,7 +149,7 @@ namespace AriesCloud.Classes
         /// <param name="savePath">Путь сохранения файла.</param>
         /// <param name="key">Ключ шифрования.</param>
         /// <returns>Удалось ли скачать файл.</returns>
-        public static bool DownloadFile(string directory, string fileName, string savePath, byte[] key)
+        public static void DownloadFile(string directory, string fileName, string savePath, byte[] key)
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>()
             {
@@ -158,85 +158,180 @@ namespace AriesCloud.Classes
                 { "fileName", fileName }
             };
 
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "file/downloadAPI")
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "files/downloadAPI")
             {
                 Content = new FormUrlEncodedContent(parameters)
             };
 
-            try
+            using (HttpClient httpClient = new HttpClient())
             {
-                using (HttpClient httpClient = new HttpClient())
+                httpClient.BaseAddress = new Uri(server);
+
+                using (FileStream fileStream = new FileStream(savePath, FileMode.Create, FileAccess.ReadWrite))
                 {
-                    httpClient.BaseAddress = new Uri(server);
-
-                    using (FileStream fileStream = new FileStream(savePath, FileMode.Create, FileAccess.ReadWrite))
+                    using (Task<HttpResponseMessage> responseTask = httpClient.SendAsync(message))
                     {
-                        using (Task<HttpResponseMessage> responseTask = httpClient.SendAsync(message))
+                        responseTask.Wait();
+
+                        using (HttpResponseMessage responseMessage = responseTask.Result)
                         {
-                            responseTask.Wait();
-
-                            using (HttpResponseMessage responseMessage = responseTask.Result)
+                            if (responseMessage.StatusCode == HttpStatusCode.NotFound)
                             {
-                                using (Task<Stream> streamTask = responseMessage.Content.ReadAsStreamAsync())
+                                throw new Exception($"На сервере отсутствует файл {fileName}.");
+                            }
+
+                            using (Task<Stream> streamTask = responseMessage.Content.ReadAsStreamAsync())
+                            {
+                                streamTask.Wait();
+
+                                using (Stream readStream = streamTask.Result)
                                 {
-                                    streamTask.Wait();
+                                    Scrambler scrambler = new Scrambler(key);
+                                    long blockCount = readStream.Length / Scrambler.BlockSize - 1;
+                                    byte[] buffer = new byte[Scrambler.BlockSize];
 
-                                    using (Stream readStream = streamTask.Result)
+                                    for (int i = 0; i < blockCount; i++)
                                     {
-                                        Scrambler scrambler = new Scrambler(key);
-                                        long blockCount = readStream.Length / scrambler.BlockSize - 1;
-                                        byte[] buffer = new byte[scrambler.BlockSize];
-
-                                        for (int i = 0; i < blockCount; i++)
-                                        {
-                                            readStream.Read(buffer, 0, buffer.Length);
-                                            scrambler.DecriptBlock(buffer);
-                                            fileStream.Write(buffer, 0, buffer.Length);
-                                        }
-
                                         readStream.Read(buffer, 0, buffer.Length);
                                         scrambler.DecriptBlock(buffer);
-                                        byte zeroCount = buffer[buffer.Length - 1];
-                                        fileStream.Write(buffer, 0, buffer.Length - zeroCount);
+                                        fileStream.Write(buffer, 0, buffer.Length);
                                     }
+
+                                    readStream.Read(buffer, 0, buffer.Length);
+                                    scrambler.DecriptBlock(buffer);
+                                    byte zeroCount = buffer[buffer.Length - 1];
+                                    fileStream.Write(buffer, 0, buffer.Length - zeroCount);
                                 }
                             }
                         }
                     }
                 }
             }
-            catch (Exception)
-            {
-                return false;
-            }
+        }
 
-            return true;
+        /// <summary>
+        /// Переименование файла или папки.
+        /// </summary>
+        /// <param name="directory">Папка с файлом или папкой.</param>
+        /// <param name="itemName">Имя файла или папки.</param>
+        /// <param name="newName">Новое имя файла или папки.</param>
+        /// <returns>Удалось ли переименовать файл или папки.</returns>
+        public static bool RenameDirecoryItem(string directory, string itemName, string newName)
+        {
+            Dictionary<string, string> parameters = new Dictionary<string, string>()
+            {
+                { "hash", UserData.Hash },
+                { "dir", directory },
+                { "oldName", itemName },
+                { "newName", newName }
+            };
+
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "files/rename")
+            {
+                Content = new FormUrlEncodedContent(parameters)
+            };
+
+            return SendMessage<bool>(message);
+        }
+
+        /// <summary>
+        /// Удаление файла или папке.
+        /// </summary>
+        /// <param name="directory">Путь к папке с файлом или папкой.</param>
+        /// <param name="itemName">Имя папки или файла.</param>
+        /// <returns>Удалось ли удалить файл или папку.</returns>
+        public static bool RemoveDirecoryItem(string directory, string itemName)
+        {
+            Dictionary<string, string> parameters = new Dictionary<string, string>()
+            {
+                { "hash", UserData.Hash },
+                { "dir", directory },
+                { "dataFiles", itemName }
+            };
+
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "files/delFiles")
+            {
+                Content = new FormUrlEncodedContent(parameters)
+            };
+
+            return SendMessage<bool>(message);
+        }
+
+        /// <summary>
+        /// Перемещение папки или файла.
+        /// </summary>
+        /// <param name="itemPath">Путь к папке или файлу.</param>
+        /// <param name="newItemPath">Новый путь к папке или файлу.</param>
+        /// <returns>Удалось ли переместить папку или файл.</returns>
+        public static bool MoveDirecoryItem(string itemPath, string newItemPath)
+        {
+            Dictionary<string, string> parameters = new Dictionary<string, string>()
+            {
+                { "hash", UserData.Hash },
+                { "oldPath", itemPath },
+                { "newPath", newItemPath }
+            };
+
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "files/move")
+            {
+                Content = new FormUrlEncodedContent(parameters)
+            };
+
+            return SendMessage<bool>(message);
+        }
+
+        /// <summary>
+        /// Создание папки.
+        /// </summary>
+        /// <param name="directory">Путь к папке где будет создана папки.</param>
+        /// <param name="directoryName">Название новой папки.</param>
+        /// <returns>Создана ли папка.</returns>
+        public static bool CreateDirectory(string directory, string directoryName)
+        {
+            Dictionary<string, string> parameters = new Dictionary<string, string>()
+            {
+                { "hash", UserData.Hash },
+                { "dir", directory },
+                { "nameFolder", directoryName }
+            };
+
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "files/createFolder")
+            {
+                Content = new FormUrlEncodedContent(parameters)
+            };
+
+            return SendMessage<bool>(message);
         }
 
         /// <summary>
         /// Получение содержимого папки.
         /// </summary>
-        /// <param name="directoryPath">Путь к папке.</param>
+        /// <param name="directory">Путь к папке.</param>
         /// <returns>Содержимое папки.</returns>
         /// <exception cref="HttpRequestException"></exception>
         /// <exception cref="Exception"></exception>
-        public static List<DirectoryItem> GetDirecoryItems(string directoryPath)
+        public static List<DirectoryItem> GetDirecoryItems(string directory)
         {
-            // TODO: Добавить получение файлов и папок из конкретной директории.
             List<DirectoryItem> directoryItems = new List<DirectoryItem>();
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "main/getFiles");
-            string result = SendMessage<string>(message);
 
-            Dictionary<string, string> dictValues = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(result);
-
-            foreach (KeyValuePair<string, string> item in dictValues)
+            Dictionary<string, string> parameters = new Dictionary<string, string>()
             {
-                File file = new File()
-                {
-                    Name = item.Value
-                };
+                { "hash", UserData.Hash },
+                { "dir", directory }
+            };
 
-                directoryItems.Add(file);
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "files/getFiles")
+            {
+                Content = new FormUrlEncodedContent(parameters)
+            };
+
+            string result = SendMessage<string>(message);
+            List<SerializeItem> items = System.Text.Json.JsonSerializer.Deserialize<List<SerializeItem>>(result);
+
+            foreach (SerializeItem item in items)
+            {
+                DirectoryItem directoryItem = item.Type == "f" ? new File(item.Name) : new Directory(item.Name);
+                directoryItems.Add(directoryItem);
             }
 
             return directoryItems;

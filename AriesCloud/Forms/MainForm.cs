@@ -29,8 +29,9 @@ namespace AriesCloud.Forms
             KeyPreview = true;
             fileManager = new FileManager();
             fileManager.ChangeDirectory += FileManagerOnChangeDirectory;
-
-            UpdateFiles();
+            fileManager.UpdateItems += UpdateItems;
+            pathTextBox.Text = fileManager.CurrentDirectory;
+            UpdateItems(fileManager);
         }
 
         /// <summary>
@@ -44,17 +45,56 @@ namespace AriesCloud.Forms
         }
 
         /// <summary>
-        /// Обработчик кнопки "Загрузить".
+        /// Обработчик кнопки "Загрузить файл".
         /// </summary>
-        /// <param name="sender">Кнопка "Загрузить".</param>
+        /// <param name="sender">Кнопка "Загрузить файл".</param>
         /// <param name="e">Данные события.</param>
-        private void UploadToolStripMenuItemOnClick(object sender, EventArgs e)
+        private void UploadFileToolStripMenuItemOnClick(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            try
             {
-                fileManager.UploadFile(openFileDialog.FileName);
+                using (OpenFileDialog openFileDialog = new OpenFileDialog())
+                {
+                    openFileDialog.Title = "Выберите файлы для загрузки.";
+                    openFileDialog.Multiselect = true;
+
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        foreach (string filePath in openFileDialog.FileNames)
+                        {
+                            fileManager.UploadFile(filePath);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                InfoViewer.ShowError(ex);
+            }
+        }
+
+        /// <summary>
+        /// Обработчик кнопки "Загрузить папку".
+        /// </summary>
+        /// <param name="sender">Кнопка "Загрузить папку".</param>
+        /// <param name="e">Данные события.</param>
+        private void UploadDirectoryToolStripMenuItemOnClick(object sender, EventArgs e)
+        {
+            try
+            {
+                using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
+                {
+                    folderBrowserDialog.Description = "Выберите папку для загрузки.";
+
+                    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        fileManager.UploadDirectory(folderBrowserDialog.SelectedPath);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                InfoViewer.ShowError(ex);
             }
         }
 
@@ -65,7 +105,7 @@ namespace AriesCloud.Forms
         /// <param name="e">Данные события.</param>
         private void DownloadToolStripMenuItemOnClick(object sender, EventArgs e)
         {
-            DownloadFiles();
+            DownloadItems();
         }
 
         /// <summary>
@@ -85,7 +125,8 @@ namespace AriesCloud.Forms
         /// <param name="e">Данные события.</param>
         private void UpdateToolStripMenuItemOnClick(object sender, EventArgs e)
         {
-            UpdateFiles();
+            fileManager.GetDirectoryItems();
+            UpdateItems(fileManager);
         }
 
         /// <summary>
@@ -95,7 +136,7 @@ namespace AriesCloud.Forms
         /// <param name="e">Данные события.</param>
         private void RemoveToolStripMenuItemOnClick(object sender, EventArgs e)
         {
-            DeleteFiles();
+            DeleteItems();
         }
 
         /// <summary>
@@ -152,7 +193,7 @@ namespace AriesCloud.Forms
         /// <param name="e">Данные события.</param>
         private void DownloadContextToolStripMenuItemOnClick(object sender, EventArgs e)
         {
-            DownloadFiles();
+            DownloadItems();
         }
 
         /// <summary>
@@ -172,7 +213,63 @@ namespace AriesCloud.Forms
         /// <param name="e">Данные события.</param>
         private void RemoveContextToolStripMenuItemOnClick(object sender, EventArgs e)
         {
-            DeleteFiles();
+            DeleteItems();
+        }
+
+        /// <summary>
+        /// Обработчик кнопок файлов и папок.
+        /// </summary>
+        /// <param name="sender">Главный ListView.</param>
+        /// <param name="e">Данные события.</param>
+        private void MainListViewOnDoubleClick(object sender, EventArgs e)
+        {
+            DirectoryItem item = (DirectoryItem)mainListView.SelectedItems[0].Tag;
+
+            if (item is Directory)
+            {
+                fileManager.OpenDirectory((Directory)item);
+            }
+        }
+
+        /// <summary>
+        /// Обработчик изменения имени файла или папки.
+        /// </summary>
+        /// <param name="sender">Главный ListView.</param>
+        /// <param name="e">Данные события.</param>
+        private void MainListViewOnAfterLabelEdit(object sender, LabelEditEventArgs e)
+        {
+            if (e.Label == null)
+            {
+                return;
+            }
+
+            try
+            {
+                DirectoryItem item = (DirectoryItem)mainListView.Items[e.Item].Tag;
+
+                if (item is Directory)
+                {
+                    fileManager.RenameDirectory((Directory)item, e.Label);
+                }
+                else
+                {
+                    fileManager.RenameFile((File)item, e.Label);
+                }
+            }
+            catch (Exception ex)
+            {
+                InfoViewer.ShowError(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Обработчик кнопки "Вверх".
+        /// </summary>
+        /// <param name="sender">Кнопка "Вверх".</param>
+        /// <param name="e">Данные события.</param>
+        private void UpButtonOnClick(object sender, EventArgs e)
+        {
+            fileManager.CloseDirectory();
         }
 
         /// <summary>
@@ -180,15 +277,96 @@ namespace AriesCloud.Forms
         /// </summary>
         private void CreateDirectory()
         {
-            // TODO: Добавить логику добавления папки.
+            try
+            {
+                Directory directory = fileManager.AddDirectory();
+                mainListView.Items[directory.Name].BeginEdit();
+            }
+            catch (Exception ex)
+            {
+                InfoViewer.ShowError(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Скачивание файлов.
+        /// </summary>
+        private void DownloadItems()
+        {
+            if (mainListView.SelectedItems.Count == 0)
+            {
+                InfoViewer.ShowError("Выберите хотябы один элемент.");
+                return;
+            }
+
+            using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
+            {
+                folderBrowserDialog.Description = "Укажите папку для сохранения.";
+
+                if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                {
+                    foreach (ListViewItem item in mainListView.SelectedItems)
+                    {
+                        DirectoryItem directoryItem = (DirectoryItem)item.Tag;
+
+                        if (directoryItem is File)
+                        {
+                            fileManager.DownloadFile((File)directoryItem, $"{folderBrowserDialog.SelectedPath}\\{directoryItem.Name}");
+                        }
+                        else
+                        {
+                            fileManager.DownloadDirectory((Directory)directoryItem, folderBrowserDialog.SelectedPath);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Переименование файла.
+        /// </summary>
+        private void RenameFile()
+        {
+            if (mainListView.SelectedItems.Count > 0)
+            {
+                mainListView.SelectedItems[0].BeginEdit();
+            }
+        }
+        
+        /// <summary>
+        /// Удаление файлов и папок.
+        /// </summary>
+        private void DeleteItems()
+        {
+            foreach (ListViewItem item in mainListView.SelectedItems)
+            {
+                DirectoryItem directoryItem = (DirectoryItem)item.Tag;
+
+                if (directoryItem is File)
+                {
+                    fileManager.RemoveFile((File)directoryItem);
+                }
+                else
+                {
+                    fileManager.RemoveDirectory((Directory)directoryItem);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Изменение открытой папки.
+        /// </summary>
+        /// <param name="sender">Файловый менеджер вызвавший событие.</param>
+        private void FileManagerOnChangeDirectory(FileManager sender)
+        {
+            pathTextBox.Text = fileManager.CurrentDirectory;
         }
 
         /// <summary>
         /// Обновление списка файлов.
         /// </summary>
-        private void UpdateFiles()
+        private void UpdateItems(FileManager fileManager)
         {
-            fileManager.GetDirectoryItems();
             mainListView.BeginUpdate();
 
             try
@@ -199,6 +377,7 @@ namespace AriesCloud.Forms
                 {
                     ListViewItem listViewItem = new ListViewItem(directory.Name, 1)
                     {
+                        Name = directory.Name,
                         Tag = directory
                     };
 
@@ -209,51 +388,21 @@ namespace AriesCloud.Forms
                 {
                     ListViewItem listViewItem = new ListViewItem(file.Name, 0)
                     {
+                        Name = file.Name,
                         Tag = file
                     };
 
                     mainListView.Items.Add(listViewItem);
                 }
             }
+            catch (Exception ex)
+            {
+                InfoViewer.ShowError(ex.Message);
+            }
             finally
             {
                 mainListView.EndUpdate();
             }
-        }
-
-        /// <summary>
-        /// Скачивание файлов.
-        /// </summary>
-        private void DownloadFiles()
-        {
-            // TODO: Добавить логику скачивания файлов.
-        }
-
-        /// <summary>
-        /// Переименование файла.
-        /// </summary>
-        private void RenameFile()
-        {
-            // TODO: Добавить логику переименования файла.
-        }
-        
-        /// <summary>
-        /// Удаление файлов.
-        /// </summary>
-        private void DeleteFiles()
-        {
-            // TODO: Добавить логику удаления файлов.
-        }
-
-        /// <summary>
-        /// Изменение открытой папки.
-        /// </summary>
-        /// <param name="sender">Файловый менеджер вызвавший событие.</param>
-        /// <param name="directoryPath">Путь к папке.</param>
-        private void FileManagerOnChangeDirectory(FileManager sender, string directoryPath)
-        {
-            pathTextBox.Text = directoryPath;
-            UpdateFiles();
         }
     }
 }

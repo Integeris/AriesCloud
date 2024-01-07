@@ -27,13 +27,23 @@ namespace AriesCloud.Forms
         /// <param name="e">Данные события.</param>
         private void ApplyButtonOnClick(object sender, EventArgs e)
         {
-            // TODO: Сделать провеку всех полей.
+            if (String.IsNullOrWhiteSpace(keyPathTextBox.Text))
+            {
+                InfoViewer.ShowError("Не указан файл с ключом.");
+                return;
+            }
 
-            UserData.KeyPath = keyPathTextBox.Text;
+            try
+            {
+                Configurator.KeyLoad(keyPathTextBox.Text);
+            }
+            catch (Exception ex)
+            {
+                InfoViewer.ShowError(ex.Message);
+                return;
+            }
+
             Configurator.Save();
-
-            // TODO: Сохранить текущие настройки.
-
             Close();
         }
 

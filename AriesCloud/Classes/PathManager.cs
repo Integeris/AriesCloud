@@ -59,7 +59,10 @@ namespace AriesCloud.Classes
                 index += path.Count;
             }
 
-            path.RemoveAt(index);
+            if (path.Count > 0)
+            {
+                path.RemoveAt(index);
+            }
         }
 
         /// <summary>
@@ -68,7 +71,7 @@ namespace AriesCloud.Classes
         /// <returns>Путь в текстовом виде.</returns>
         public override string ToString()
         {
-            return String.Join("\\", path);
+            return $"/{String.Join("/", path)}";
         }
 
         /// <summary>

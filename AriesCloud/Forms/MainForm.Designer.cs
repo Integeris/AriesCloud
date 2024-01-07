@@ -38,7 +38,7 @@
             this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.uploadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uploadFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,6 +52,7 @@
             this.mainListView = new System.Windows.Forms.ListView();
             this.columnName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.mainImageList = new System.Windows.Forms.ImageList(this.components);
+            this.uploadDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainContextMenuStrip.SuspendLayout();
             this.mainMenuStrip.SuspendLayout();
             this.controlPanel.SuspendLayout();
@@ -78,7 +79,7 @@
             // 
             this.downloadContextToolStripMenuItem.Name = "downloadContextToolStripMenuItem";
             this.downloadContextToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-            this.downloadContextToolStripMenuItem.Text = "Загрузить";
+            this.downloadContextToolStripMenuItem.Text = "Скачать";
             this.downloadContextToolStripMenuItem.Click += new System.EventHandler(this.DownloadContextToolStripMenuItemOnClick);
             // 
             // renameContextToolStripMenuItem
@@ -113,7 +114,8 @@
             this.fileToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.createDirectoryToolStripMenuItem,
-            this.uploadToolStripMenuItem,
+            this.uploadFileToolStripMenuItem,
+            this.uploadDirectoryToolStripMenuItem,
             this.downloadToolStripMenuItem,
             this.renameToolStripMenuItem,
             this.updateToolStripMenuItem,
@@ -130,13 +132,13 @@
             this.createDirectoryToolStripMenuItem.Text = "Создать папку";
             this.createDirectoryToolStripMenuItem.Click += new System.EventHandler(this.CreateDirectoryToolStripMenuItemOnClick);
             // 
-            // uploadToolStripMenuItem
+            // uploadFileToolStripMenuItem
             // 
-            this.uploadToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.uploadToolStripMenuItem.Name = "uploadToolStripMenuItem";
-            this.uploadToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.uploadToolStripMenuItem.Text = "Загрузить";
-            this.uploadToolStripMenuItem.Click += new System.EventHandler(this.UploadToolStripMenuItemOnClick);
+            this.uploadFileToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.uploadFileToolStripMenuItem.Name = "uploadFileToolStripMenuItem";
+            this.uploadFileToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.uploadFileToolStripMenuItem.Text = "Загрузить файл";
+            this.uploadFileToolStripMenuItem.Click += new System.EventHandler(this.UploadFileToolStripMenuItemOnClick);
             // 
             // downloadToolStripMenuItem
             // 
@@ -211,10 +213,13 @@
             // 
             this.pathTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.pathTextBox.BackColor = System.Drawing.Color.White;
             this.pathTextBox.Location = new System.Drawing.Point(39, 4);
             this.pathTextBox.Name = "pathTextBox";
+            this.pathTextBox.ReadOnly = true;
             this.pathTextBox.Size = new System.Drawing.Size(500, 26);
             this.pathTextBox.TabIndex = 6;
+            this.pathTextBox.TabStop = false;
             // 
             // upButton
             // 
@@ -226,6 +231,7 @@
             this.upButton.TabIndex = 5;
             this.upButton.Text = "🡹";
             this.upButton.UseVisualStyleBackColor = true;
+            this.upButton.Click += new System.EventHandler(this.UpButtonOnClick);
             // 
             // mainListView
             // 
@@ -234,6 +240,8 @@
             this.mainListView.ContextMenuStrip = this.mainContextMenuStrip;
             this.mainListView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainListView.HideSelection = false;
+            this.mainListView.LabelEdit = true;
+            this.mainListView.LabelWrap = false;
             this.mainListView.LargeImageList = this.mainImageList;
             this.mainListView.Location = new System.Drawing.Point(0, 60);
             this.mainListView.Name = "mainListView";
@@ -242,6 +250,8 @@
             this.mainListView.TabIndex = 7;
             this.mainListView.UseCompatibleStateImageBehavior = false;
             this.mainListView.View = System.Windows.Forms.View.Details;
+            this.mainListView.AfterLabelEdit += new System.Windows.Forms.LabelEditEventHandler(this.MainListViewOnAfterLabelEdit);
+            this.mainListView.DoubleClick += new System.EventHandler(this.MainListViewOnDoubleClick);
             // 
             // columnName
             // 
@@ -254,6 +264,14 @@
             this.mainImageList.TransparentColor = System.Drawing.Color.Transparent;
             this.mainImageList.Images.SetKeyName(0, "File.png");
             this.mainImageList.Images.SetKeyName(1, "Folder.png");
+            // 
+            // uploadDirectoryToolStripMenuItem
+            // 
+            this.uploadDirectoryToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.uploadDirectoryToolStripMenuItem.Name = "uploadDirectoryToolStripMenuItem";
+            this.uploadDirectoryToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.uploadDirectoryToolStripMenuItem.Text = "Загрузить папку";
+            this.uploadDirectoryToolStripMenuItem.Click += new System.EventHandler(this.UploadDirectoryToolStripMenuItemOnClick);
             // 
             // MainForm
             // 
@@ -285,7 +303,7 @@
         #endregion
         private System.Windows.Forms.MenuStrip mainMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem uploadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem uploadFileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem downloadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
@@ -305,5 +323,6 @@
         private System.Windows.Forms.ToolStripMenuItem createDirectoryToolStripMenuItem;
         private System.Windows.Forms.ColumnHeader columnName;
         private System.Windows.Forms.ImageList mainImageList;
+        private System.Windows.Forms.ToolStripMenuItem uploadDirectoryToolStripMenuItem;
     }
 }

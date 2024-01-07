@@ -10,12 +10,17 @@ namespace AriesCloud.Classes
         /// <summary>
         /// Размер блока.
         /// </summary>
-        private readonly int blockSize;
+        public const int BlockSize = 16;
+
+        /// <summary>
+        /// Размер ключа.
+        /// </summary>
+        public const int KeySize = 32;
 
         /// <summary>
         /// Таблица для линейного преобразования.
         /// </summary>
-        private readonly byte[] replaceBytes = 
+        private readonly byte[] replaceBytes =
         {
             0xFC, 0xEE, 0xDD, 0x11, 0xCF, 0x6E, 0x31, 0x16,
             0xFB, 0xC4, 0xFA, 0xDA, 0x23, 0xC5, 0x04, 0x4D,
@@ -331,26 +336,16 @@ namespace AriesCloud.Classes
         private readonly byte[][] keys;
 
         /// <summary>
-        /// Размер блока.
-        /// </summary>
-        public int BlockSize 
-        { 
-            get => blockSize;
-        }
-
-        /// <summary>
         /// Создание Шифратора.
         /// </summary>
         /// <param name="key">Ключ.</param>
         public Scrambler(byte[] key)
         {
-            // 32 - полная длинна ключа.
-            if (key.Length != 32)
+            if (key.Length != KeySize)
             {
                 throw new ArgumentOutOfRangeException(nameof(key), "Длинна ключа должна быть 32 байта.");
             }
 
-            blockSize = 16;
             linearTransformation = new byte[]
             {
                 1, 148, 32, 133, 16, 194, 192, 1, 251, 1, 192, 194, 16, 133, 32, 148
@@ -360,11 +355,11 @@ namespace AriesCloud.Classes
             
             for (int i = 0; i < keys.Length; i++)
             {
-                keys[i] = new byte[16];
+                keys[i] = new byte[BlockSize];
             }
 
-            Array.Copy(key, keys[0], blockSize);
-            Array.Copy(key, blockSize, keys[1], 0, blockSize);
+            Array.Copy(key, keys[0], BlockSize);
+            Array.Copy(key, BlockSize, keys[1], 0, BlockSize);
 
             GenerationRoundKeys();
         }
@@ -375,7 +370,7 @@ namespace AriesCloud.Classes
         /// <param name="block">Блок.</param>
         public void EncriptBlock(byte[] block)
         {
-            if (block.Length != blockSize)
+            if (block.Length != BlockSize)
             {
                 throw new ArgumentOutOfRangeException(nameof(block), "Длина массива должна быть 16 байт.");
             }
@@ -396,7 +391,7 @@ namespace AriesCloud.Classes
         /// <param name="block">Блок.</param>
         public void DecriptBlock(byte[] block)
         {
-            if (block.Length != blockSize)
+            if (block.Length != BlockSize)
             {
                 throw new ArgumentOutOfRangeException(nameof(block), "Длина массива должна быть 16 байт.");
             }
@@ -418,7 +413,7 @@ namespace AriesCloud.Classes
         /// <param name="key">Поправка.</param>
         private void ExclusiveOR(byte[] source, byte[] key)
         {
-            for (int i = 0; i < blockSize; i++)
+            for (int i = 0; i < BlockSize; i++)
             {
                 source[i] ^= key[i];
             }
@@ -432,7 +427,7 @@ namespace AriesCloud.Classes
         /// <returns>Переписанный блок.</returns>
         private void ReplaceBytes(byte[] block, byte[] replaceBytes)
         {
-            for (int i = 0; i < blockSize; i++)
+            for (int i = 0; i < BlockSize; i++)
             {
                 block[i] = replaceBytes[block[i]];
             }
@@ -480,7 +475,7 @@ namespace AriesCloud.Classes
         {
             byte sum = GaussiaMultiplication(block[0], linearTransformation[0]);
 
-            for (int i = 1; i < blockSize; i++)
+            for (int i = 1; i < BlockSize; i++)
             {
                 block[i - 1] = block[i];
                 sum ^= GaussiaMultiplication(block[i], linearTransformation[i]);
@@ -497,7 +492,7 @@ namespace AriesCloud.Classes
         {
             byte sum = block[15];
 
-            for (int i = blockSize - 1; i > 0; i--)
+            for (int i = BlockSize - 1; i > 0; i--)
             {
                 block[i] = block[i - 1];
                 sum ^= GaussiaMultiplication(block[i], linearTransformation[i]);
@@ -512,7 +507,7 @@ namespace AriesCloud.Classes
         /// <param name="block">Блок.</param>
         private void MultiTransform(byte[] block, Action<byte[]> transformBlock)
         {
-            for(int i = 0; i < blockSize; i++)
+            for(int i = 0; i < BlockSize; i++)
             {
                 transformBlock(block);
             }
@@ -548,8 +543,8 @@ namespace AriesCloud.Classes
                 int firstPart = i * 2 + 2;
                 int secondPart = i * 2 + 3;
 
-                keys[firstPart] = keys[firstPart - 2];
-                keys[secondPart] = keys[secondPart - 2];
+                Array.Copy(keys[firstPart - 2], keys[firstPart], BlockSize);
+                Array.Copy(keys[secondPart - 2], keys[secondPart], BlockSize);
 
                 for (int j = 0; j < 8; j++)
                 {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Threading;
 using System.Xml;
 
 namespace AriesCloud.Classes
@@ -40,7 +39,12 @@ namespace AriesCloud.Classes
 
                 if (login == UserData.Hash)
                 {
-                    UserData.KeyPath = user.Attributes.GetNamedItem("KeyPath").Value;
+                    try
+                    {
+                        KeyLoad(user.Attributes.GetNamedItem("KeyPath").Value);
+                    }
+                    catch (Exception) { }
+
                     return;
                 }
             }
@@ -48,6 +52,37 @@ namespace AriesCloud.Classes
             XmlElement newUser = CreateUser(document, UserData.Hash);
             users.AppendChild(newUser);
             document.Save(fileName);
+        }
+
+        /// <summary>
+        /// Загружает ключ из файла.
+        /// </summary>
+        /// <param name="keyPath">Путь к файлу ключа.</param>
+        /// <exception cref="Exception"></exception>
+        public static void KeyLoad(string keyPath)
+        {
+            if (String.IsNullOrWhiteSpace(keyPath) || keyPath.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+            {
+                throw new Exception("Путь не является путём к файлу.");
+            }
+
+            FileInfo fileInfo = new FileInfo(keyPath);
+
+            if (!fileInfo.Exists)
+            {
+                throw new Exception($"{fileInfo.FullName} файла не существует.");
+            }
+
+            using (FileStream fileStream = fileInfo.Open(FileMode.Open, FileAccess.Read))
+            {
+                if (fileStream.Length < Scrambler.KeySize)
+                {
+                    throw new Exception($"{fileInfo.FullName} должен быть больше или равен {Scrambler.KeySize} байт.");
+                }
+
+                UserData.KeyPath = keyPath;
+                fileStream.Read(UserData.Key, 0, Scrambler.KeySize);
+            }
         }
 
         /// <summary>

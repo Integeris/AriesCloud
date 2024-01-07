@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
+using System.IO;
 
 namespace AriesCloud.Classes
 {
@@ -28,13 +28,31 @@ namespace AriesCloud.Classes
         /// Изменение папки.
         /// </summary>
         /// <param name="sender">Файловый менеджер вызвавший событие.</param>
-        /// <param name="directoryPath">Путь к папке.</param>
-        public delegate void ChangeDirectoryHandler(FileManager sender, string directoryPath);
+        public delegate void ChangeDirectoryHandler(FileManager sender);
+
+        /// <summary>
+        /// Обновление списка файлов и папок в директории.
+        /// </summary>
+        /// <param name="sender">Файловый менеджер вызвавший событие.</param>
+        public delegate void UpdateItemsHandler(FileManager sender);
 
         /// <summary>
         /// Событие изменения папки.
         /// </summary>
         public event ChangeDirectoryHandler ChangeDirectory;
+
+        /// <summary>
+        /// Событие обновления файлов и папок в текущей директории.
+        /// </summary>
+        public event UpdateItemsHandler UpdateItems;
+
+        /// <summary>
+        /// Текущая папка.
+        /// </summary>
+        public string CurrentDirectory
+        {
+            get => pathManager.ToString();
+        }
 
         /// <summary>
         /// Папки.
@@ -69,8 +87,6 @@ namespace AriesCloud.Classes
         /// </summary>
         /// <param name="directory">Папка.</param>
         /// <exception cref="KeyNotFoundException"></exception>
-        /// <exception cref="HttpRequestException"></exception>
-        /// <exception cref="Exception"></exception>
         public void OpenDirectory(Directory directory)
         {
             if (!directories.Contains(directory))
@@ -80,19 +96,19 @@ namespace AriesCloud.Classes
 
             pathManager.Add(directory.Name);
             GetDirectoryItems();
-            ChangeDirectory.Invoke(this, pathManager.ToString());
+            ChangeDirectory.Invoke(this);
+            UpdateItems.Invoke(this);
         }
 
         /// <summary>
         /// Закрыть текущую папку.
         /// </summary>
-        /// <exception cref="HttpRequestException"></exception>
-        /// <exception cref="Exception"></exception>
         public void CloseDirectory()
         {
             pathManager.RemoveAt(-1);
             GetDirectoryItems();
-            ChangeDirectory.Invoke(this, pathManager.ToString());
+            ChangeDirectory.Invoke(this);
+            UpdateItems.Invoke(this);
         }
 
         /// <summary>
@@ -102,15 +118,16 @@ namespace AriesCloud.Classes
         /// <exception cref="Exception"></exception>
         public void UploadFile(string filePath)
         {
-            System.IO.FileInfo fileInfo = new System.IO.FileInfo(filePath);
+            FileInfo fileInfo = new FileInfo(filePath);
 
             if (!fileInfo.Exists)
             {
                 throw new Exception("Указанного файла не существует.");
             }
 
-            Core.UploadFile(fileInfo, pathManager.ToString(), GetScramblerKey());
+            Core.UploadFile(fileInfo, pathManager.ToString(), UserData.Key);
             files.Add(new File(fileInfo.Name));
+            UpdateItems.Invoke(this);
         }
 
         /// <summary>
@@ -118,84 +135,147 @@ namespace AriesCloud.Classes
         /// </summary>
         /// <param name="file">Файл.</param>
         /// <param name="savePath">Полный путь сохранения для файла.</param>
-        /// <exception cref="Exception"></exception>
         public void DownloadFile(File file, string savePath)
         {
-            Core.DownloadFile(pathManager.ToString(), file.Name, savePath, GetScramblerKey());
+            Core.DownloadFile(pathManager.ToString(), file.Name, savePath, UserData.Key);
         }
 
         /// <summary>
         /// Переименовать файл.
         /// </summary>
         /// <param name="file">Файл.</param>
-        /// <exception cref="HttpRequestException"></exception>
-        /// <exception cref="Exception"></exception>
-        public void RenameFile(File file)
+        /// <param name="newFileName">Новое имя файла.</param>
+        public void RenameFile(File file, string newFileName)
         {
+            try
+            {
+                Core.MoveDirecoryItem($"{pathManager}/{file.Name}", $"{pathManager}/{newFileName}");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось переименовать файл.", ex);
+            }
 
+            file.Name = newFileName;
+            UpdateItems.Invoke(this);
         }
 
         /// <summary>
         /// Удалить файл.
         /// </summary>
         /// <param name="file">Файл.</param>
-        /// <exception cref="HttpRequestException"></exception>
-        /// <exception cref="Exception"></exception>
         public void RemoveFile(File file)
         {
+            try
+            {
+                Core.RemoveDirecoryItem(pathManager.ToString(), file.Name);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось удалить файл.", ex);
+            }
 
+            files.Remove(file);
+            UpdateItems.Invoke(this);
         }
 
         /// <summary>
         /// Добавить папку.
         /// </summary>
-        /// <param name="fullDirectoryName">Полный путь к папке.</param>
-        /// <exception cref="HttpRequestException"></exception>
-        /// <exception cref="Exception"></exception>
-        public void AddDirectory(string fullDirectoryName)
+        /// <returns>Новая папка.</returns>
+        public Directory AddDirectory()
         {
+            string directoryName = String.Empty;
 
+            for (int i = 1; i < Int32.MaxValue; i++)
+            {
+                directoryName = $"Новая папка {i}";
+
+                if (directories.FindIndex(dir => dir.Name == directoryName) == -1)
+                {
+                    break;
+                }
+            }
+
+            try
+            {
+                Core.CreateDirectory(pathManager.ToString(), directoryName);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось создать папку.", ex);
+            }
+
+            Directory directory = new Directory(directoryName);
+
+            directories.Add(directory);
+            UpdateItems.Invoke(this);
+
+            return directory;
+        }
+
+        /// <summary>
+        /// Загрузить папку.
+        /// </summary>
+        /// <param name="directoryPath">Полный путь к загружаемой папке.</param>
+        public void UploadDirectory(string directoryPath)
+        {
+            try
+            {
+                UploadDirectory(directoryPath, pathManager.ToString());
+                directories.Add(new Directory(Path.GetFileName(directoryPath)));
+                UpdateItems.Invoke(this);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось загрузить папку.", ex);
+            }
         }
 
         /// <summary>
         /// Скачать папку.
         /// </summary>
-        /// <param name="directory">Папка</param>
-        /// <param name="fullDirectoryName">Путь сохранения папки.</param>
-        /// <exception cref="HttpRequestException"></exception>
-        /// <exception cref="Exception"></exception>
-        public void DownloadDirectory(Directory directory, string fullDirectoryName)
+        /// <param name="directory">Папка.</param>
+        /// <param name="saveDirectory">Путь к папке сохранения.</param>
+        public void DownloadDirectory(Directory directory, string saveDirectory)
         {
-
+            DownloadDirectory(directory.Name, saveDirectory);
         }
 
         /// <summary>
         /// Переименовать папку.
         /// </summary>
         /// <param name="directory">Папка.</param>
-        /// <exception cref="HttpRequestException"></exception>
-        /// <exception cref="Exception"></exception>
-        public void RenameDirectory(Directory directory)
+        /// <param name="directoryNewName">Новое имя папки.</param>
+        public void RenameDirectory(Directory directory, string directoryNewName)
         {
+            try
+            {
+                Core.MoveDirecoryItem($"{pathManager}/{directory.Name}", $"{pathManager}/{directoryNewName}");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось переименовать папку.", ex);
+            }
 
+            directory.Name = directoryNewName;
+            UpdateItems.Invoke(this);
         }
 
         /// <summary>
         /// Удаление папки.
         /// </summary>
-        /// <param name="directory">Папка.ы</param>
-        /// <exception cref="HttpRequestException"></exception>
-        /// <exception cref="Exception"></exception>
+        /// <param name="directory">Папка.</param>
         public void RemoveDirectory(Directory directory)
         {
-
+            Core.RemoveDirecoryItem(pathManager.ToString(), directory.Name);
+            directories.Remove(directory);
+            UpdateItems.Invoke(this);
         }
 
         /// <summary>
         /// Получение папок и файлов текущей папки.
         /// </summary>
-        /// <exception cref="HttpRequestException"></exception>
-        /// <exception cref="Exception"></exception>
         public void GetDirectoryItems()
         {
             directories.Clear();
@@ -215,18 +295,50 @@ namespace AriesCloud.Classes
         }
 
         /// <summary>
-        /// Получение ключа шифрования из файла.
+        /// Скачать папку.
         /// </summary>
-        /// <returns>Ключ шифрования.</returns>
-        /// <exception cref="Exception"></exception>
-        private byte[] GetScramblerKey()
+        /// <param name="directoryName">Имя папки.</param>
+        /// <param name="saveDirectory">Путь сохранения папки.</param>
+        private void DownloadDirectory(string directoryName, string saveDirectory)
         {
-            if (!System.IO.File.Exists(UserData.KeyPath))
+            string serverPath = $"{pathManager}/{directoryName}";
+            string savePath = $"{saveDirectory}\\{directoryName}";
+            System.IO.Directory.CreateDirectory(savePath);
+
+            foreach (DirectoryItem item in Core.GetDirecoryItems(serverPath))
             {
-                throw new Exception("Ключа шифрования по указанному пути нет.");
+                if (item is File)
+                {
+                    Core.DownloadFile(serverPath, item.Name, $"{savePath}\\{item.Name}", UserData.Key);
+                }
+                else
+                {
+                    DownloadDirectory($"{directoryName}/{item.Name}", saveDirectory);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Загрузка директории.
+        /// </summary>
+        /// <param name="directoryPath">Путь к папке.</param>
+        /// <param name="serverPath">Путь к папке на сервере в которую надо загрузить папку.</param>
+        private void UploadDirectory(string directoryPath, string serverPath)
+        {
+            DirectoryInfo directoryInfo = new DirectoryInfo(directoryPath);
+            string serverDirectoryPath = $"{serverPath}/{directoryInfo.Name}";
+
+            Core.CreateDirectory(serverPath, directoryInfo.Name);
+            
+            foreach (FileInfo file in directoryInfo.GetFiles())
+            {
+                Core.UploadFile(file, serverDirectoryPath, UserData.Key);
             }
 
-            return System.IO.File.ReadAllBytes(UserData.KeyPath);
+            foreach (DirectoryInfo subDirectory in directoryInfo.GetDirectories())
+            {
+                UploadDirectory(subDirectory.FullName, serverDirectoryPath);
+            }
         }
     }
 }
