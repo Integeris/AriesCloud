@@ -128,6 +128,18 @@ if ($segments[0] == "files" && $acces != "NO") {
         $get->exit();
         return;
     }
+
+    if ($segments[1]=="changePasswordAPI"){
+        $get = new authentication();
+        $ret=$get->changePasswordAPI($_POST["hash"]);
+        if ($ret) {
+            echo $ret;
+            return;
+        } else {
+            echo "False";
+            return;
+        }
+    }
 }
 if ($segments[0] == "main" || $acces == "NO") {
     if ($segments[1] == "autorization") {

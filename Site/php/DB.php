@@ -50,7 +50,8 @@ class DB
         }
     }
 
-    public function getName($hash){
+    public function getName($hash)
+    {
         $pdo = $this->conn();
 
         $state = $pdo->prepare("SELECT * FROM users WHERE hash = :hash");
@@ -163,5 +164,21 @@ class DB
         } else {
             return False;
         }
+    }
+
+    public function changePassword($hash, $password)
+    {
+        $pdo = $this->conn();
+
+        $state = $pdo->prepare("SELECT * FROM users WHERE hash = :hash");
+        $state->execute(['hash' => $hash]);
+        $result = $state->fetch();
+        $login=$result["login"];
+        $newHash = md5($login . ".*." . $password);
+
+        $sql = "UPDATE users SET password = :password, hash= :newHash WHERE hash = :oldHash";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['password' => $password, 'newHash' => $newHash, 'oldHash' => $hash]);
+        return $newHash;
     }
 }

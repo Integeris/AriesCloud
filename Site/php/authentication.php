@@ -18,7 +18,7 @@ class authentication
         $hash = md5($login . ".*." . $password);
         $db = new DB();
         if ($db->auth($hash)) {
-            setcookie('uid', $hash, time() + 3600,'/');
+            setcookie('uid', $hash, time() + 3600, '/');
             echo "Good";
         } else {
             echo "Who are U?";
@@ -27,7 +27,7 @@ class authentication
 
     public function exit()
     {
-        setcookie('uid', "", time() + 3600,'/');
+        setcookie('uid', "", time() + 3600, '/');
     }
 
     public function sendMail($email)
@@ -52,9 +52,9 @@ class authentication
             $headers = "MIME-Version: 1.0\r\n";
             $headers .= "Content-type: text/html; charset=utf-8\r\n";
             $headers .= "From: AriesCloud@yandex.ru\r\n";
-            $result =  $mailSMTP->send($email, 'Code Verefication', $url."checkCode?code=$randomCode&email=$email", $headers);
+            $result =  $mailSMTP->send($email, 'Code Verefication', $url . "checkCode?code=$randomCode&email=$email", $headers);
             if ($result === true) {
-                $db->updateCode($email,$randomCode);
+                $db->updateCode($email, $randomCode);
                 return "True";
             } else {
                 return "Письмо не отправлено. Ошибка: " . $result;
@@ -70,7 +70,7 @@ class authentication
         if ($db->checkDB('users', 'email', $email)) {
             if ($db->checkDB('users', 'login', $login)) {
                 if ($db->reg($login, $password, $email)) {
-                    if ($this->sendMail($email)=="True")
+                    if ($this->sendMail($email) == "True")
                         echo "Регистрация прошла успешно, проверьте почту";
                     else
                         echo "Отправить письмо не удалось";
@@ -82,6 +82,20 @@ class authentication
             }
         } else {
             echo "Почтовый ящик занят";
+        }
+    }
+
+    public function changePasswordAPI($hash)
+    {
+        $db= new DB();
+        $ret=$db->changePassword($hash,$_POST["newPassword"]);
+        if($ret){
+            $oldDir = "./fileUsers/$hash";
+            $newDir = "./fileUsers/$ret";
+            rename($oldDir, $newDir);
+            return $ret;
+        }else{
+            return false;
         }
     }
 }
