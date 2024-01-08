@@ -291,7 +291,7 @@ function move() {
 }
 
 function openRename() {
-  $("#newName")[0].value = elem.children[1].innerText;
+  $("#newName")[0].value = elem.children[1].innerText.replace(/\.[^/.]+$/, '');
 }
 
 function rename() {
@@ -306,6 +306,20 @@ function rename() {
     },
     success: function (data) {
       getFiles();
+    },
+  });
+}
+
+function changePassword(){
+  $.ajax({
+    url: window.location.href + "/changePasswordWeb",
+    method: "post",
+    dataType: "html",
+    data: {
+      newPassword: $("#newPassword")[0].value,
+    },
+    success: function (data) {
+      console.log(data);
     },
   });
 }

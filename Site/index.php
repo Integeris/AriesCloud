@@ -129,11 +129,24 @@ if ($segments[0] == "files" && $acces != "NO") {
         return;
     }
 
-    if ($segments[1]=="changePasswordAPI"){
+    if ($segments[1] == "changePasswordAPI") {
         $get = new authentication();
-        $ret=$get->changePasswordAPI($_POST["hash"]);
+        $ret = $get->changePassword($_POST["hash"]);
         if ($ret) {
             echo $ret;
+            return;
+        } else {
+            echo "False";
+            return;
+        }
+    }
+
+    if ($segments[1] == "changePasswordWeb") {
+        $get = new authentication();
+        $ret = $get->changePassword($acces);
+        if ($ret) {
+            setcookie('uid', $ret, time() + 3600, '/');
+            echo "True";
             return;
         } else {
             echo "False";
@@ -168,7 +181,7 @@ if ($segments[0] == "main" || $acces == "NO") {
 
 
 
-if ($segments[0] == null && $acces=="NO") {
+if ($segments[0] == null && $acces == "NO") {
     $url = ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     $url = explode('?', $url);
     $url = $url[0];
@@ -176,7 +189,7 @@ if ($segments[0] == null && $acces=="NO") {
     die();
 }
 
-if($acces!="NO" && $segments[0] == null){
+if ($acces != "NO" && $segments[0] == null) {
     $url = ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     $url = explode('?', $url);
     $url = $url[0];
@@ -186,7 +199,7 @@ if($acces!="NO" && $segments[0] == null){
 
 
 $controllerFile = 'php/' . $controllerName . '.php';
-if (file_exists($controllerFile) && ($segments[0] == "files" && $acces != 'NO'|| $segments[0]=="main")) {
+if (file_exists($controllerFile) && ($segments[0] == "files" && $acces != 'NO' || $segments[0] == "main")) {
     require_once $controllerFile;
     $controller = new $controllerName();
 } else {

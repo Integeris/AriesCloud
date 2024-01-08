@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway:300,400');
+@import url('https://fonts.googleapis.com/css?family=Damion|Muli:400,600');
 
 body {
     background-color: #f1eef1;
@@ -488,4 +489,17 @@ select::-ms-expand {
     border: 1px solid #cccccc;
     -ms-word-break: normal;
     word-break: normal;
+}
+
+.effect-4{
+    border: 0;
+    padding: 5px 0 7px;
+    border: 1px solid transparent;
+    border-bottom-color: #ccc;
+    transition: 0.4s;
+}
+
+.effect-4:focus {
+    padding: 5px 14px 7px;
+    transition: 0.4s;
 }

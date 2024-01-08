@@ -25,10 +25,9 @@
     <div class="body">
         <div class="button">
             <a onclick="back()">Назад</a>
-            <a onclick="downloadFiles()">Скачать</a>
-            <a onclick="">Удалить</a>
             <a onclick="openWindows('Upload')">Загрузить</a>
-            <a onclick="">Выбрать</a>
+            <a onclick="openWindows('NewFolder')">Создать папку</a>
+            <a onclick="openWindows('ChangePass')">Сменить пароль</a>
         </div>
         <div class="way">
             <label id="way">/</label>
@@ -41,7 +40,6 @@
             <li onclick="downloadFiles('right')"><a>Скачать</a></li>
             <li onclick="delFile()"><a>Удалить</a></li>
             <li onclick="getDir(); openWindows('Move')"><a>Переместить</a></li>
-            <li onclick="openWindows('NewFolder')"><a>Создать папку</a></li>
             <li onclick="openRename(); openWindows('Rename')"><a>Переименовать</a></li>
         </ul>
     </div>
@@ -116,7 +114,7 @@
                             <select id="selectMove">
                             </select>
                         </label>
-                      </div>
+                    </div>
                 </div>
                 <div class="container">
                     <a class="buttonArrow button" id="submit" onclick="move()">Переместить</a>
@@ -124,6 +122,20 @@
             </form>
         </div>
         <button id="closeMove" class="popup-close">×</button>
+    </div>
+    <div id="popupChangePass" class="popup-window">
+        <div class="popup-content">
+            <form id="form" class="form">
+                <div class="omrs-input-group" style="flex-direction: column">
+                    <input class="effect-4" id="newPassword" type="text" placeholder="Новый пароль">
+                    <input class="effect-4" type="text" placeholder="Повторите пароль">
+                    <div class="container">
+                        <a class="buttonArrow button" id="submit" onclick="changePassword()">Сменить пароль</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <button id="closeChangePass" class="popup-close">×</button>
     </div>
     <script type="text/javascript">
         document.oncontextmenu = rightClick;

@@ -85,16 +85,16 @@ class authentication
         }
     }
 
-    public function changePasswordAPI($hash)
+    public function changePassword($hash)
     {
-        $db= new DB();
-        $ret=$db->changePassword($hash,$_POST["newPassword"]);
-        if($ret){
+        $db = new DB();
+        $ret = $db->changePassword($hash, $_POST["newPassword"]);
+        if ($ret) {
             $oldDir = "./fileUsers/$hash";
             $newDir = "./fileUsers/$ret";
             rename($oldDir, $newDir);
             return $ret;
-        }else{
+        } else {
             return false;
         }
     }
