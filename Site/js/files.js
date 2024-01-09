@@ -200,7 +200,6 @@ function downloadFiles(mode) {
       responseType: "blob",
     },
     success: function (response) {
-      console.log(response);
       var blob = new Blob([response]);
       var link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
@@ -232,10 +231,6 @@ function uploadFiles(mode) {
     },
   });
 }
-
-function selectedMod() {}
-
-function selected(e) {}
 
 function back() {
   dir = dir.replace(/\/[^/]+\/$/, "/");
@@ -324,4 +319,22 @@ function changePassword(){
   });
 }
 
-function unselected() {}
+function createKey(){
+  $.ajax({
+    url: window.location.href + "/createKey",
+    type: "POST",
+    processData: false,
+    contentType: false,
+    xhrFields: {
+      responseType: "blob",
+    },
+    success: function (response) {
+      var blob = new Blob([response]);
+      var link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = "key.key";
+      link.click();
+    },
+  });
+}
+

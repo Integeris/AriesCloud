@@ -14,10 +14,10 @@ class webFiles
     {
         $files = scandir("./fileUsers/$hash/" . $_POST["dir"]);
         $files = array_diff($files, array('.', '..'));
-        $ret=[];
-        foreach($files as $val){
-            $type= is_dir("./fileUsers/$hash/" . $_POST["dir"]."/$val")? 'p' : 'f';
-            $ret[]=["name"=>$val,"type"=>$type];
+        $ret = [];
+        foreach ($files as $val) {
+            $type = is_dir("./fileUsers/$hash/" . $_POST["dir"] . "/$val") ? 'p' : 'f';
+            $ret[] = ["name" => $val, "type" => $type];
         }
         echo json_encode($ret);
     }
@@ -124,7 +124,7 @@ class webFiles
                 }
 
                 $lastArray = end($encryptedFileContent);
-                
+
                 if (end($lastArray) == 16) {
                     array_pop($encryptedFileContent);
                 } else if (end($lastArray) < 16) {
@@ -273,7 +273,7 @@ class webFiles
         $startDir = "./fileUsers/$hash/";
         $excludeDir = $startDir . $_POST["dir"] . "/" . $_POST["excludeDir"];
         $directories = [];
-        $directories[]="/";
+        $directories[] = "/";
         $startDir = preg_replace('/\s+/', '/', $startDir);
         $excludeDir = preg_replace('/\/{2,}/', '/', $excludeDir);
         $iterator = new RecursiveIteratorIterator(
@@ -301,8 +301,8 @@ class webFiles
     public function move($hash)
     {
         $dir = "./fileUsers/$hash/";
-        $oldPath = $dir.$_POST["oldPath"];
-        $newPath = $dir.$_POST["newPath"];
+        $oldPath = $dir . $_POST["oldPath"];
+        $newPath = $dir . $_POST["newPath"];
 
         if (file_exists($oldPath)) {
             rename($oldPath, $newPath);
@@ -310,5 +310,21 @@ class webFiles
         } else {
             echo "False";
         }
+    }
+
+    public function createKey()
+    {
+        $numbers = [];
+        for ($i = 0; $i < 32; $i++) {
+            $numbers[] = rand(1, 255);
+        }
+
+        $numbers = pack('C*', ...$numbers);
+
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="key.key"');
+
+        echo ($numbers);
+        exit;
     }
 }

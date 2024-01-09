@@ -153,6 +153,12 @@ if ($segments[0] == "files" && $acces != "NO") {
             return;
         }
     }
+
+    if ($segments[1] == "createKey") {
+        $get = new webFiles();
+        $ret = $get->createKey();
+        return;
+    }
 }
 if ($segments[0] == "main" || $acces == "NO") {
     if ($segments[1] == "autorization") {
