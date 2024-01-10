@@ -71,6 +71,8 @@ namespace AriesCloud.Forms
             {
                 InfoViewer.ShowError(ex);
             }
+
+            InfoViewer.ShowInformation("Загрузка произошла успешно.");
         }
 
         /// <summary>
@@ -96,6 +98,8 @@ namespace AriesCloud.Forms
             {
                 InfoViewer.ShowError(ex);
             }
+
+            InfoViewer.ShowInformation("Загрузка произошла успешно.");
         }
 
         /// <summary>
@@ -125,8 +129,15 @@ namespace AriesCloud.Forms
         /// <param name="e">Данные события.</param>
         private void UpdateToolStripMenuItemOnClick(object sender, EventArgs e)
         {
-            fileManager.GetDirectoryItems();
-            UpdateItems(fileManager);
+            try
+            {
+                fileManager.GetDirectoryItems();
+                UpdateItems(fileManager);
+            }
+            catch (Exception ex)
+            {
+                InfoViewer.ShowError(ex);
+            }
         }
 
         /// <summary>
@@ -223,11 +234,18 @@ namespace AriesCloud.Forms
         /// <param name="e">Данные события.</param>
         private void MainListViewOnDoubleClick(object sender, EventArgs e)
         {
-            DirectoryItem item = (DirectoryItem)mainListView.SelectedItems[0].Tag;
-
-            if (item is Directory)
+            try
             {
-                fileManager.OpenDirectory((Directory)item);
+                DirectoryItem item = (DirectoryItem)mainListView.SelectedItems[0].Tag;
+
+                if (item is Directory)
+                {
+                    fileManager.OpenDirectory((Directory)item);
+                }
+            }
+            catch (Exception ex)
+            {
+                InfoViewer.ShowError(ex);
             }
         }
 
@@ -269,7 +287,14 @@ namespace AriesCloud.Forms
         /// <param name="e">Данные события.</param>
         private void UpButtonOnClick(object sender, EventArgs e)
         {
-            fileManager.CloseDirectory();
+            try
+            {
+                fileManager.CloseDirectory();
+            }
+            catch (Exception ex)
+            {
+                InfoViewer.ShowError(ex);
+            }
         }
 
         /// <summary>
@@ -299,27 +324,36 @@ namespace AriesCloud.Forms
                 return;
             }
 
-            using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
+            try
             {
-                folderBrowserDialog.Description = "Укажите папку для сохранения.";
-
-                if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
                 {
-                    foreach (ListViewItem item in mainListView.SelectedItems)
-                    {
-                        DirectoryItem directoryItem = (DirectoryItem)item.Tag;
+                    folderBrowserDialog.Description = "Укажите папку для сохранения.";
 
-                        if (directoryItem is File)
+                    if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        foreach (ListViewItem item in mainListView.SelectedItems)
                         {
-                            fileManager.DownloadFile((File)directoryItem, $"{folderBrowserDialog.SelectedPath}\\{directoryItem.Name}");
-                        }
-                        else
-                        {
-                            fileManager.DownloadDirectory((Directory)directoryItem, folderBrowserDialog.SelectedPath);
+                            DirectoryItem directoryItem = (DirectoryItem)item.Tag;
+
+                            if (directoryItem is File)
+                            {
+                                fileManager.DownloadFile((File)directoryItem, $"{folderBrowserDialog.SelectedPath}\\{directoryItem.Name}");
+                            }
+                            else
+                            {
+                                fileManager.DownloadDirectory((Directory)directoryItem, folderBrowserDialog.SelectedPath);
+                            }
                         }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                InfoViewer.ShowError(ex);
+            }
+
+            InfoViewer.ShowInformation("Скачивание произошло успешно.");
         }
 
         /// <summary>
@@ -338,18 +372,25 @@ namespace AriesCloud.Forms
         /// </summary>
         private void DeleteItems()
         {
-            foreach (ListViewItem item in mainListView.SelectedItems)
+            try
             {
-                DirectoryItem directoryItem = (DirectoryItem)item.Tag;
+                foreach (ListViewItem item in mainListView.SelectedItems)
+                {
+                    DirectoryItem directoryItem = (DirectoryItem)item.Tag;
 
-                if (directoryItem is File)
-                {
-                    fileManager.RemoveFile((File)directoryItem);
+                    if (directoryItem is File)
+                    {
+                        fileManager.RemoveFile((File)directoryItem);
+                    }
+                    else
+                    {
+                        fileManager.RemoveDirectory((Directory)directoryItem);
+                    }
                 }
-                else
-                {
-                    fileManager.RemoveDirectory((Directory)directoryItem);
-                }
+            }
+            catch (Exception ex) 
+            { 
+                InfoViewer.ShowError(ex); 
             }
         }
 

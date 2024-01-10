@@ -24,15 +24,16 @@ namespace AriesCloud.Classes
         /// <param name="ex">Ошибка.</param>
         public static void ShowError(Exception ex)
         {
-            List<string> exeptions = new List<string>();
+            Exception exception = ex;
+            List<string> exceptions = new List<string>();
 
-            while (ex != null)
+            for (int i = 0; exception != null; i++)
             {
-                exeptions.Add(ex.Message);
-                ex = ex.InnerException;
+                exceptions.Add($"{i}) {exception.Message};");
+                exception = exception.InnerException;
             }
 
-            ShowError(String.Join("\n", exeptions));
+            ShowError(String.Join("\n", exceptions));
         }
 
         /// <summary>

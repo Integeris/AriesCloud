@@ -17,7 +17,8 @@ namespace AriesCloud.Classes
         /// <summary>
         /// Загрузка данных пользователя.
         /// </summary>
-        public static void Load()
+        /// <param name="login">Логин пользователя.</param>
+        public static void Load(string login)
         {
             XmlDocument document = new XmlDocument();
 
@@ -35,9 +36,9 @@ namespace AriesCloud.Classes
 
             foreach (XmlNode user in users)
             {
-                string login = user.Attributes.GetNamedItem("Hash").Value;
+                string loadLogin = user.Attributes.GetNamedItem("Login").Value;
 
-                if (login == UserData.Hash)
+                if (loadLogin == login)
                 {
                     try
                     {
@@ -49,7 +50,7 @@ namespace AriesCloud.Classes
                 }
             }
 
-            XmlElement newUser = CreateUser(document, UserData.Hash);
+            XmlElement newUser = CreateUser(document, UserData.Login);
             users.AppendChild(newUser);
             document.Save(fileName);
         }
@@ -80,8 +81,9 @@ namespace AriesCloud.Classes
                     throw new Exception($"{fileInfo.FullName} должен быть больше или равен {Scrambler.KeySize} байт.");
                 }
 
-                UserData.KeyPath = keyPath;
                 fileStream.Read(UserData.Key, 0, Scrambler.KeySize);
+                UserData.KeyPath = keyPath;
+                UserData.KeyLoad = true;
             }
         }
 
@@ -107,9 +109,9 @@ namespace AriesCloud.Classes
 
             foreach (XmlNode user in users)
             {
-                string login = user.Attributes.GetNamedItem("Hash").Value;
+                string login = user.Attributes.GetNamedItem("Login").Value;
 
-                if (login == UserData.Hash)
+                if (login == UserData.Login)
                 {
                     user.Attributes.GetNamedItem("KeyPath").Value = UserData.KeyPath;
                     document.Save(fileName);
@@ -117,7 +119,7 @@ namespace AriesCloud.Classes
                 }
             }
 
-            XmlElement newUser = CreateUser(document, UserData.Hash);
+            XmlElement newUser = CreateUser(document, UserData.Login);
             newUser.Value = UserData.KeyPath;
             users.AppendChild(newUser);
             document.Save(fileName);
@@ -127,13 +129,13 @@ namespace AriesCloud.Classes
         /// Создание нового пользователя в файле конфигурации.
         /// </summary>
         /// <param name="document">Объект документа.</param>
-        /// <param name="hash">Хеш нового пользователя.</param>
+        /// <param name="login">Логин нового пользователя.</param>
         /// <returns>Новый пользователь.</returns>
-        private static XmlElement CreateUser(XmlDocument document, string hash)
+        private static XmlElement CreateUser(XmlDocument document, string login)
         {
             XmlElement newUser = document.CreateElement("User");
-            XmlAttribute tmp = document.CreateAttribute("Hash");
-            tmp.Value = hash;
+            XmlAttribute tmp = document.CreateAttribute("Login");
+            tmp.Value = login;
             newUser.Attributes.Append(tmp);
             tmp = document.CreateAttribute("KeyPath");
             newUser.Attributes.Append(tmp);

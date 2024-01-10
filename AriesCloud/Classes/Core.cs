@@ -29,7 +29,7 @@ namespace AriesCloud.Classes
         {
             Dictionary<string, string> parameters = new Dictionary<string, string>()
             {
-                { "hash", token}
+                { "hash", token }
             };
 
             HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "main/autorizationHash")
@@ -68,6 +68,26 @@ namespace AriesCloud.Classes
             {
                 throw new Exception($"Не удалось зарегистрироваться\n{result}");
             }
+        }
+
+        /// <summary>
+        /// Изменение пароля.
+        /// </summary>
+        /// <param name="newPassword">Новый пароль.</param>
+        public static void ChangePassword(string newPassword)
+        {
+            Dictionary<string, string> parameters = new Dictionary<string, string>()
+            {
+                { "hash", UserData.Hash },
+                { "newPassword", newPassword }
+            };
+
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "main/changePasswordAPI")
+            {
+                Content = new FormUrlEncodedContent(parameters)
+            };
+
+            SendMessage<bool>(message);
         }
 
         /// <summary>

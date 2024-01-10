@@ -118,6 +118,8 @@ namespace AriesCloud.Classes
         /// <exception cref="Exception"></exception>
         public void UploadFile(string filePath)
         {
+            KeyCheck();
+
             FileInfo fileInfo = new FileInfo(filePath);
 
             if (!fileInfo.Exists)
@@ -137,7 +139,16 @@ namespace AriesCloud.Classes
         /// <param name="savePath">Полный путь сохранения для файла.</param>
         public void DownloadFile(File file, string savePath)
         {
-            Core.DownloadFile(pathManager.ToString(), file.Name, savePath, UserData.Key);
+            KeyCheck();
+
+            try
+            {
+                Core.DownloadFile(pathManager.ToString(), file.Name, savePath, UserData.Key);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось скачать файл.", ex);
+            }
         }
 
         /// <summary>
@@ -220,6 +231,8 @@ namespace AriesCloud.Classes
         /// <param name="directoryPath">Полный путь к загружаемой папке.</param>
         public void UploadDirectory(string directoryPath)
         {
+            KeyCheck();
+
             try
             {
                 UploadDirectory(directoryPath, pathManager.ToString());
@@ -239,7 +252,16 @@ namespace AriesCloud.Classes
         /// <param name="saveDirectory">Путь к папке сохранения.</param>
         public void DownloadDirectory(Directory directory, string saveDirectory)
         {
-            DownloadDirectory(directory.Name, saveDirectory);
+            KeyCheck();
+
+            try
+            {
+                DownloadDirectory(directory.Name, saveDirectory);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось скачать папку.", ex);
+            }
         }
 
         /// <summary>
@@ -338,6 +360,17 @@ namespace AriesCloud.Classes
             foreach (DirectoryInfo subDirectory in directoryInfo.GetDirectories())
             {
                 UploadDirectory(subDirectory.FullName, serverDirectoryPath);
+            }
+        }
+
+        /// <summary>
+        /// Проверка наличия ключа.
+        /// </summary>
+        private static void KeyCheck()
+        {
+            if (!UserData.KeyLoad)
+            {
+                throw new Exception("Не указан ключ шифрования.");
             }
         }
     }

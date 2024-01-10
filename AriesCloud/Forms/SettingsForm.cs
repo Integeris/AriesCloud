@@ -1,6 +1,7 @@
 ﻿using AriesCloud.Classes;
 using System;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace AriesCloud.Forms
@@ -124,7 +125,27 @@ namespace AriesCloud.Forms
         /// <param name="e">Данные события.</param>
         private void ChangePasswordButtonOnClick(object sender, EventArgs e)
         {
-            // TODO: Написать запрос на смену пароля.
+            if (!Regex.IsMatch(newPasswordTextBox.Text, @"^[A-Za-z][A-Za-z0-9]{7,49}$"))
+            {
+                InfoViewer.ShowError("Пароль должен состаять из латинских букв и цифр от 8 по 50 символов. Первый символ е может быть цифрой.");
+                return;
+            }
+            else if (newPasswordTextBox.Text != confirmTextBox.Text)
+            {
+                InfoViewer.ShowError("Вы ввели неправильный пароль в подтверждении пароля.");
+            }
+
+            try
+            {
+                Core.ChangePassword(newPasswordTextBox.Text);
+            }
+            catch (Exception ex)
+            {
+                InfoViewer.ShowError(ex);
+                return;
+            }
+
+            InfoViewer.ShowInformation("Пароль успешно изменён.");
         }
     }
 }

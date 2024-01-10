@@ -72,7 +72,8 @@ namespace AriesCloud.Forms
             }
 
             UserData.Hash = token;
-            Configurator.Load();
+            UserData.Login = loginTextBox.Text;
+            Configurator.Load(UserData.Login);
 
             DialogResult = DialogResult.OK;
             Close();

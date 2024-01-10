@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AriesCloud.Classes
+﻿namespace AriesCloud.Classes
 {
     /// <summary>
     /// Данные пользователя.
@@ -18,6 +16,11 @@ namespace AriesCloud.Classes
         public static string Hash { get; set; }
 
         /// <summary>
+        /// Логин.
+        /// </summary>
+        public static string Login { get; set; }
+
+        /// <summary>
         /// Загружен ли ключ.
         /// </summary>
         public static bool KeyLoad { get; set; }
@@ -32,11 +35,7 @@ namespace AriesCloud.Classes
         /// </summary>
         public static byte[] Key
         {
-            get
-            {
-                return key;
-            }
-
+            get => key;
             set
             {
                 key = value;
