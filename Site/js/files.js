@@ -102,6 +102,14 @@ function getFiles() {
 }
 
 function delFile() {
+  if (
+    elem == undefined ||
+    elem.children.length == 0 ||
+    elem.children[1].innerText == ""
+  ) {
+    console.log("Файл или папка для удаления не выбраны");
+    return;
+  }
   $.ajax({
     url: window.location.href + "/delFiles",
     method: "post",
@@ -121,10 +129,10 @@ function exit() {
     data: {},
     success: function (data) {
       window.location.href =
-          window.location.href.substring(
-            0,
-            window.location.href.lastIndexOf("files")
-          ) + "main";
+        window.location.href.substring(
+          0,
+          window.location.href.lastIndexOf("files")
+        ) + "main";
     },
   });
 }
@@ -187,9 +195,25 @@ function downloadFiles(mode) {
   var key = $("#key")[0].files[0];
   var way = dir;
   var formData = new FormData();
+
+  if (
+    elem == undefined ||
+    elem.children.length == 0 ||
+    elem.children[1].innerText == ""
+  ) {
+    console.log("Файл не выбран для скачивания");
+    return;
+  }
+
+  if (key.length <= 0) {
+    console.log("Ключ не загружен");
+    return;
+  }
+
   formData.append("keyFile", key);
   formData.append("nameFiles", JSON.stringify(nameFiles));
   formData.append("dir", way);
+
   $.ajax({
     url: window.location.href + "/downloadSiteFiles",
     type: "POST",
@@ -219,6 +243,16 @@ function uploadFiles(mode) {
   formData.append("keyFile", key);
   formData.append("file", file);
   formData.append("dir", way);
+
+  if (key.length <= 0) {
+    console.log("Ключ не загружен");
+    return;
+  }
+  if (file.length <= 0) {
+    console.log("Файл не загружен");
+    return;
+  }
+
   $.ajax({
     url: window.location.href + "/uploadSiteFiles",
     type: "POST",
@@ -243,6 +277,29 @@ function openFolder(e) {
 }
 
 function createFolder() {
+  if (
+    $("#inputFolder")[0].value.length < 3 ||
+    $("#inputFolder")[0].value.length > 30
+  ) {
+    console.log(
+      "Длинна имени файла должно превышать 3 символа и быть менее 30"
+    );
+    return;
+  }
+
+  const russianRegex = /[а-яА-Я]/;
+  const englishRegex = /[a-zA-Z]/;
+  const digitRegex = /[0-9]/;
+
+  const hasUppercase = russianRegex.test($("#inputFolder")[0].value.length);
+  const hasLowercase = englishRegex.test($("#inputFolder")[0].value.length);
+  const hasDigit = digitRegex.test($("#inputFolder")[0].value.length);
+
+  if (!(hasUppercase && hasLowercase && hasDigit)) {
+    console.log("Имя файлов должно состоять из букв и цифр");
+    return;
+  }
+
   $.ajax({
     url: window.location.href + "/createFolder",
     method: "post",
@@ -255,6 +312,14 @@ function createFolder() {
 }
 
 function getDir() {
+  if (
+    elem == undefined ||
+    elem.children.length == 0 ||
+    elem.children[1].innerText == ""
+  ) {
+    return;
+  }
+
   $.ajax({
     url: window.location.href + "/getDir",
     method: "post",
@@ -270,6 +335,14 @@ function getDir() {
 }
 
 function move() {
+  if (
+    elem == undefined ||
+    elem.children.length == 0 ||
+    elem.children[1].innerText == ""
+  ) {
+    console.log("Файл или папка не выбраны для перемещения");
+    return;
+  }
   $.ajax({
     url: window.location.href + "/move",
     method: "post",
@@ -286,10 +359,39 @@ function move() {
 }
 
 function openRename() {
-  $("#newName")[0].value = elem.children[1].innerText.replace(/\.[^/.]+$/, '');
+  $("#newName")[0].value = elem.children[1].innerText.replace(/\.[^/.]+$/, "");
 }
 
 function rename() {
+  if (
+    elem == undefined ||
+    elem.children.length == 0 ||
+    elem.children[1].innerText == ""
+  ) {
+    console.log("Файл или папка не выбраны для переименования");
+    return;
+  }
+
+  if ($("#newName")[0].value.length < 3 || $("#newName")[0].value.length > 30) {
+    console.log(
+      "Длинна имени файла должно превышать 3 символа и быть менее 30"
+    );
+    return;
+  }
+
+  const russianRegex = /[а-яА-Я]/;
+  const englishRegex = /[a-zA-Z]/;
+  const digitRegex = /[0-9]/;
+
+  const hasUppercase = russianRegex.test($("#newName")[0].value.length);
+  const hasLowercase = englishRegex.test($("#newName")[0].value.length);
+  const hasDigit = digitRegex.test($("#newName")[0].value.length);
+
+  if (!(hasUppercase && hasLowercase && hasDigit)) {
+    console.log("Имя файлов должно состоять из букв и цифр");
+    return;
+  }
+
   $.ajax({
     url: window.location.href + "/rename",
     method: "post",
@@ -305,7 +407,33 @@ function rename() {
   });
 }
 
-function changePassword(){
+function changePassword() {
+  if ($("#newPassword")[0].value != $("#newPasswordCheck")[0].value) {
+    console.log("Пароли не сходятся");
+    return;
+  }
+
+  if ($("#newPassword")[0].value < 6 || $("#newPassword")[0].value > 20) {
+    console.log("Размер пароля должен привышать 6, но быть менее 20 символов");
+    return;
+  }
+
+  const uppercaseRegex = /[A-Z]/;
+  const lowercaseRegex = /[a-z]/;
+  const digitRegex = /[0-9]/;
+  const specialCharRegex = /[!_+=-?,.]/;
+
+  const hasUppercase = uppercaseRegex.test($("#newPassword")[0].value);
+  const hasLowercase = lowercaseRegex.test($("#newPassword")[0].value);
+  const hasDigit = digitRegex.test($("#newPassword")[0].value);
+  const hasSpecialChar = specialCharRegex.test($("#newPassword")[0].value);
+  if (!(hasUppercase && hasLowercase && hasDigit && hasSpecialChar)) {
+    console.log(
+      "Пароль должен содержать хотябы одну строчную букву, заглавную букву, цифру и спец символ !_+=-?,."
+    );
+    return;
+  }
+
   $.ajax({
     url: window.location.href + "/changePasswordWeb",
     method: "post",
@@ -319,7 +447,7 @@ function changePassword(){
   });
 }
 
-function createKey(){
+function createKey() {
   $.ajax({
     url: window.location.href + "/createKey",
     type: "POST",
@@ -337,4 +465,3 @@ function createKey(){
     },
   });
 }
-
