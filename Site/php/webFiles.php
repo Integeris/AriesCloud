@@ -304,7 +304,6 @@ class webFiles
 
 
         foreach ($iterator as $path => $dir) {
-            $path = preg_replace('/\s+/', '/', $path);
             $path = str_replace("\\", "/", $path);
 
             if ($dir->isDir() && $dir->getFilename() !== $excludeDir) {
@@ -332,9 +331,10 @@ class webFiles
             RecursiveIteratorIterator::CATCH_GET_CHILD
         );
 
+        
 
         foreach ($iterator as $path => $dir) {
-            $path = preg_replace('/\s+/', '/', $path);
+            
             $path = str_replace("\\", "/", $path);
             if ($dir->isDir()) {
                 $path = str_replace($startDir, "", $path);
@@ -353,7 +353,7 @@ class webFiles
         $oldPath = $dir . $_POST["oldPath"];
         $newPath = $dir . $_POST["newPath"];
 
-        if (file_exists($oldPath)) {
+        if (file_exists($oldPath) && $oldPath != $newPath) {
             rename($oldPath, $newPath);
             echo "True";
         } else {
