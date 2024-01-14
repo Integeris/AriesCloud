@@ -1,3 +1,5 @@
+// Функции для аниммации
+
 $("#buttonCheckReg").click(function () {
   var clone = $("#containerAuth");
   clone.css({
@@ -56,22 +58,42 @@ $("#buttonCheckAuth").click(function () {
   });
 });
 
+// Функция для входа
+
 function auth() {
   login = document.getElementById("login").value;
   password = document.getElementById("password").value;
-  if (!(login >= 6 && login <= 20)) {
-    console.log("Размер логина должен привышать 6, но быть менее 20 символов")
-    return
+  if (login.length < 5 || login.length > 20) {
+    new Toast({
+      title: false,
+      text: "Размер логина должен привышать 6, но быть менее 20 символов",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
   }
-  if (!(password >= 6 && password <= 20)) {
-    console.log("Размер пароля должен привышать 6, но быть менее 20 символов")
-    return
+  if (password.length < 5 || password.length > 20) {
+    new Toast({
+      title: false,
+      text: "Размер пароля должен привышать 6, но быть менее 20 символов",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
   }
-  
+
   const specialCharRegex = /[$&'"`@]/;
-  if(!(specialCharRegex.test(login)&&specialCharRegex.test(password))){
-    console.log("Пароль или логин содержат недопустимые символы")
-    return
+  if (specialCharRegex.test(login) || specialCharRegex.test(password)) {
+    new Toast({
+      title: false,
+      text: "Пароль или логин содержат недопустимые символы",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
   }
 
   $.ajax({
@@ -89,17 +111,27 @@ function auth() {
             0,
             window.location.href.lastIndexOf("main")
           ) + "files";
+      } else {
+        new Toast({
+          title: false,
+          text: "Аутентификация не была произведена",
+          theme: "danger",
+          autohide: true,
+          interval: 10000,
+        });
       }
     },
   });
 }
 
+// Функция для регистрации
+
 function reg() {
   login = document.getElementById("regLogin").value;
   password = document.getElementById("regPassword").value;
   email = document.getElementById("regEmail").value;
-  if (login >= 6 && login <= 20) {
-    if (password >= 6 && password <= 20) {
+  if (login.length >= 6 && login.length <= 20) {
+    if (password.length >= 6 && password.length <= 20) {
       const uppercaseRegex = /[A-Z]/;
       const lowercaseRegex = /[a-z]/;
       const digitRegex = /[0-9]/;
@@ -110,6 +142,16 @@ function reg() {
       const hasDigit = digitRegex.test(password);
       const hasSpecialChar = specialCharRegex.test(password);
       if (hasUppercase && hasLowercase && hasDigit && hasSpecialChar) {
+        if(password!=document.getElementById("regPasswordRepiat").value){
+          new Toast({
+            title: false,
+            text: "Пароли не совпадают",
+            theme: "danger",
+            autohide: true,
+            interval: 10000,
+          });
+          return
+        }
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (regex.test(email)) {
           $.ajax({
@@ -122,23 +164,60 @@ function reg() {
               login: login,
             },
             success: function (data) {
-              console.log(data);
+              if(data!="Регистрация прошла успешно, проверьте почту"){
+                new Toast({
+                  title: false,
+                  text: data,
+                  theme: "danger",
+                  autohide: true,
+                  interval: 10000,
+                });
+              }else{
+                new Toast({
+                  title: false,
+                  text: data,
+                  theme: "success",
+                  autohide: true,
+                  interval: 10000,
+                });
+              }
+              document.getElementById("buttonRegB").click()
             },
           });
         } else {
-          console.log("Введена неправильная почта");
+          new Toast({
+            title: false,
+            text: "Введена некорркектная почта",
+            theme: "danger",
+            autohide: true,
+            interval: 10000,
+          });
         }
       } else {
-        console.log(
-          "Пароль должен содержать хотябы одну строчную букву, заглавную букву, цифру и спец символ !_+=-?,."
-        );
+        new Toast({
+          title: false,
+          text: "Пароль должен содержать хотябы одну строчную букву, заглавную букву, цифру и спец символ !_+=-?,.",
+          theme: "danger",
+          autohide: true,
+          interval: 10000,
+        });
       }
     } else {
-      console.log(
-        "Размер пароля должен привышать 6, но быть менее 20 символов"
-      );
+      new Toast({
+        title: false,
+        text: "Размер пароля должен привышать 6, но быть менее 20 символов",
+        theme: "danger",
+        autohide: true,
+        interval: 10000,
+      });
     }
   } else {
-    console.log("Размер логина должен привышать 6, но быть менее 20 символов");
+    new Toast({
+      title: false,
+      text: "Размер логина должен привышать 6, но быть менее 20 символов",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
   }
 }

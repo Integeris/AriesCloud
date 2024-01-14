@@ -18,6 +18,8 @@ class DB
         $this->dsn = "pgsql:host=$this->host;port=5432;dbname=$this->db;";
     }
 
+    // Функция для создания подключения к базе 
+
     public function conn()
     {
         try {
@@ -33,6 +35,8 @@ class DB
             }
         }
     }
+
+    // Функция для проверки пользователя и дальнейшей авторизации
 
     public function auth($hash)
     {
@@ -50,6 +54,8 @@ class DB
         }
     }
 
+    // Функция для получения имени (логина)
+
     public function getName($hash)
     {
         $pdo = $this->conn();
@@ -61,9 +67,10 @@ class DB
         return $result["login"];
     }
 
+    // Функция для проверки наличия кода в базе и подтверждения пользователя 
+
     public function checkCode($email, $code)
     {
-
 
         $pdo = $this->conn();
 
@@ -104,6 +111,8 @@ class DB
         }
     }
 
+    // Функция для проверки параметра в базе 
+
     public function checkDB($nameDB, $name, $what)
     {
         $pdo = $this->conn();
@@ -118,6 +127,8 @@ class DB
             return True;
         }
     }
+
+    // Функция для обновленния кода
 
     public function updateCode($email, $code)
     {
@@ -136,6 +147,8 @@ class DB
             return False;
         }
     }
+
+    // Функция для добавления пользователя в базу и отправки письма на почту
 
     public function reg($login, $password, $email)
     {
@@ -166,6 +179,8 @@ class DB
         }
     }
 
+    // Функция для смены пароля
+
     public function changePassword($hash, $password)
     {
         $pdo = $this->conn();
@@ -173,7 +188,7 @@ class DB
         $state = $pdo->prepare("SELECT * FROM users WHERE hash = :hash");
         $state->execute(['hash' => $hash]);
         $result = $state->fetch();
-        $login=$result["login"];
+        $login = $result["login"];
         $newHash = md5($login . ".*." . $password);
 
         $sql = "UPDATE users SET password = :password, hash= :newHash WHERE hash = :oldHash";

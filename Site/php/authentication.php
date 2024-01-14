@@ -12,6 +12,7 @@ use SendMailSmtpClass;
 
 class authentication
 {
+    // Функция для авторизации
 
     public function auth($login, $password)
     {
@@ -25,10 +26,14 @@ class authentication
         }
     }
 
+    // Функция для выхода
+
     public function exit()
     {
         setcookie('uid', "", time() + 3600, '/');
     }
+
+    // Функция для отправки письма 
 
     public function sendMail($email)
     {
@@ -64,6 +69,8 @@ class authentication
         }
     }
 
+    // Функция для регистрации
+
     public function reg($login, $password, $email)
     {
         $db = new DB();
@@ -84,6 +91,8 @@ class authentication
             echo "Почтовый ящик занят";
         }
     }
+
+    // Функция для смены пароля 
 
     public function changePassword($hash)
     {

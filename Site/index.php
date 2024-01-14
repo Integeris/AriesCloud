@@ -22,6 +22,8 @@ $actionName = '';
 
 $acces = "";
 
+//Обработчик для кода из письма
+
 if ($segments[0] == "checkCode") {
     $urlWithData = $_SERVER['REQUEST_URI'];
     $parsedUrl = parse_url($urlWithData);
@@ -37,7 +39,7 @@ if ($segments[0] == "checkCode") {
     return;
 }
 
-
+// Обработчик для переадрисации авторизованными пользователям 
 
 if ($segments[0] == "main") {
     $acces = "NO";
@@ -58,10 +60,16 @@ if ($segments[0] == "main") {
 }
 
 
+
 if (!empty($segments[0])) {
     $controllerName = ucfirst($segments[0]);
 }
+
+// Обработчик дял распеределения фукций файлов и страницы входа
+
 if ($segments[0] == "files" && $acces != "NO") {
+
+    //Обработчик дял получения файлов
 
     if ($segments[1] == "getFiles") {
         $get = new webFiles();
@@ -69,11 +77,15 @@ if ($segments[0] == "files" && $acces != "NO") {
         return;
     }
 
+    //Обработчик для удаления файлов
+
     if ($segments[1] == "delFiles") {
         $get = new webFiles();
         $get->delFiles($acces);
         return;
     }
+
+    //Обработчик для создания папки
 
     if ($segments[1] == "createFolder") {
         $get = new webFiles();
@@ -81,11 +93,15 @@ if ($segments[0] == "files" && $acces != "NO") {
         return;
     }
 
+    //Обработчик для переименования
+
     if ($segments[1] == "rename") {
         $get = new webFiles();
         $get->rename($acces);
         return;
     }
+
+    //Обработчик для получения дирректорий
 
     if ($segments[1] == "getDir") {
         $get = new webFiles();
@@ -93,11 +109,15 @@ if ($segments[0] == "files" && $acces != "NO") {
         return;
     }
 
+    //Обработчик для перемещения
+
     if ($segments[1] == "move") {
         $get = new webFiles();
         $get->move($acces);
         return;
     }
+
+    //Обработчик для скачиваняи файлов через сайт
 
     if ($segments[1] == "downloadSiteFiles") {
         $get = new webFiles();
@@ -105,11 +125,15 @@ if ($segments[0] == "files" && $acces != "NO") {
         return;
     }
 
+    //Обработчик для загрузки файлов через сайт
+
     if ($segments[1] == "uploadSiteFiles") {
         $get = new webFiles();
         $get->uploadSite($acces);
         return;
     }
+
+    //Обработчик для скачивания файлов через АПИ
 
     if ($segments[1] == "downloadAPI") {
         $get = new webFiles();
@@ -117,17 +141,23 @@ if ($segments[0] == "files" && $acces != "NO") {
         return;
     }
 
+    //Обработчик для загрузки файлов через АПИ
+
     if ($segments[1] == "uploadAPI") {
         $get = new webFiles();
         $get->uploadAPI($_POST["hash"]);
         return;
     }
 
+    //Обработчик для выхода с сайта
+
     if ($segments[1] == "exit") {
         $get = new authentication();
         $get->exit();
         return;
     }
+
+    //Обработчик для смены пароля через АПИ
 
     if ($segments[1] == "changePasswordAPI") {
         $get = new authentication();
@@ -140,6 +170,8 @@ if ($segments[0] == "files" && $acces != "NO") {
             return;
         }
     }
+
+    //Обработчик для смены пароля через Сайт
 
     if ($segments[1] == "changePasswordWeb") {
         $get = new authentication();
@@ -154,6 +186,8 @@ if ($segments[0] == "files" && $acces != "NO") {
         }
     }
 
+    //Обработчик для создания ключа
+
     if ($segments[1] == "createKey") {
         $get = new webFiles();
         $ret = $get->createKey();
@@ -161,11 +195,16 @@ if ($segments[0] == "files" && $acces != "NO") {
     }
 }
 if ($segments[0] == "main" || $acces == "NO") {
+
+    //Обработчик для авторизации
+
     if ($segments[1] == "autorization") {
         $get = new authentication();
         $get->auth($_POST["login"], $_POST['password']);
         return;
     }
+
+    //Обработчик для авторизации через АПИ
 
     if ($segments[1] == "autorizationHash") {
         $get = new DB();
@@ -178,6 +217,8 @@ if ($segments[0] == "main" || $acces == "NO") {
         }
     }
 
+    //Обработчик для регистрации
+
     if ($segments[1] == "registration") {
         $get = new authentication();
         $get->reg($_POST["login"], $_POST['password'], $_POST['email']);
@@ -185,7 +226,7 @@ if ($segments[0] == "main" || $acces == "NO") {
     }
 }
 
-
+//Обработчик для переадрисации на main если пользователь не авторизован
 
 if ($segments[0] == null && $acces == "NO") {
     $url = ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
@@ -195,6 +236,8 @@ if ($segments[0] == null && $acces == "NO") {
     die();
 }
 
+//Обработчик для переадрисации на failes если пользователь авторизован
+
 if ($acces != "NO" && $segments[0] == null) {
     $url = ((!empty($_SERVER['HTTPS'])) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
     $url = explode('?', $url);
@@ -203,6 +246,7 @@ if ($acces != "NO" && $segments[0] == null) {
     die();
 }
 
+//Обработчик страниц
 
 $controllerFile = 'php/' . $controllerName . '.php';
 if (file_exists($controllerFile) && ($segments[0] == "files" && $acces != 'NO' || $segments[0] == "main")) {

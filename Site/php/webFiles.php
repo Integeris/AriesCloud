@@ -10,6 +10,8 @@ use RecursiveIteratorIterator;
 
 class webFiles
 {
+    // Функция для получения списка файлов с разграничением на папку и файл
+
     public function getFiles($hash)
     {
         $files = scandir("./fileUsers/$hash/" . $_POST["dir"]);
@@ -21,6 +23,8 @@ class webFiles
         }
         echo json_encode($ret);
     }
+
+    // Функция для удаления файла или дирректории
 
     public function delFiles($hash)
     {
@@ -38,6 +42,8 @@ class webFiles
         }
     }
 
+    // Функция для удаления не пустой дирректории
+
     private function deleteDirectory($dir)
     {
         $files = glob($dir . '/*');
@@ -50,6 +56,8 @@ class webFiles
         }
         rmdir($dir);
     }
+
+    // Функция для загрузки на сервер файла через сайт
 
     public function uploadSite($hash)
     {
@@ -98,6 +106,8 @@ class webFiles
         $encryptedFilePath = "./fileUsers/$hash/" . $_POST["dir"] . "/" . $fileToEncrypt['name'];
         file_put_contents($encryptedFilePath, $encryptedFileContent);
     }
+
+    // Функция для скачриваняи файла через сайт
 
     public function downloadSite($hash)
     {
@@ -206,6 +216,8 @@ class webFiles
         }
     }
 
+    // Функция для загрузки файла на сервер через АПИ
+
     public static function uploadAPI($hash)
     {
         $dir = "./fileUsers/$hash/" . $_POST["dir"] . "/";
@@ -217,6 +229,8 @@ class webFiles
             echo "False";
         }
     }
+
+    // Функция для скачивания файла с сервера через АПИ
 
     public static function downloadAPI($hash)
     {
@@ -235,6 +249,8 @@ class webFiles
         }
     }
 
+    // Функция для созданяи папки 
+
     public function createFolder($hash)
     {
         $dir = "./fileUsers/$hash/" . $_POST['dir'] . "/" . $_POST['nameFolder'];
@@ -245,6 +261,8 @@ class webFiles
             echo "False";
         }
     }
+
+    // Функция для переименования папки
 
     public function rename($hash)
     {
@@ -267,6 +285,8 @@ class webFiles
             echo "False";
         }
     }
+
+    // Функция для получения списка дирректорий для перемещения файлов и папок
 
     public function getDir($hash)
     {
@@ -298,6 +318,8 @@ class webFiles
         echo (json_encode($directories));
     }
 
+    // Функция для перемещения файла
+    
     public function move($hash)
     {
         $dir = "./fileUsers/$hash/";
@@ -311,6 +333,8 @@ class webFiles
             echo "False";
         }
     }
+
+    // Функция для создания ключа
 
     public function createKey()
     {

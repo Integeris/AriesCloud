@@ -4,6 +4,9 @@ function hideMenu() {
   document.getElementById("contextMenu").style.display = "none";
 }
 var elem;
+
+//Упарвление нажатием на правую кнопку мыши
+
 function rightClick(e) {
   e.preventDefault();
   if (document.getElementById("contextMenu").style.display == "block")
@@ -15,7 +18,6 @@ function rightClick(e) {
     } else {
       elem = e.target.parentElement;
     }
-    console.log(elem);
     menu.style.display = "block";
     menu.style.left = e.pageX + "px";
     menu.style.top = e.pageY + "px";
@@ -23,6 +25,8 @@ function rightClick(e) {
 }
 
 var dir = "/";
+
+//Создание из списка иконок с именем файла так же тут выбирается какая иконка будет стоять
 
 function fileGeneration(files) {
   var parent = document.getElementById("files");
@@ -86,6 +90,8 @@ function fileGeneration(files) {
   });
 }
 
+//Функция для получения файлов
+
 function getFiles() {
   startLoader();
   $.ajax({
@@ -101,13 +107,21 @@ function getFiles() {
   });
 }
 
+// Функция для удаления папок и файлов
+
 function delFile() {
   if (
     elem == undefined ||
     elem.children.length == 0 ||
     elem.children[1].innerText == ""
   ) {
-    console.log("Файл или папка для удаления не выбраны");
+    new Toast({
+      title: false,
+      text: "Файл или папка для удаления не выбраны",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
     return;
   }
   $.ajax({
@@ -120,6 +134,8 @@ function delFile() {
     },
   });
 }
+
+// Функция дял выхода из системы
 
 function exit() {
   $.ajax({
@@ -137,7 +153,11 @@ function exit() {
   });
 }
 
+// Первичное получение файлов
+
 getFiles();
+
+//Функция отвечающая за открыте всплывающих окон
 
 function openWindows(name) {
   var popupWindow = document.getElementById("popup" + name);
@@ -184,10 +204,33 @@ function compareStrings(str1, str2) {
   };
 }
 
+// Функция для скачивания файлов
+
 function downloadFiles(mode) {
   if ((mode = "right")) {
-    files.push(elem);
+    if (elem != null) files.push(elem);
   }
+
+  var key = $("#key")[0].files[0];
+  var way = dir;
+  var formData = new FormData();
+
+  if (
+    elem == undefined ||
+    elem.children.length == 0 ||
+    elem.children[1].innerText == "" ||
+    elem == null
+  ) {
+    new Toast({
+      title: false,
+      text: "Файл не выбран для скачивания",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    return;
+  }
+
   nameFiles = [];
   files.forEach((element) => {
     nameFiles.push(element.children[1].innerText);
@@ -196,17 +239,14 @@ function downloadFiles(mode) {
   var way = dir;
   var formData = new FormData();
 
-  if (
-    elem == undefined ||
-    elem.children.length == 0 ||
-    elem.children[1].innerText == ""
-  ) {
-    console.log("Файл не выбран для скачивания");
-    return;
-  }
-
-  if (key.length <= 0) {
-    console.log("Ключ не загружен");
+  if (key == null) {
+    new Toast({
+      title: false,
+      text: "Ключ не загружен",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
     return;
   }
 
@@ -235,6 +275,8 @@ function downloadFiles(mode) {
   });
 }
 
+// Функция для загрузки фалов на сайт
+
 function uploadFiles(mode) {
   var key = $("#key")[0].files[0];
   var file = $("#file")[0].files[0];
@@ -244,12 +286,24 @@ function uploadFiles(mode) {
   formData.append("file", file);
   formData.append("dir", way);
 
-  if (key.length <= 0) {
-    console.log("Ключ не загружен");
+  if (key == null) {
+    new Toast({
+      title: false,
+      text: "Ключ не загружен",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
     return;
   }
-  if (file.length <= 0) {
-    console.log("Файл не загружен");
+  if (file == null) {
+    new Toast({
+      title: false,
+      text: "Файл не загружен",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
     return;
   }
 
@@ -261,20 +315,27 @@ function uploadFiles(mode) {
     contentType: false,
     success: function (data) {
       test = data;
+      document.getElementById("closeUpload").click();
       getFiles();
     },
   });
 }
+
+// Функция для возврата назад по дирректории
 
 function back() {
   dir = dir.replace(/\/[^/]+\/$/, "/");
   getFiles();
 }
 
+// Функция для продвижения вглубь дирректории
+
 function openFolder(e) {
   dir += e.children[1].innerText + "/";
   getFiles();
 }
+
+// Функция дял создания папки
 
 function createFolder() {
   if (
@@ -282,21 +343,22 @@ function createFolder() {
     $("#inputFolder")[0].value.length > 30
   ) {
     console.log(
-      "Длинна имени файла должно превышать 3 символа и быть менее 30"
+      "Длинна имени папки должно превышать 3 символа и быть менее 30"
     );
     return;
   }
+  specialCharRegex = /[$&'"`@]/;
 
-  const russianRegex = /[а-яА-Я]/;
-  const englishRegex = /[a-zA-Z]/;
-  const digitRegex = /[0-9]/;
-
-  const hasUppercase = russianRegex.test($("#inputFolder")[0].value.length);
-  const hasLowercase = englishRegex.test($("#inputFolder")[0].value.length);
-  const hasDigit = digitRegex.test($("#inputFolder")[0].value.length);
-
-  if (!(hasUppercase && hasLowercase && hasDigit)) {
-    console.log("Имя файлов должно состоять из букв и цифр");
+  specialCharRegex = specialCharRegex.test($("#inputFolder")[0].value);
+  console.log(specialCharRegex);
+  if (specialCharRegex) {
+    new Toast({
+      title: false,
+      text: "Имя папки должно состоять из букв и цифр",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
     return;
   }
 
@@ -306,10 +368,31 @@ function createFolder() {
     dataType: "html",
     data: { dir: dir, nameFolder: $("#inputFolder")[0].value },
     success: function (data) {
-      getFiles();
+      if (data == "True") {
+        new Toast({
+          title: false,
+          text: "Папка создана успешно",
+          theme: "success",
+          autohide: true,
+          interval: 10000,
+        });
+        document.getElementById("closeNewFolder").click();
+        getFiles();
+        $("#inputFolder")[0].value=""
+      } else {
+        new Toast({
+          title: false,
+          text: "Данная папка уже существует",
+          theme: "danger",
+          autohide: true,
+          interval: 10000,
+        });
+      }
     },
   });
 }
+
+//Функция для заполнения select-а дирректориями
 
 function getDir() {
   if (
@@ -334,13 +417,21 @@ function getDir() {
   });
 }
 
+//Функция для перемещения папок и файлов
+
 function move() {
   if (
     elem == undefined ||
     elem.children.length == 0 ||
     elem.children[1].innerText == ""
   ) {
-    console.log("Файл или папка не выбраны для перемещения");
+    new Toast({
+      title: false,
+      text: "Файл или папка не выбраны для перемещения",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
     return;
   }
   $.ajax({
@@ -353,14 +444,36 @@ function move() {
       newPath: $("#selectMove")[0].value + "/" + elem.children[1].innerText,
     },
     success: function (data) {
-      getFiles();
+      if (data == "True") {
+        new Toast({
+          title: false,
+          text: "Перемещение прошло успешно",
+          theme: "success",
+          autohide: true,
+          interval: 10000,
+        });
+        document.getElementById("closeMove").click();
+        getFiles();
+      } else {
+        new Toast({
+          title: false,
+          text: "Во время перемещения произошла ошибка",
+          theme: "danger",
+          autohide: true,
+          interval: 10000,
+        });
+      }
     },
   });
 }
 
+// Функция срабатывающая при переименовании дял ввода старого имени файла
+
 function openRename() {
   $("#newName")[0].value = elem.children[1].innerText.replace(/\.[^/.]+$/, "");
 }
+
+//Функция переименования файлов
 
 function rename() {
   if (
@@ -368,27 +481,40 @@ function rename() {
     elem.children.length == 0 ||
     elem.children[1].innerText == ""
   ) {
-    console.log("Файл или папка не выбраны для переименования");
+    new Toast({
+      title: false,
+      text: "Файл или папка не выбраны для переименования",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
+    console.log();
     return;
   }
 
   if ($("#newName")[0].value.length < 3 || $("#newName")[0].value.length > 30) {
-    console.log(
-      "Длинна имени файла должно превышать 3 символа и быть менее 30"
-    );
+    new Toast({
+      title: false,
+      text: "Длинна имени должна превышать 3 символа и быть менее 30",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
     return;
   }
 
-  const russianRegex = /[а-яА-Я]/;
-  const englishRegex = /[a-zA-Z]/;
-  const digitRegex = /[0-9]/;
+  specialCharRegex = /[$&'"`@]/;
 
-  const hasUppercase = russianRegex.test($("#newName")[0].value.length);
-  const hasLowercase = englishRegex.test($("#newName")[0].value.length);
-  const hasDigit = digitRegex.test($("#newName")[0].value.length);
-
-  if (!(hasUppercase && hasLowercase && hasDigit)) {
-    console.log("Имя файлов должно состоять из букв и цифр");
+  specialCharRegex = specialCharRegex.test($("#inputFolder")[0].value);
+  console.log(specialCharRegex);
+  if (specialCharRegex) {
+    new Toast({
+      title: false,
+      text: "Имя должно состоять из букв и цифр",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
     return;
   }
 
@@ -402,19 +528,51 @@ function rename() {
       newName: $("#newName")[0].value,
     },
     success: function (data) {
-      getFiles();
+      if (data == "True") {
+        new Toast({
+          title: false,
+          text: "Переименование прошло успешно",
+          theme: "success",
+          autohide: true,
+          interval: 10000,
+        });
+        document.getElementById("closeMove").click();
+        getFiles();
+      } else {
+        new Toast({
+          title: false,
+          text: "Во время переименования произошла ошибка",
+          theme: "danger",
+          autohide: true,
+          interval: 10000,
+        });
+      }
     },
   });
 }
 
+//Функция смены пароля
+
 function changePassword() {
   if ($("#newPassword")[0].value != $("#newPasswordCheck")[0].value) {
-    console.log("Пароли не сходятся");
+    new Toast({
+      title: false,
+      text: "Пароли не сходятся",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
     return;
   }
 
-  if ($("#newPassword")[0].value < 6 || $("#newPassword")[0].value > 20) {
-    console.log("Размер пароля должен привышать 6, но быть менее 20 символов");
+  if ($("#newPassword")[0].value.length < 6 || $("#newPassword")[0].value.length > 20) {
+    new Toast({
+      title: false,
+      text: "Размер пароля должен привышать 6, но быть менее 20 символов",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
     return;
   }
 
@@ -428,9 +586,13 @@ function changePassword() {
   const hasDigit = digitRegex.test($("#newPassword")[0].value);
   const hasSpecialChar = specialCharRegex.test($("#newPassword")[0].value);
   if (!(hasUppercase && hasLowercase && hasDigit && hasSpecialChar)) {
-    console.log(
-      "Пароль должен содержать хотябы одну строчную букву, заглавную букву, цифру и спец символ !_+=-?,."
-    );
+    new Toast({
+      title: false,
+      text: "Пароль должен содержать хотябы одну строчную букву, заглавную букву, цифру и спец символ !_+=-?,.",
+      theme: "danger",
+      autohide: true,
+      interval: 10000,
+    });
     return;
   }
 
@@ -442,10 +604,32 @@ function changePassword() {
       newPassword: $("#newPassword")[0].value,
     },
     success: function (data) {
-      console.log(data);
+      if (data != "False") {
+        new Toast({
+          title: false,
+          text: "Смена пароля прошла успешна",
+          theme: "success",
+          autohide: true,
+          interval: 10000,
+        });
+        document.getElementById("closeChangePass").click();
+        getFiles();
+        $("#newPassword")[0].value=""
+        $("#newPasswordCheck")[0].value=""
+      } else {
+        new Toast({
+          title: false,
+          text: "Во время смены пароля произошла ошибка",
+          theme: "danger",
+          autohide: true,
+          interval: 10000,
+        });
+      }
     },
   });
 }
+
+//Функция для создания ключа
 
 function createKey() {
   $.ajax({
