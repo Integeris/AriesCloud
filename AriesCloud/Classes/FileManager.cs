@@ -172,6 +172,30 @@ namespace AriesCloud.Classes
         }
 
         /// <summary>
+        /// Перенести файл в другую папку.
+        /// </summary>
+        /// <param name="file">Файл.</param>
+        /// <param name="newDirectoryPath">Новая папка.</param>
+        public void MoveFile(File file, string newDirectoryPath)
+        {
+            try
+            {
+                if (pathManager.ToString() == newDirectoryPath)
+                {
+                    throw new Exception("Текущий путь к файлу совпадает с конечным.");
+                }
+
+                Core.MoveDirecoryItem($"{pathManager}/{file.Name}", $"{newDirectoryPath}/{file.Name}");
+                files.Remove(file);
+                UpdateItems.Invoke(this);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось переместить файл.", ex);
+            }
+        }
+
+        /// <summary>
         /// Удалить файл.
         /// </summary>
         /// <param name="file">Файл.</param>
@@ -282,6 +306,30 @@ namespace AriesCloud.Classes
 
             directory.Name = directoryNewName;
             UpdateItems.Invoke(this);
+        }
+
+        /// <summary>
+        /// Перенести папку в другую папку.
+        /// </summary>
+        /// <param name="directory">Папка.</param>
+        /// <param name="newDirectoryPath">Новая папка.</param>
+        public void MoveDirectory(Directory directory, string newDirectoryPath)
+        {
+            try
+            {
+                if (pathManager.ToString() == newDirectoryPath)
+                {
+                    throw new Exception("Текущий путь к папке совпадает с конечным.");
+                }
+
+                Core.MoveDirecoryItem($"{pathManager}/{directory.Name}", $"{newDirectoryPath}/{directory.Name}");
+                directories.Remove(directory);
+                UpdateItems.Invoke(this);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось переместить папку.", ex);
+            }
         }
 
         /// <summary>

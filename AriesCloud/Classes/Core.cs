@@ -37,7 +37,17 @@ namespace AriesCloud.Classes
                 Content = new FormUrlEncodedContent(parameters)
             };
 
-            bool result = SendMessage<bool>(message);
+            bool result;
+
+            try
+            {
+                result = SendMessage<bool>(message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось авторизоваться", ex);
+            }
+
             return result;
         }
 
@@ -62,7 +72,16 @@ namespace AriesCloud.Classes
                 Content = new FormUrlEncodedContent(parameters)
             };
 
-            string result = SendMessage<string>(message);
+            string result;
+
+            try
+            {
+                result = SendMessage<string>(message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось зарегестрироваться", ex);
+            }
 
             if (result != "Регистрация прошла успешно, проверьте почту")
             {
@@ -87,7 +106,14 @@ namespace AriesCloud.Classes
                 Content = new FormUrlEncodedContent(parameters)
             };
 
-            SendMessage<bool>(message);
+            try
+            {
+                SendMessage<bool>(message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось изменить пароль", ex);
+            }
         }
 
         /// <summary>
@@ -106,58 +132,65 @@ namespace AriesCloud.Classes
             boundary = $"--{boundary}";
             httpWebRequest.KeepAlive = true;
 
-            using (Stream requestStream = httpWebRequest.GetRequestStream())
+            try
             {
-                using (FileStream fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
+                using (Stream requestStream = httpWebRequest.GetRequestStream())
                 {
-                    StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.AppendLine(boundary);
-                    stringBuilder.AppendLine($"Content-Disposition: form-data; name=\"hash\"");
-                    stringBuilder.AppendLine();
-                    stringBuilder.AppendLine(UserData.Hash);
-                    stringBuilder.AppendLine(boundary);
-                    stringBuilder.AppendLine($"Content-Disposition: form-data; name=\"dir\"");
-                    stringBuilder.AppendLine();
-                    stringBuilder.AppendLine(directory);
-                    stringBuilder.AppendLine(boundary);
-                    stringBuilder.AppendLine($"Content-Disposition: form-data; name=\"file\"; filename=\"{file.Name}\"");
-                    stringBuilder.AppendLine($"Content-Type: application/octet-stream");
-                    stringBuilder.AppendLine();
-
-                    WriteStringBuffer(requestStream, stringBuilder.ToString());
-
-                    Scrambler scrambler = new Scrambler(key);
-                    byte[] buffer = new byte[Scrambler.BlockSize];
-
-                    long blockCount = fileStream.Length / Scrambler.BlockSize;
-
-                    for (int i = 0; i < blockCount; i++)
+                    using (FileStream fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
                     {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        stringBuilder.AppendLine(boundary);
+                        stringBuilder.AppendLine($"Content-Disposition: form-data; name=\"hash\"");
+                        stringBuilder.AppendLine();
+                        stringBuilder.AppendLine(UserData.Hash);
+                        stringBuilder.AppendLine(boundary);
+                        stringBuilder.AppendLine($"Content-Disposition: form-data; name=\"dir\"");
+                        stringBuilder.AppendLine();
+                        stringBuilder.AppendLine(directory);
+                        stringBuilder.AppendLine(boundary);
+                        stringBuilder.AppendLine($"Content-Disposition: form-data; name=\"file\"; filename=\"{file.Name}\"");
+                        stringBuilder.AppendLine($"Content-Type: application/octet-stream");
+                        stringBuilder.AppendLine();
+
+                        WriteStringBuffer(requestStream, stringBuilder.ToString());
+
+                        Scrambler scrambler = new Scrambler(key);
+                        byte[] buffer = new byte[Scrambler.BlockSize];
+
+                        long blockCount = fileStream.Length / Scrambler.BlockSize;
+
+                        for (int i = 0; i < blockCount; i++)
+                        {
+                            fileStream.Read(buffer, 0, buffer.Length);
+                            scrambler.EncriptBlock(buffer);
+                            requestStream.Write(buffer, 0, buffer.Length);
+                        }
+
+                        // Последний блок должен содержать количество нулей + 1 в конце.
+                        Array.Clear(buffer, 0, buffer.Length);
                         fileStream.Read(buffer, 0, buffer.Length);
+                        buffer[buffer.Length - 1] = (byte)(Scrambler.BlockSize - fileStream.Length % Scrambler.BlockSize);
                         scrambler.EncriptBlock(buffer);
                         requestStream.Write(buffer, 0, buffer.Length);
+
+                        stringBuilder.Clear();
+                        stringBuilder.AppendLine();
+                        stringBuilder.AppendLine($"{boundary}--");
+                        WriteStringBuffer(requestStream, stringBuilder.ToString());
                     }
+                }
 
-                    // Последний блок должен содержать количество нулей + 1 в конце.
-                    Array.Clear(buffer, 0, buffer.Length);
-                    fileStream.Read(buffer, 0, buffer.Length);
-                    buffer[buffer.Length - 1] = (byte)(Scrambler.BlockSize - fileStream.Length % Scrambler.BlockSize);
-                    scrambler.EncriptBlock(buffer);
-                    requestStream.Write(buffer, 0, buffer.Length);
-
-                    stringBuilder.Clear();
-                    stringBuilder.AppendLine();
-                    stringBuilder.AppendLine($"{boundary}--");
-                    WriteStringBuffer(requestStream, stringBuilder.ToString());
+                using (WebResponse response = httpWebRequest.GetResponse())
+                {
+                    using (StreamReader streamReader = new StreamReader(response.GetResponseStream()))
+                    {
+                        return Convert.ToBoolean(streamReader.ReadToEnd());
+                    }
                 }
             }
-
-            using (WebResponse response = httpWebRequest.GetResponse())
+            catch (Exception ex)
             {
-                using (StreamReader streamReader = new StreamReader(response.GetResponseStream()))
-                {
-                    return Convert.ToBoolean(streamReader.ReadToEnd());
-                }
+                throw new Exception("Не удалось загрузить файл.", ex);
             }
         }
 
@@ -183,49 +216,56 @@ namespace AriesCloud.Classes
                 Content = new FormUrlEncodedContent(parameters)
             };
 
-            using (HttpClient httpClient = new HttpClient())
+            try
             {
-                httpClient.BaseAddress = new Uri(server);
-
-                using (FileStream fileStream = new FileStream(savePath, FileMode.Create, FileAccess.ReadWrite))
+                using (HttpClient httpClient = new HttpClient())
                 {
-                    using (Task<HttpResponseMessage> responseTask = httpClient.SendAsync(message))
+                    httpClient.BaseAddress = new Uri(server);
+
+                    using (FileStream fileStream = new FileStream(savePath, FileMode.Create, FileAccess.ReadWrite))
                     {
-                        responseTask.Wait();
-
-                        using (HttpResponseMessage responseMessage = responseTask.Result)
+                        using (Task<HttpResponseMessage> responseTask = httpClient.SendAsync(message))
                         {
-                            if (responseMessage.StatusCode == HttpStatusCode.NotFound)
-                            {
-                                throw new Exception($"На сервере отсутствует файл {fileName}.");
-                            }
+                            responseTask.Wait();
 
-                            using (Task<Stream> streamTask = responseMessage.Content.ReadAsStreamAsync())
+                            using (HttpResponseMessage responseMessage = responseTask.Result)
                             {
-                                streamTask.Wait();
-
-                                using (Stream readStream = streamTask.Result)
+                                if (responseMessage.StatusCode == HttpStatusCode.NotFound)
                                 {
-                                    Scrambler scrambler = new Scrambler(key);
-                                    long blockCount = readStream.Length / Scrambler.BlockSize - 1;
-                                    byte[] buffer = new byte[Scrambler.BlockSize];
+                                    throw new Exception($"На сервере отсутствует файл {fileName}.");
+                                }
 
-                                    for (int i = 0; i < blockCount; i++)
+                                using (Task<Stream> streamTask = responseMessage.Content.ReadAsStreamAsync())
+                                {
+                                    streamTask.Wait();
+
+                                    using (Stream readStream = streamTask.Result)
                                     {
+                                        Scrambler scrambler = new Scrambler(key);
+                                        long blockCount = readStream.Length / Scrambler.BlockSize - 1;
+                                        byte[] buffer = new byte[Scrambler.BlockSize];
+
+                                        for (int i = 0; i < blockCount; i++)
+                                        {
+                                            readStream.Read(buffer, 0, buffer.Length);
+                                            scrambler.DecriptBlock(buffer);
+                                            fileStream.Write(buffer, 0, buffer.Length);
+                                        }
+
                                         readStream.Read(buffer, 0, buffer.Length);
                                         scrambler.DecriptBlock(buffer);
-                                        fileStream.Write(buffer, 0, buffer.Length);
+                                        byte zeroCount = buffer[buffer.Length - 1];
+                                        fileStream.Write(buffer, 0, buffer.Length - zeroCount);
                                     }
-
-                                    readStream.Read(buffer, 0, buffer.Length);
-                                    scrambler.DecriptBlock(buffer);
-                                    byte zeroCount = buffer[buffer.Length - 1];
-                                    fileStream.Write(buffer, 0, buffer.Length - zeroCount);
                                 }
                             }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось скачать файл.", ex);
             }
         }
 
@@ -251,7 +291,14 @@ namespace AriesCloud.Classes
                 Content = new FormUrlEncodedContent(parameters)
             };
 
-            return SendMessage<bool>(message);
+            try
+            {
+                return SendMessage<bool>(message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось переименовать элемент.", ex);
+            }
         }
 
         /// <summary>
@@ -274,7 +321,14 @@ namespace AriesCloud.Classes
                 Content = new FormUrlEncodedContent(parameters)
             };
 
-            return SendMessage<bool>(message);
+            try
+            {
+                return SendMessage<bool>(message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось переименовать элемент.", ex);
+            }
         }
 
         /// <summary>
@@ -297,7 +351,14 @@ namespace AriesCloud.Classes
                 Content = new FormUrlEncodedContent(parameters)
             };
 
-            return SendMessage<bool>(message);
+            try
+            {
+                return SendMessage<bool>(message);
+            }
+            catch (Exception ex) 
+            { 
+                throw new Exception("Не удалось переместить (переименовать) элемент.", ex); 
+            }
         }
 
         /// <summary>
@@ -320,7 +381,14 @@ namespace AriesCloud.Classes
                 Content = new FormUrlEncodedContent(parameters)
             };
 
-            return SendMessage<bool>(message);
+            try
+            {
+                return SendMessage<bool>(message);
+            }
+            catch (Exception ex) 
+            { 
+                throw new Exception("Не удалось создать папку.", ex); 
+            }
         }
 
         /// <summary>
@@ -345,16 +413,54 @@ namespace AriesCloud.Classes
                 Content = new FormUrlEncodedContent(parameters)
             };
 
-            string result = SendMessage<string>(message);
-            List<SerializeItem> items = System.Text.Json.JsonSerializer.Deserialize<List<SerializeItem>>(result);
-
-            foreach (SerializeItem item in items)
+            try
             {
-                DirectoryItem directoryItem = item.Type == "f" ? new File(item.Name) : new Directory(item.Name);
-                directoryItems.Add(directoryItem);
+                string result = SendMessage<string>(message);
+                List<SerializeItem> items = System.Text.Json.JsonSerializer.Deserialize<List<SerializeItem>>(result);
+
+                foreach (SerializeItem item in items)
+                {
+                    DirectoryItem directoryItem = item.Type == "f" ? new File(item.Name) : new Directory(item.Name);
+                    directoryItems.Add(directoryItem);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось получить элементы папкки.", ex);
             }
 
             return directoryItems;
+        }
+
+        /// <summary>
+        /// Получение всех папок.
+        /// </summary>
+        /// <returns>Список всех папок.</returns>
+        public static List<string> GetDirecories()
+        {
+            List<string> directories;
+
+            Dictionary<string, string> parameters = new Dictionary<string, string>()
+            {
+                { "hash", UserData.Hash }
+            };
+
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "files/getAllDir")
+            {
+                Content = new FormUrlEncodedContent(parameters)
+            };
+
+            try
+            {
+                string result = SendMessage<string>(message);
+                directories = System.Text.Json.JsonSerializer.Deserialize<List<string>>(result);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось получить список папок.", ex);
+            }
+
+            return directories;
         }
 
         /// <summary>

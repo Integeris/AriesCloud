@@ -34,13 +34,16 @@
             this.createDirectoryContextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadContextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameContextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveContextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeContextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainMenuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.uploadFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.uploadDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.downloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.updateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,7 +55,6 @@
             this.mainListView = new System.Windows.Forms.ListView();
             this.columnName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.mainImageList = new System.Windows.Forms.ImageList(this.components);
-            this.uploadDirectoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainContextMenuStrip.SuspendLayout();
             this.mainMenuStrip.SuspendLayout();
             this.controlPanel.SuspendLayout();
@@ -64,9 +66,10 @@
             this.createDirectoryContextToolStripMenuItem,
             this.downloadContextToolStripMenuItem,
             this.renameContextToolStripMenuItem,
+            this.moveContextToolStripMenuItem,
             this.removeContextToolStripMenuItem});
             this.mainContextMenuStrip.Name = "mainContextMenuStrip";
-            this.mainContextMenuStrip.Size = new System.Drawing.Size(162, 92);
+            this.mainContextMenuStrip.Size = new System.Drawing.Size(162, 114);
             // 
             // createDirectoryContextToolStripMenuItem
             // 
@@ -88,6 +91,13 @@
             this.renameContextToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.renameContextToolStripMenuItem.Text = "Переименовать";
             this.renameContextToolStripMenuItem.Click += new System.EventHandler(this.RenameContextToolStripMenuItemOnClick);
+            // 
+            // moveContextToolStripMenuItem
+            // 
+            this.moveContextToolStripMenuItem.Name = "moveContextToolStripMenuItem";
+            this.moveContextToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.moveContextToolStripMenuItem.Text = "Переместить";
+            this.moveContextToolStripMenuItem.Click += new System.EventHandler(this.MoveContextToolStripMenuItemOnClick);
             // 
             // removeContextToolStripMenuItem
             // 
@@ -118,6 +128,7 @@
             this.uploadDirectoryToolStripMenuItem,
             this.downloadToolStripMenuItem,
             this.renameToolStripMenuItem,
+            this.moveToolStripMenuItem,
             this.updateToolStripMenuItem,
             this.removeToolStripMenuItem,
             this.exitToolStripMenuItem});
@@ -140,6 +151,14 @@
             this.uploadFileToolStripMenuItem.Text = "Загрузить файл";
             this.uploadFileToolStripMenuItem.Click += new System.EventHandler(this.UploadFileToolStripMenuItemOnClick);
             // 
+            // uploadDirectoryToolStripMenuItem
+            // 
+            this.uploadDirectoryToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.uploadDirectoryToolStripMenuItem.Name = "uploadDirectoryToolStripMenuItem";
+            this.uploadDirectoryToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.uploadDirectoryToolStripMenuItem.Text = "Загрузить папку";
+            this.uploadDirectoryToolStripMenuItem.Click += new System.EventHandler(this.UploadDirectoryToolStripMenuItemOnClick);
+            // 
             // downloadToolStripMenuItem
             // 
             this.downloadToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -157,6 +176,15 @@
             this.renameToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.renameToolStripMenuItem.Text = "Переименовать";
             this.renameToolStripMenuItem.Click += new System.EventHandler(this.RenameToolStripMenuItemOnClick);
+            // 
+            // moveToolStripMenuItem
+            // 
+            this.moveToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.moveToolStripMenuItem.Name = "moveToolStripMenuItem";
+            this.moveToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
+            this.moveToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.moveToolStripMenuItem.Text = "Переместить";
+            this.moveToolStripMenuItem.Click += new System.EventHandler(this.MoveToolStripMenuItemOnClick);
             // 
             // updateToolStripMenuItem
             // 
@@ -265,14 +293,6 @@
             this.mainImageList.Images.SetKeyName(0, "File.png");
             this.mainImageList.Images.SetKeyName(1, "Folder.png");
             // 
-            // uploadDirectoryToolStripMenuItem
-            // 
-            this.uploadDirectoryToolStripMenuItem.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.uploadDirectoryToolStripMenuItem.Name = "uploadDirectoryToolStripMenuItem";
-            this.uploadDirectoryToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.uploadDirectoryToolStripMenuItem.Text = "Загрузить папку";
-            this.uploadDirectoryToolStripMenuItem.Click += new System.EventHandler(this.UploadDirectoryToolStripMenuItemOnClick);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 22F);
@@ -324,5 +344,7 @@
         private System.Windows.Forms.ColumnHeader columnName;
         private System.Windows.Forms.ImageList mainImageList;
         private System.Windows.Forms.ToolStripMenuItem uploadDirectoryToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem moveContextToolStripMenuItem;
     }
 }

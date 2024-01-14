@@ -141,6 +141,16 @@ namespace AriesCloud.Forms
         }
 
         /// <summary>
+        /// Обработчик кнопки "Переместить".
+        /// </summary>
+        /// <param name="sender">Кнопка "Переместить".</param>
+        /// <param name="e">Данные события.</param>
+        private void MoveToolStripMenuItemOnClick(object sender, EventArgs e)
+        {
+            MoveItems();
+        }
+
+        /// <summary>
         /// Обработчик кнопки "Удалить".
         /// </summary>
         /// <param name="sender">Кнопка "Удалить".</param>
@@ -215,6 +225,16 @@ namespace AriesCloud.Forms
         private void RenameContextToolStripMenuItemOnClick(object sender, EventArgs e)
         {
             RenameFile();
+        }
+
+        /// <summary>
+        /// Обработчик кнопки "Переместить".
+        /// </summary>
+        /// <param name="sender">Кнопка "Переместить".</param>
+        /// <param name="e">Данные события.</param>
+        private void MoveContextToolStripMenuItemOnClick(object sender, EventArgs e)
+        {
+            MoveItems();
         }
 
         /// <summary>
@@ -366,7 +386,42 @@ namespace AriesCloud.Forms
                 mainListView.SelectedItems[0].BeginEdit();
             }
         }
-        
+
+        /// <summary>
+        /// Перемещение файлов и папок.
+        /// </summary>
+        private void MoveItems()
+        {
+            try
+            {
+                using (OpenServerFolderDialog openServerFolderDialog = new OpenServerFolderDialog())
+                {
+                    if (openServerFolderDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        foreach (ListViewItem item in mainListView.SelectedItems)
+                        {
+                            DirectoryItem directoryItem = ((DirectoryItem)item.Tag);
+
+                            if (directoryItem is Directory)
+                            {
+                                fileManager.MoveDirectory((Directory)directoryItem, openServerFolderDialog.Path);
+                            }
+                            else
+                            {
+                                fileManager.MoveFile((File)directoryItem, openServerFolderDialog.Path);
+                            }
+                        }
+                    }
+                }
+
+                InfoViewer.ShowInformation("Элементы успешно перенесены.");
+            }
+            catch (Exception ex)
+            {
+                InfoViewer.ShowError(ex);
+            }
+        }
+
         /// <summary>
         /// Удаление файлов и папок.
         /// </summary>
