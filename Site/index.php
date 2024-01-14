@@ -109,6 +109,14 @@ if ($segments[0] == "files" && $acces != "NO") {
         return;
     }
 
+    //Обработчик для получения всех дирректорий
+
+    if ($segments[1] == "getAllDir") {
+        $get = new webFiles();
+        $get->getAllDir($acces);
+        return;
+    }
+
     //Обработчик для перемещения
 
     if ($segments[1] == "move") {

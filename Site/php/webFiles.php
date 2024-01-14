@@ -318,8 +318,31 @@ class webFiles
         echo (json_encode($directories));
     }
 
+    // Функция для получения списка из всех дирректорий для перемещения файлов и папок
+
+    public function getAllDir($hash)
+    {
+        $startDir = "./fileUsers/$hash/";
+        $directories = [];
+        $directories[] = "/";
+        $startDir = preg_replace('/\s+/', '/', $startDir);
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($startDir, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::SELF_FIRST,
+            RecursiveIteratorIterator::CATCH_GET_CHILD
+        );
+
+
+        foreach ($iterator as $path => $dir) {
+            $path = preg_replace('/\s+/', '/', $path);
+            $path = str_replace("\\", "/", $path);
+            $directories[] = $path;
+        }
+        echo (json_encode($directories));
+    }
+
     // Функция для перемещения файла
-    
+
     public function move($hash)
     {
         $dir = "./fileUsers/$hash/";
