@@ -336,7 +336,11 @@ class webFiles
         foreach ($iterator as $path => $dir) {
             $path = preg_replace('/\s+/', '/', $path);
             $path = str_replace("\\", "/", $path);
-            $directories[] = $path;
+            if ($dir->isDir()) {
+                $path = str_replace($startDir, "", $path);
+                $path = "/" . $path;
+                $directories[] = $path;
+            }
         }
         echo (json_encode($directories));
     }
