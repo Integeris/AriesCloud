@@ -411,10 +411,10 @@ namespace AriesCloud.Forms
                                 fileManager.MoveFile((File)directoryItem, openServerFolderDialog.Path);
                             }
                         }
+
+                        InfoViewer.ShowInformation("Элементы успешно перенесены.");
                     }
                 }
-
-                InfoViewer.ShowInformation("Элементы успешно перенесены.");
             }
             catch (Exception ex)
             {

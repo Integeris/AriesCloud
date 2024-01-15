@@ -78,22 +78,5 @@ namespace AriesCloud.Forms
             DialogResult = DialogResult.OK;
             Close();
         }
-
-        /// <summary>
-        /// Обработчик ссылки "Забыли пароль?".
-        /// </summary>
-        /// <param name="sender">Ссылка "Забыли пароль?".</param>
-        /// <param name="e">Данные события.</param>
-        private void ForgotPasswordLinkLabelOnLinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            if (String.IsNullOrEmpty(loginTextBox.Text))
-            {
-                InfoViewer.ShowError("Введите логин.");
-            }
-
-            // TODO: Сделать запрос к серверу на сброс пароля.
-
-            InfoViewer.ShowInformation("На вашу электронную почту отправленна ссылка на сброс паролья. Сбросьте пароль и пропробуйте войти снова.");
-        }
     }
 }

@@ -317,12 +317,19 @@ namespace AriesCloud.Classes
         {
             try
             {
+                string directoryFullName = $"{pathManager}/{directory.Name}";
+                string directoryNewFullName = $"{newDirectoryPath}/{directory.Name}";
+
                 if (pathManager.ToString() == newDirectoryPath)
                 {
                     throw new Exception("Текущий путь к папке совпадает с конечным.");
                 }
+                else if (directoryNewFullName.StartsWith(directoryFullName))
+                {
+                    throw new Exception("Невозможно перенести папку в саму себя.");
+                }
 
-                Core.MoveDirecoryItem($"{pathManager}/{directory.Name}", $"{newDirectoryPath}/{directory.Name}");
+                Core.MoveDirecoryItem(directoryFullName, directoryNewFullName);
                 directories.Remove(directory);
                 UpdateItems.Invoke(this);
             }
