@@ -92,7 +92,7 @@ class authentication
         }
     }
 
-    // Функция для смены пароля 
+    // Функция для смены пароля
 
     public function changePassword($hash)
     {

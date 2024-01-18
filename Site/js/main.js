@@ -66,7 +66,7 @@ function auth() {
   if (login.length < 5 || login.length > 20) {
     new Toast({
       title: false,
-      text: "Размер логина должен привышать 6, но быть менее 20 символов",
+      text: "Размер логина должен превышать 6, но быть менее 20 символов",
       theme: "danger",
       autohide: true,
       interval: 10000,
@@ -76,7 +76,7 @@ function auth() {
   if (password.length < 5 || password.length > 20) {
     new Toast({
       title: false,
-      text: "Размер пароля должен привышать 6, но быть менее 20 символов",
+      text: "Размер пароля должен превышать 6, но быть менее 20 символов",
       theme: "danger",
       autohide: true,
       interval: 10000,
@@ -187,7 +187,7 @@ function reg() {
         } else {
           new Toast({
             title: false,
-            text: "Введена некорркектная почта",
+            text: "Введена некорректная почта",
             theme: "danger",
             autohide: true,
             interval: 10000,
@@ -205,7 +205,7 @@ function reg() {
     } else {
       new Toast({
         title: false,
-        text: "Размер пароля должен привышать 6, но быть менее 20 символов",
+        text: "Размер пароля должен превышать 6, но быть менее 20 символов",
         theme: "danger",
         autohide: true,
         interval: 10000,
@@ -214,7 +214,7 @@ function reg() {
   } else {
     new Toast({
       title: false,
-      text: "Размер логина должен привышать 6, но быть менее 20 символов",
+      text: "Размер логина должен превышать 6, но быть менее 20 символов",
       theme: "danger",
       autohide: true,
       interval: 10000,

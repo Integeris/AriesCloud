@@ -67,7 +67,7 @@ if (!empty($segments[0])) {
 
 // Обработчик дял распеределения фукций файлов и страницы входа
 
-if ($segments[0] == "files" && $acces != "NO") {
+if ($segments[0] == "files" && $acces != "NO" && !empty($segments[1])) {
 
     //Обработчик дял получения файлов
 
@@ -202,7 +202,7 @@ if ($segments[0] == "files" && $acces != "NO") {
         return;
     }
 }
-if ($segments[0] == "main" || $acces == "NO") {
+if (($segments[0] == "main" || $acces == "NO") && !empty($segments[1])) {
 
     //Обработчик для авторизации
 

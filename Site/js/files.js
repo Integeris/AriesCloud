@@ -568,7 +568,7 @@ function changePassword() {
   if ($("#newPassword")[0].value.length < 6 || $("#newPassword")[0].value.length > 20) {
     new Toast({
       title: false,
-      text: "Размер пароля должен привышать 6, но быть менее 20 символов",
+      text: "Размер пароля должен превышать 6, но быть менее 20 символов",
       theme: "danger",
       autohide: true,
       interval: 10000,
@@ -607,7 +607,7 @@ function changePassword() {
       if (data != "False") {
         new Toast({
           title: false,
-          text: "Смена пароля прошла успешна",
+          text: "Смена пароля прошла успешно",
           theme: "success",
           autohide: true,
           interval: 10000,
