@@ -79,7 +79,14 @@ namespace AriesCloud.Classes
             directories = new List<Directory>();
             files = new List<File>();
 
-            GetDirectoryItems();
+            try
+            {
+                GetDirectoryItems();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось получить элементы папки.", ex);
+            }
         }
 
         /// <summary>
@@ -94,10 +101,17 @@ namespace AriesCloud.Classes
                 throw new KeyNotFoundException("Папка не найдена.");
             }
 
-            pathManager.Add(directory.Name);
-            GetDirectoryItems();
-            ChangeDirectory.Invoke(this);
-            UpdateItems.Invoke(this);
+            try
+            {
+                pathManager.Add(directory.Name);
+                GetDirectoryItems();
+                ChangeDirectory.Invoke(this);
+                UpdateItems.Invoke(this);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось открыть папку.", ex);
+            }
         }
 
         /// <summary>
@@ -105,10 +119,17 @@ namespace AriesCloud.Classes
         /// </summary>
         public void CloseDirectory()
         {
-            pathManager.RemoveAt(-1);
-            GetDirectoryItems();
-            ChangeDirectory.Invoke(this);
-            UpdateItems.Invoke(this);
+            try
+            {
+                pathManager.RemoveAt(-1);
+                GetDirectoryItems();
+                ChangeDirectory.Invoke(this);
+                UpdateItems.Invoke(this);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось перейти на папку выше.", ex);
+            }
         }
 
         /// <summary>
@@ -355,19 +376,26 @@ namespace AriesCloud.Classes
         /// </summary>
         public void GetDirectoryItems()
         {
-            directories.Clear();
-            files.Clear();
-
-            foreach (DirectoryItem item in Core.GetDirecoryItems(pathManager.ToString()))
+            try
             {
-                if (item is File)
+                directories.Clear();
+                files.Clear();
+
+                foreach (DirectoryItem item in Core.GetDirecoryItems(pathManager.ToString()))
                 {
-                    files.Add((File)item);
+                    if (item is File)
+                    {
+                        files.Add((File)item);
+                    }
+                    else
+                    {
+                        directories.Add((Directory)item);
+                    }
                 }
-                else
-                {
-                    directories.Add((Directory)item);
-                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Не удалось получить элементы папки.", ex);
             }
         }
 

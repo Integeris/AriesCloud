@@ -27,7 +27,16 @@ namespace AriesCloud.Forms
                 .SetValue(mainListView, true);
 
             KeyPreview = true;
-            fileManager = new FileManager();
+
+            try
+            {
+                fileManager = new FileManager();
+            }
+            catch (Exception ex)
+            {
+                InfoViewer.ShowError(ex);
+            }
+            
             fileManager.ChangeDirectory += FileManagerOnChangeDirectory;
             fileManager.UpdateItems += UpdateItems;
             pathTextBox.Text = fileManager.CurrentDirectory;

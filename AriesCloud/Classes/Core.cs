@@ -95,20 +95,21 @@ namespace AriesCloud.Classes
         /// <param name="newPassword">Новый пароль.</param>
         public static void ChangePassword(string newPassword)
         {
+            // TODO: Исправить ошибку смены пароля.
             Dictionary<string, string> parameters = new Dictionary<string, string>()
             {
                 { "hash", UserData.Hash },
                 { "newPassword", newPassword }
             };
 
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "main/changePasswordAPI")
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "files/changePasswordAPI")
             {
                 Content = new FormUrlEncodedContent(parameters)
             };
 
             try
             {
-                SendMessage<bool>(message);
+                UserData.Hash = SendMessage<string>(message);
             }
             catch (Exception ex)
             {

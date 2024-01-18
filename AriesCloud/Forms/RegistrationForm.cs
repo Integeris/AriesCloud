@@ -39,7 +39,7 @@ namespace AriesCloud.Forms
             }
             else if (!Regex.IsMatch(passwordTextBox.Text, loginPattern))
             {
-                InfoViewer.ShowError("Пароль должен состаять из латинских букв и цифр от 8 по 50 символов. Первый символ е может быть цифрой.");
+                InfoViewer.ShowError("Пароль должен состоять из латинских букв и цифр от 8 по 50 символов. Первый символ не может быть цифрой.");
                 return;
             }
             else if (loginTextBox.Text == passwordTextBox.Text)
