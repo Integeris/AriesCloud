@@ -54,6 +54,7 @@ class webFiles
                 unlink($file);
             }
         }
+        if (file_exists($dir))
         rmdir($dir);
     }
 
