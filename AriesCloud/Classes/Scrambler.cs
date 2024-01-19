@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace AriesCloud.Classes
 {
@@ -386,6 +387,26 @@ namespace AriesCloud.Classes
         }
 
         /// <summary>
+        /// Шифрование массива блоков.
+        /// </summary>
+        /// <param name="arr">Массив.</param>
+        public void Encript(byte[] arr)
+        {
+            if (arr.Length % BlockSize != 0)
+            {
+                throw new Exception("Можно зашифровать только целое количество блоков.");
+            }
+
+            Parallel.For(0, arr.Length / BlockSize, (i) =>
+            {
+                Span<byte> span = new Span<byte>(arr, i * BlockSize, BlockSize);
+                byte[] tmpBlock = span.ToArray();
+                EncriptBlock(tmpBlock);
+                tmpBlock.CopyTo(span);
+            });
+        }
+
+        /// <summary>
         /// Расшифровка блока.
         /// </summary>
         /// <param name="block">Блок.</param>
@@ -404,6 +425,26 @@ namespace AriesCloud.Classes
                 ReplaceBytes(block, reversReplaceBytes);
                 ExclusiveOR(block, keys[i]);
             }
+        }
+
+        /// <summary>
+        /// Расшифровка массива.
+        /// </summary>
+        /// <param name="arr">Массив.</param>
+        public void Decript(byte[] arr)
+        {
+            if (arr.Length % BlockSize != 0)
+            {
+                throw new Exception("Можно расшифровать только целое количество блоков.");
+            }
+
+            Parallel.For(0, arr.Length / BlockSize, (i) =>
+            {
+                Span<byte> span = new Span<byte>(arr, i * BlockSize, BlockSize);
+                byte[] tmpBlock = span.ToArray();
+                DecriptBlock(tmpBlock);
+                tmpBlock.CopyTo(span);
+            });
         }
 
         /// <summary>

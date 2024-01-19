@@ -19,6 +19,11 @@ namespace AriesCloud.Classes
         private const string server = "http://site";
 
         /// <summary>
+        /// Размер буфера по умолчанию.
+        /// </summary>
+        private const int bufferSize = 1024;
+
+        /// <summary>
         /// Авторизация.
         /// </summary>
         /// <param name="token">Токен.</param>
@@ -95,7 +100,6 @@ namespace AriesCloud.Classes
         /// <param name="newPassword">Новый пароль.</param>
         public static void ChangePassword(string newPassword)
         {
-            // TODO: Исправить ошибку смены пароля.
             Dictionary<string, string> parameters = new Dictionary<string, string>()
             {
                 { "hash", UserData.Hash },
@@ -156,18 +160,25 @@ namespace AriesCloud.Classes
                         WriteStringBuffer(requestStream, stringBuilder.ToString());
 
                         Scrambler scrambler = new Scrambler(key);
-                        byte[] buffer = new byte[Scrambler.BlockSize];
+                        byte[] buffer = new byte[bufferSize];
+                        long bufferCount = fileStream.Length / buffer.Length;
+                        int lastBlockCount = (int)(fileStream.Length % bufferCount / Scrambler.BlockSize);
 
-                        long blockCount = fileStream.Length / Scrambler.BlockSize;
-
-                        for (int i = 0; i < blockCount; i++)
+                        for (int i = 0; i < bufferCount; i++)
                         {
                             fileStream.Read(buffer, 0, buffer.Length);
-                            scrambler.EncriptBlock(buffer);
+                            scrambler.Encript(buffer);
                             requestStream.Write(buffer, 0, buffer.Length);
                         }
 
+                        // Последние целые блоки не вошедшие в целый пакет.
+                        Array.Resize(ref buffer, lastBlockCount * Scrambler.BlockSize);
+                        fileStream.Read(buffer, 0, buffer.Length);
+                        scrambler.Encript(buffer);
+                        requestStream.Write(buffer, 0, buffer.Length);
+
                         // Последний блок должен содержать количество нулей + 1 в конце.
+                        Array.Resize(ref buffer, Scrambler.BlockSize);
                         Array.Clear(buffer, 0, buffer.Length);
                         fileStream.Read(buffer, 0, buffer.Length);
                         buffer[buffer.Length - 1] = (byte)(Scrambler.BlockSize - fileStream.Length % Scrambler.BlockSize);
@@ -243,20 +254,25 @@ namespace AriesCloud.Classes
                                     using (Stream readStream = streamTask.Result)
                                     {
                                         Scrambler scrambler = new Scrambler(key);
-                                        long blockCount = readStream.Length / Scrambler.BlockSize - 1;
-                                        byte[] buffer = new byte[Scrambler.BlockSize];
+                                        byte[] buffer = new byte[bufferSize];
+                                        long bufferCount = readStream.Length / buffer.Length;
+                                        int lastBlockCount = (int)(readStream.Length % buffer.Length / Scrambler.BlockSize);
 
-                                        for (int i = 0; i < blockCount; i++)
+                                        for (int i = 0; i < bufferCount; i++)
                                         {
                                             readStream.Read(buffer, 0, buffer.Length);
-                                            scrambler.DecriptBlock(buffer);
+                                            scrambler.Decript(buffer);
                                             fileStream.Write(buffer, 0, buffer.Length);
                                         }
 
+                                        // Последние целые блоки не вошедшие в целый пакет.
+                                        Array.Resize(ref buffer, lastBlockCount * Scrambler.BlockSize);
                                         readStream.Read(buffer, 0, buffer.Length);
-                                        scrambler.DecriptBlock(buffer);
+                                        scrambler.Decript(buffer);
+                                        fileStream.Write(buffer, 0, buffer.Length);
+
                                         byte zeroCount = buffer[buffer.Length - 1];
-                                        fileStream.Write(buffer, 0, buffer.Length - zeroCount);
+                                        fileStream.SetLength(fileStream.Length - zeroCount);
                                     }
                                 }
                             }
