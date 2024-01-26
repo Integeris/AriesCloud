@@ -16,7 +16,7 @@ namespace AriesCloud.Classes
         /// <summary>
         /// Адрес сервера.
         /// </summary>
-        private const string server = "http://site";
+        private const string server = "http://ariescloud.ru";
 
         /// <summary>
         /// Размер буфера по умолчанию.
