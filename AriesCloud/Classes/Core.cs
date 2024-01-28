@@ -167,14 +167,14 @@ namespace AriesCloud.Classes
                         for (int i = 0; i < bufferCount; i++)
                         {
                             fileStream.Read(buffer, 0, buffer.Length);
-                            scrambler.Encript(buffer);
+                            scrambler.Encrypt(buffer);
                             requestStream.Write(buffer, 0, buffer.Length);
                         }
 
                         // Последние целые блоки не вошедшие в целый пакет.
                         Array.Resize(ref buffer, lastBlockCount * Scrambler.BlockSize);
                         fileStream.Read(buffer, 0, buffer.Length);
-                        scrambler.Encript(buffer);
+                        scrambler.Encrypt(buffer);
                         requestStream.Write(buffer, 0, buffer.Length);
 
                         // Последний блок должен содержать количество нулей + 1 в конце.
@@ -182,7 +182,7 @@ namespace AriesCloud.Classes
                         Array.Clear(buffer, 0, buffer.Length);
                         fileStream.Read(buffer, 0, buffer.Length);
                         buffer[buffer.Length - 1] = (byte)(Scrambler.BlockSize - fileStream.Length % Scrambler.BlockSize);
-                        scrambler.EncriptBlock(buffer);
+                        scrambler.EncryptBlock(buffer);
                         requestStream.Write(buffer, 0, buffer.Length);
 
                         stringBuilder.Clear();
@@ -261,14 +261,14 @@ namespace AriesCloud.Classes
                                         for (int i = 0; i < bufferCount; i++)
                                         {
                                             readStream.Read(buffer, 0, buffer.Length);
-                                            scrambler.Decript(buffer);
+                                            scrambler.Decrypt(buffer);
                                             fileStream.Write(buffer, 0, buffer.Length);
                                         }
 
                                         // Последние целые блоки не вошедшие в целый пакет.
                                         Array.Resize(ref buffer, lastBlockCount * Scrambler.BlockSize);
                                         readStream.Read(buffer, 0, buffer.Length);
-                                        scrambler.Decript(buffer);
+                                        scrambler.Decrypt(buffer);
                                         fileStream.Write(buffer, 0, buffer.Length);
 
                                         byte zeroCount = buffer[buffer.Length - 1];

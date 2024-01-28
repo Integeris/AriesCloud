@@ -19,7 +19,7 @@ namespace AriesCloud.Classes
         public const int KeySize = 32;
 
         /// <summary>
-        /// Таблица для линейного преобразования.
+        /// Таблица для нелинейного преобразования.
         /// </summary>
         private readonly byte[] replaceBytes =
         {
@@ -58,7 +58,7 @@ namespace AriesCloud.Classes
         };
 
         /// <summary>
-        /// Таблица для обратного линейного преобразования.
+        /// Таблица для обратного нелинейного преобразования.
         /// </summary>
         private readonly byte[] reversReplaceBytes =  
         {
@@ -369,7 +369,7 @@ namespace AriesCloud.Classes
         /// Шифрование блока.
         /// </summary>
         /// <param name="block">Блок.</param>
-        public void EncriptBlock(byte[] block)
+        public void EncryptBlock(byte[] block)
         {
             if (block.Length != BlockSize)
             {
@@ -390,7 +390,7 @@ namespace AriesCloud.Classes
         /// Шифрование массива блоков.
         /// </summary>
         /// <param name="arr">Массив.</param>
-        public void Encript(byte[] arr)
+        public void Encrypt(byte[] arr)
         {
             if (arr.Length % BlockSize != 0)
             {
@@ -401,7 +401,7 @@ namespace AriesCloud.Classes
             {
                 Span<byte> span = new Span<byte>(arr, i * BlockSize, BlockSize);
                 byte[] tmpBlock = span.ToArray();
-                EncriptBlock(tmpBlock);
+                EncryptBlock(tmpBlock);
                 tmpBlock.CopyTo(span);
             });
         }
@@ -410,7 +410,7 @@ namespace AriesCloud.Classes
         /// Расшифровка блока.
         /// </summary>
         /// <param name="block">Блок.</param>
-        public void DecriptBlock(byte[] block)
+        public void DecryptBlock(byte[] block)
         {
             if (block.Length != BlockSize)
             {
@@ -431,7 +431,7 @@ namespace AriesCloud.Classes
         /// Расшифровка массива.
         /// </summary>
         /// <param name="arr">Массив.</param>
-        public void Decript(byte[] arr)
+        public void Decrypt(byte[] arr)
         {
             if (arr.Length % BlockSize != 0)
             {
@@ -442,7 +442,7 @@ namespace AriesCloud.Classes
             {
                 Span<byte> span = new Span<byte>(arr, i * BlockSize, BlockSize);
                 byte[] tmpBlock = span.ToArray();
-                DecriptBlock(tmpBlock);
+                DecryptBlock(tmpBlock);
                 tmpBlock.CopyTo(span);
             });
         }
@@ -461,11 +461,10 @@ namespace AriesCloud.Classes
         }
 
         /// <summary>
-        /// Замена байт блока на байты из указанной тиблицы.
+        /// Замена байт блока на байты из указанной таблицы.
         /// </summary>
         /// <param name="block">Блок данных.</param>
-        /// <param name="replaceBytes">Таблица заменый байт.</param>
-        /// <returns>Переписанный блок.</returns>
+        /// <param name="replaceBytes">Таблица замены.</param>
         private void ReplaceBytes(byte[] block, byte[] replaceBytes)
         {
             for (int i = 0; i < BlockSize; i++)
@@ -475,19 +474,19 @@ namespace AriesCloud.Classes
         }
 
         /// <summary>
-        /// Умножение чисел по Гауссу.
+        /// Умножение чисел в поле Галуа.
         /// </summary>
         /// <param name="origin">Исходный байт.</param>
         /// <param name="key">Байт ключа.</param>
-        /// <returns>Результат умножения по гаусу.</returns>
-        private byte GaussiaMultiplication(byte origin, byte key)
+        /// <returns>Результат умножения по Галуа.</returns>
+        private byte GaloisMultiplication(byte origin, byte key)
         {
             byte result = 0;
 
             // цикл для каждого бита (В байте 8 битов)
             for (int i = 0; i < 8; i++)
             {
-                // Если млодший бит ключа равен 1.
+                // Если младший бит ключа равен 1.
                 if ((key & 0b01) == 1)
                 {
                     result ^= origin;
@@ -495,7 +494,7 @@ namespace AriesCloud.Classes
 
                 key >>= 1;
 
-                // Вычисляем тарший бит исходного байта.
+                // Вычисляем старший бит исходного байта.
                 byte higherBit = (byte)(origin & 0b10000000);
                 origin <<= 1;
 
@@ -514,12 +513,12 @@ namespace AriesCloud.Classes
         /// <param name="block">Блок.</param>
         private void TransformBlock(byte[] block)
         {
-            byte sum = GaussiaMultiplication(block[0], linearTransformation[0]);
+            byte sum = GaloisMultiplication(block[0], linearTransformation[0]);
 
             for (int i = 1; i < BlockSize; i++)
             {
                 block[i - 1] = block[i];
-                sum ^= GaussiaMultiplication(block[i], linearTransformation[i]);
+                sum ^= GaloisMultiplication(block[i], linearTransformation[i]);
             }
 
             block[15] = sum;
@@ -536,7 +535,7 @@ namespace AriesCloud.Classes
             for (int i = BlockSize - 1; i > 0; i--)
             {
                 block[i] = block[i - 1];
-                sum ^= GaussiaMultiplication(block[i], linearTransformation[i]);
+                sum ^= GaloisMultiplication(block[i], linearTransformation[i]);
             }
 
             block[0] = sum;
@@ -558,7 +557,7 @@ namespace AriesCloud.Classes
         /// Ячейка Фейстеля.
         /// </summary>
         /// <param name="firstKeys">Первый ключ.</param>
-        /// <param name="secondKey">Втоорой ключ.</param>
+        /// <param name="secondKey">Второй ключ.</param>
         /// <param name="constants">Константы.</param>
         private void FeistelCell(byte[] firstKeys, byte[] secondKey, byte[] constants)
         {
