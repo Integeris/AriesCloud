@@ -15,6 +15,7 @@ use HttpContext;
 
 
 
+
 $route = $_GET['route'];
 $segments = explode('/', $route);
 $controllerName = '';
@@ -198,7 +199,7 @@ if ($segments[0] == "files" && $acces != "NO" && !empty($segments[1])) {
 
     if ($segments[1] == "createKey") {
         $get = new webFiles();
-        $ret = $get->createKey();
+        $get->createKey();
         return;
     }
 }

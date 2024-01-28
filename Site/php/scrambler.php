@@ -307,7 +307,7 @@ class Scrambler
         $this->generationRoundKeys();
     }
 
-    public function encriptBlock($block)
+    public function encript($block)
     {
         if (count($block) != $this->blockSize) {
             throw new \OutOfRangeException("Длина массива должна быть 16 байт.");
@@ -324,7 +324,7 @@ class Scrambler
         return $result;
     }
 
-    public function decriptBlock($block)
+    public function decript($block)
     {
         if (count($block) != $this->blockSize) {
             var_dump($block);
@@ -357,20 +357,20 @@ class Scrambler
         }
     }
 
-    private function gaussiaMultiplication($origin, $key)
+    private function galoisMultiplication($origin, $key)
     {
         $result = 0;
 
         // цикл для каждого бита (В байте 8 битов)
         for ($i = 0; $i < 8; $i++) {
-            // Если млодший бит ключа равен 1.
+            // Если младший бит ключа равен 1.
             if (($key & 0b01) == 1) {
                 $result ^= $origin;
             }
 
             $key >>= 1;
 
-            // Вычисляем тарший бит исходного байта.
+            // Вычисляем старший бит исходного байта.
             $higherBit = $origin & 0b10000000;
             $origin <<= 1;
             $origin &= 255;
@@ -385,13 +385,13 @@ class Scrambler
 
     private function transformBlock(&$block)
     {
-        $sum = $this->gaussiaMultiplication($block[0], $this->linearTransformation[0]);
+        $sum = $this->galoisMultiplication($block[0], $this->linearTransformation[0]);
 
         for ($i = 1; $i < $this->blockSize; $i++) {
 
             $block[$i - 1] = $block[$i];
 
-            $sum ^= $this->gaussiaMultiplication($block[$i], $this->linearTransformation[$i]);
+            $sum ^= $this->galoisMultiplication($block[$i], $this->linearTransformation[$i]);
         }
 
         $block[15] = $sum;
@@ -403,7 +403,7 @@ class Scrambler
 
         for ($i = $this->blockSize - 1; $i > 0; $i--) {
             $block[$i] = $block[$i - 1];
-            $sum ^= $this->gaussiaMultiplication($block[$i], $this->linearTransformation[$i]);
+            $sum ^= $this->galoisMultiplication($block[$i], $this->linearTransformation[$i]);
         }
 
         $block[0] = $sum;

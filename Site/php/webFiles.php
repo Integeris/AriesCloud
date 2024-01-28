@@ -91,7 +91,7 @@ class webFiles
 
         $scram = new Scrambler($key);
         for ($i = 0; $i < count($encryptedFileContent); $i++) {
-            $encryptedFileContent[$i] = $scram->encriptBlock($encryptedFileContent[$i]);
+            $encryptedFileContent[$i] = $scram->encript($encryptedFileContent[$i]);
         }
 
         $endArr = [];
@@ -131,7 +131,7 @@ class webFiles
 
                 $scram = new Scrambler($key);
                 for ($i = 0; $i < count($encryptedFileContent); $i++) {
-                    $encryptedFileContent[$i] = $scram->decriptBlock($encryptedFileContent[$i]);
+                    $encryptedFileContent[$i] = $scram->decript($encryptedFileContent[$i]);
                 }
 
                 $lastArray = end($encryptedFileContent);
@@ -175,7 +175,7 @@ class webFiles
 
                         $scram = new Scrambler($key);
                         for ($i = 0; $i < count($encryptedFileContent); $i++) {
-                            $encryptedFileContent[$i] = $scram->decriptBlock($encryptedFileContent[$i]);
+                            $encryptedFileContent[$i] = $scram->decript($encryptedFileContent[$i]);
                         }
 
 
