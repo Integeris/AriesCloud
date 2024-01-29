@@ -71,10 +71,11 @@ namespace AriesCloud.Forms
 
                 mainTreeView.BeginUpdate();
 
-                foreach (TreeNode node in mainTreeNode.Nodes)
-                {
-                    mainTreeView.Nodes.Add(node);
-                }
+                mainTreeView.Nodes.Add(mainTreeNode);
+                //foreach (TreeNode node in mainTreeNode.Nodes)
+                //{
+                //    mainTreeView.Nodes.Add(node);
+                //}
 
                 mainTreeView.EndUpdate();
             }
@@ -105,7 +106,7 @@ namespace AriesCloud.Forms
             try
             {
                 TreeNode node = mainTreeView.SelectedNode;
-                path = $"/{node.FullPath}";
+                path = $"/{node.FullPath.Remove(0, mainTreeView.Nodes[0].Text.Length)}";
                 DialogResult = DialogResult.OK;
                 Close();
             }

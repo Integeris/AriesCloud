@@ -73,6 +73,8 @@ namespace AriesCloud.Forms
                         {
                             fileManager.UploadFile(filePath);
                         }
+
+                        InfoViewer.ShowInformation("Загрузка произошла успешно.");
                     }
                 }
             }
@@ -80,8 +82,6 @@ namespace AriesCloud.Forms
             {
                 InfoViewer.ShowError(ex);
             }
-
-            InfoViewer.ShowInformation("Загрузка произошла успешно.");
         }
 
         /// <summary>
@@ -100,6 +100,7 @@ namespace AriesCloud.Forms
                     if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                     {
                         fileManager.UploadDirectory(folderBrowserDialog.SelectedPath);
+                        InfoViewer.ShowInformation("Загрузка произошла успешно.");
                     }
                 }
             }
@@ -107,8 +108,6 @@ namespace AriesCloud.Forms
             {
                 InfoViewer.ShowError(ex);
             }
-
-            InfoViewer.ShowInformation("Загрузка произошла успешно.");
         }
 
         /// <summary>

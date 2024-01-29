@@ -73,7 +73,15 @@ namespace AriesCloud.Forms
 
             UserData.Hash = token;
             UserData.Login = loginTextBox.Text;
-            Configurator.Load(UserData.Login);
+
+            try
+            {
+                Configurator.Load(UserData.Login);
+            }
+            catch (Exception)
+            {
+                InfoViewer.ShowError("Файл config.xml неправильного вида. Удалите его.");
+            }
 
             DialogResult = DialogResult.OK;
             Close();
