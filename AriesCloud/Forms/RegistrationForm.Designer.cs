@@ -128,7 +128,7 @@
             this.registrationButton.Name = "registrationButton";
             this.registrationButton.Size = new System.Drawing.Size(518, 31);
             this.registrationButton.TabIndex = 10;
-            this.registrationButton.Text = "Зарегестрироваться";
+            this.registrationButton.Text = "Зарегистрироваться";
             this.registrationButton.UseVisualStyleBackColor = false;
             this.registrationButton.Click += new System.EventHandler(this.RegistrationButtonOnClick);
             // 

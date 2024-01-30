@@ -373,6 +373,8 @@ namespace AriesCloud.Forms
                                 fileManager.DownloadDirectory((Directory)directoryItem, folderBrowserDialog.SelectedPath);
                             }
                         }
+
+                        InfoViewer.ShowInformation("Скачивание произошло успешно.");
                     }
                 }
             }
@@ -380,8 +382,6 @@ namespace AriesCloud.Forms
             {
                 InfoViewer.ShowError(ex);
             }
-
-            InfoViewer.ShowInformation("Скачивание произошло успешно.");
         }
 
         /// <summary>

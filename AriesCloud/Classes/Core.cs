@@ -72,7 +72,7 @@ namespace AriesCloud.Classes
                 { "password", password}
             };
 
-            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "main/autorizationHash")
+            HttpRequestMessage message = new HttpRequestMessage(HttpMethod.Post, "main/registration")
             {
                 Content = new FormUrlEncodedContent(parameters)
             };
