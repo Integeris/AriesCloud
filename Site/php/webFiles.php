@@ -16,7 +16,7 @@ class webFiles
     {
         $files = scandir("./fileUsers/$hash/" . $_POST["dir"]);
         $files = array_diff($files, array('.', '..'));
-        $ret = [];
+        $ret = []; 
         foreach ($files as $val) {
             $type = is_dir("./fileUsers/$hash/" . $_POST["dir"] . "/$val") ? 'p' : 'f';
             $ret[] = ["name" => $val, "type" => $type];
