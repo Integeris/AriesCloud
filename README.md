@@ -66,9 +66,9 @@ CREATE TABLE IF NOT EXISTS public.users
 ```
 
 ## Сервер
-Для установки сервера необходимо либо развернуть ```http```-сервер, либо установить специальное приложение такое как [Denver](http://www.denwer.ru/) или [Open Server Panel](https://ospanel.io/). Необходимо скачать ветку ```Full-Suck```:  
+Для установки сервера необходимо либо развернуть ```http```-сервер, либо установить специальное приложение такое как [Denver](http://www.denwer.ru/) или [Open Server Panel](https://ospanel.io/). Необходимо скачать ветку ```Full-Stack```:  
 
-```git clone https://github.com/Integeris/AriesCloud.git -b Full-Suck```  
+```git clone https://github.com/Integeris/AriesCloud.git -b Full-Stack```  
 
 Следующим шагом необходимо переместить папку ```Site``` в папку с доменами. Изменить настройки подключения к базе данных можно в файле ```Site/php/DB.php```:  
 
@@ -82,9 +82,9 @@ private $dsn = "";
 
 ## Desktop-клиент
 
-Для установки desktop-клиента необходимо скачать ветку ```Development```:  
+Для установки desktop-клиента необходимо скачать ветку ```Main```:  
 
-```git clone https://github.com/Integeris/AriesCloud.git -b Development```  
+```git clone https://github.com/Integeris/AriesCloud.git -b Main```  
 
 Далее необходимо скомпилировать проект через [Visual Studio](https://visualstudio.microsoft.com/ru/). В файле ```AriesCloud//Classes/Core.cs``` можно поменять доменное имя сервера:  
 
